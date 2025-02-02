@@ -1,25 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ScrollView, Image} from 'react-native';
-import "../global.css";
-import { Link } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import { View, ScrollView, Image, Animated } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '../constants/images';
 
+export default function LogoScreen() {
+  const router = useRouter();
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Start from 0 opacity
 
+  useEffect(() => {
+    // Fade in the logo
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000, // 1 second fade-in
+      useNativeDriver: true,
+    }).start();
 
-export default function App() {
+    // Fade out and navigate after 2 seconds
+    const timer = setTimeout(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500, // 0.5 second fade-out
+        useNativeDriver: true,
+      }).start(() => {
+        router.replace('/sign-in'); // Navigate after fade-out
+      });
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [fadeAnim, router]);
+
   return (
-    <SafeAreaView className = "bg-white h-full">
-      <ScrollView contentContainerStyle={{ height:'100%'}} >
-        <View className='w-full justify-center items-center h-full px-4'>
-          <Image 
-            source = {images.logo}
+    <SafeAreaView className="bg-white h-full">
+      <ScrollView contentContainerStyle={{ height: '100%' }}>
+        <View className="w-full justify-center items-center h-full px-4">
+          <Animated.Image 
+            source={images.logo} 
+            style={{ opacity: fadeAnim, width: 250, height: 250 }} // Adjust size as needed
           />
-
         </View>
-
       </ScrollView>
-
     </SafeAreaView>
   );
 }
