@@ -3,7 +3,7 @@ import { View, ScrollView, Image, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '../constants/images';
-import '../global.css'
+// import '../global.css';
 
 
 
