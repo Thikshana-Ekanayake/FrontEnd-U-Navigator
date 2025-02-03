@@ -1,35 +1,92 @@
-import React, { useState } from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+  TextInput,
+} from "react-native";
+import { ChevronDown, Check } from "lucide-react-native";
 
-const CustomDropdown = ({ items, selectedValue, setSelectedValue }) => {
+const CustomDropdown = ({ items, title, selectedValue, setSelectedValue }) => {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filteredItems, setFilteredItems] = useState(items);
+
+  const handleSelect = (item) => {
+    setSelectedValue(item.value);
+    setOpen(false);
+  };
+
+  const handleSearch = (text) => {
+    setSearch(text);
+    setFilteredItems(
+      items.filter((item) =>
+        item.label.toLowerCase().includes(text.toLowerCase())
+      )
+    );
+  };
 
   return (
-    <DropDownPicker
-      open={open}
-      value={selectedValue}
-      items={items}
-      setOpen={setOpen}
-      setValue={setSelectedValue}
-      placeholder="Select Category"
-      style={{
-        backgroundColor: '#F3F4F6',
-        borderColor: '#D1D5DB',
-        borderRadius: 10,
-        marginTop: 15,
-        marginBottom: 15,
-        height: 60,
-      }}
-      dropDownContainerStyle={{
-        backgroundColor: '#fff',
-        borderColor: '#D1D5DB',
-      }}
-      tickIconStyle={{
-        tintColor: '#22C55E', // Green tick color
-        width: 24,
-        height: 24,
-      }}
-    />
+    <View>
+      {/* Trigger Button */}
+      <TouchableOpacity
+        onPress={() => setOpen(true)}
+        className="flex-row justify-between items-center px-4 py-5 mt-4 mb-1 border border-gray-300 rounded-lg bg-gray-100"
+      >
+        <Text className="text-gray-400">
+          {selectedValue
+            ? items.find((i) => i.value === selectedValue)?.label
+            : title}
+        </Text>
+        <ChevronDown size={20} color="#6B7280" />
+      </TouchableOpacity>
+
+      {/* Modal Dropdown */}
+      <Modal visible={open} animationType="slide" transparent>
+      <View className="flex-1 justify-end bg-black bg-opacity-10 backdrop-blur-lg">
+          <View className="h-[90vh] bg-white rounded-t-2xl p-5">
+            {/* Header */}
+            <View className="flex-row justify-between items-center pb-3 border-b border-gray-300">
+              <TouchableOpacity onPress={() => setOpen(false)}>
+                <Text className="text-blue-500 text-lg">Cancel</Text>
+              </TouchableOpacity>
+              <Text className="text-lg font-semibold">{title}</Text>
+              <TouchableOpacity>
+                <Text className="text-blue-500 text-lg">Edit</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Search Bar */}
+            <View className="bg-gray-100 px-3 py-2 rounded-lg flex-row items-center mt-3 mb-3">
+              <TextInput
+                placeholder="Search"
+                value={search}
+                onChangeText={handleSearch}
+                className="flex-1 text-base"
+              />
+            </View>
+
+            {/* List of Options */}
+            <FlatList
+              data={filteredItems}
+              keyExtractor={(item) => item.value}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  onPress={() => handleSelect(item)}
+                  className="flex-row justify-between p-4 border-b border-gray-200"
+                >
+                  <Text className="text-gray-700">{item.label}</Text>
+                  {selectedValue === item.value && <Check size={18} color="#007AFF" />}
+                </TouchableOpacity>
+              )}
+            />
+
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
