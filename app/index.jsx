@@ -3,6 +3,9 @@ import { View, ScrollView, Image, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '../constants/images';
+import '../global.css'
+
+
 
 export default function LogoScreen() {
   const router = useRouter();
