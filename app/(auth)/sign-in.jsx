@@ -1,231 +1,69 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft } from 'lucide-react-native';
+import { ChevronLeft, Eye, EyeOff } from 'lucide-react-native';
 import CustomInput from '../../components/CustomInput';
-import CustomDropdown from '../../components/CustomDropdown';
 import CustomButton from '../../components/CustomButton';
-import * as Progress from 'react-native-progress';
-import { MotiView } from 'moti';
+import { useRouter } from 'expo-router';
 
-const SignIn = () => {
-  const [step, setStep] = useState(1);
-  const totalSteps = 3;
+const SignIn = ({ navigation }) => {
+  const router = useRouter();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    category: '',
-    AL: {
-      stream: '',
-      year: '',
-      zScore: '',
-      district: '',
-      subjects: [{ subject: '', result: '' }, { subject: '', result: '' }, { subject: '', result: '' }]
-    },
-    OL: {
-      subjects: {}
+  // Placeholder login handler (Replace this with real authentication later)
+  const handleLogin = () => {
+    if (formData.email === 'admin' && formData.password === 'admin') {
+      router.replace('/home'); // Navigate to Home
+    } else {
+      Alert.alert('Login Failed', 'Invalid email or password.');
     }
-  });
-
-  const categories = [
-    { label: 'Pre-AL', value: 'Pre-AL' },
-    { label: 'After-AL', value: 'After-AL' },
-    { label: 'Admin', value: 'Admin' },
-  ];
-
-  const ALsubjects = [
-    { label: 'Mathematics', value: 'Mathematics' },
-    { label: 'Physics', value: 'Physics' },
-    { label: 'Chemistry', value: 'Chemistry' },
-  ];
-
-  const OLsubjects = [
-    'Mathematics', 'Science', 'English', 'Sinhala', 
-    'Buddhism', 'Religion', 'History'
-  ].map(sub => ({ label: sub, value: sub }));
-
-  const results = [
-    { label: 'A', value: 'A' },
-    { label: 'B', value: 'B' },
-    { label: 'C', value: 'C' },
-    { label: 'S', value: 'S' },
-    { label: 'F', value: 'F' },
-  ];
-
-  const handleNext = () => {
-    if (step < totalSteps) setStep(step + 1);
-  };
-
-  const handleBack = () => {
-    if (step > 1) setStep(step - 1);
-  };
-
-  const handleSubmit = () => {
-    console.log('User Data:', formData);
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <ScrollView>
-        <View className="px-6 my-6">
-          {/* Back Button */}
-          {step > 1 && (
-            <TouchableOpacity className="mt-4 mb-5" onPress={handleBack}>
-              <ChevronLeft size={24} color="#000" />
-            </TouchableOpacity>
-          )}
+    <SafeAreaView className="bg-white h-full px-6 flex justify-center">
+      {/* Back Button */}
+      <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-20 left-6">
+        <ChevronLeft size={24} color="#000" />
+      </TouchableOpacity>
 
-          {/* Dynamic Title */}
-          <Text className="text-3xl font-bold text-gray-900 mb-6">
-            {step === 1
-              ? 'Hello! Welcome to U - Navigator'
-              : formData.category === 'After-AL'
-              ? step === 2 ? 'AL Results' : 'OL Results'
-              : 'General Information'}
-          </Text>
+      {/* Logo / Title */}
+      <Text className="text-4xl font-bold text-primary-g2 mb-6">
+        U - <Text className="text-accent">N</Text>avigator
+      </Text>
 
-          {/* Progress Bar */}
-          <Progress.Bar 
-            progress={step / totalSteps} 
-            width={null} 
-            height={8}
-            borderRadius={10}
-            color="#3498db"
-            borderWidth={0}
-            unfilledColor="#e0e0e0"
-          />
+      {/* Input Fields */}
+      <CustomInput 
+        placeholder="Enter your email"
+        value={formData.email}
+        onChangeText={(text) => setFormData({ ...formData, email: text })}
+        keyboardType="email-address"
+      />
 
-          {/* Animated Form Fields */}
-          <MotiView 
-            key={step}
-            from={{ opacity: 0, translateX: 100 }} 
-            animate={{ opacity: 1, translateX: 0 }}
-            exit={{ opacity: 0, translateX: -100 }}
-            transition={{ type: "spring", duration: 400 }}
-          >
-            {/* Step 1: User Info */}
-            {step === 1 && (
-              <>
-                <CustomInput 
-                  placeholder="Username" 
-                  value={formData.username} 
-                  onChangeText={(text) => setFormData({ ...formData, username: text })}
-                />
-                <CustomInput 
-                  placeholder="Email" 
-                  value={formData.email} 
-                  onChangeText={(text) => setFormData({ ...formData, email: text })}
-                />
-                <CustomInput 
-                  placeholder="Password" 
-                  secureTextEntry 
-                  value={formData.password} 
-                  onChangeText={(text) => setFormData({ ...formData, password: text })}
-                />
-                <CustomDropdown 
-                  title="Select Category"
-                  items={categories} 
-                  selectedValue={formData.category} 
-                  setSelectedValue={(value) => setFormData({ ...formData, category: value })}
-                />
-              </>
-            )}
+      <CustomInput 
+        placeholder="Enter your password"
+        secureTextEntry={!showPassword}
+        value={formData.password}
+        onChangeText={(text) => setFormData({ ...formData, password: text })}
+        rightIcon={showPassword ? <EyeOff size={20} color="gray" /> : <Eye size={20} color="gray" />}
+        onRightIconPress={() => setShowPassword(!showPassword)}
+      />
 
-            {/* Step 2 & 3: Category-Based Forms */}
-            {formData.category === 'After-AL' ? (
-              <>
-                {/* Step 2: AL Results */}
-                {step === 2 && (
-                  <>
-                    <CustomDropdown 
-                      title="AL Stream" 
-                      items={[]} 
-                      selectedValue={formData.AL.stream}
-                      setSelectedValue={(value) => setFormData({ ...formData, AL: { ...formData.AL, stream: value } })}
-                    />
-                    <CustomDropdown 
-                      title="AL Year" 
-                      items={[]} 
-                      selectedValue={formData.AL.year}
-                      setSelectedValue={(value) => setFormData({ ...formData, AL: { ...formData.AL, year: value } })}
-                    />
-                    <CustomInput 
-                      placeholder="Z Score" 
-                      value={formData.AL.zScore} 
-                      onChangeText={(text) => setFormData({ ...formData, AL: { ...formData.AL, zScore: text } })}
-                    />
-                    <CustomDropdown 
-                      title="District" 
-                      items={[]} 
-                      selectedValue={formData.AL.district}
-                      setSelectedValue={(value) => setFormData({ ...formData, AL: { ...formData.AL, district: value } })}
-                    />
+      {/* Forgot Password */}
+      <TouchableOpacity className="self-end mt-4">
+        <Text className="text-gray-500">Forgot Password?</Text>
+      </TouchableOpacity>
 
-                    {[1, 2, 3].map((num, index) => (
-                      <View key={num} className="flex-row justify-between space-x-2">
-                        <View className="flex-1">
-                          <CustomDropdown 
-                            title={`Subject ${num}`} 
-                            items={ALsubjects} 
-                            selectedValue={formData.AL.subjects[index].subject}
-                            setSelectedValue={(value) => {
-                              let newSubjects = [...formData.AL.subjects];
-                              newSubjects[index].subject = value;
-                              setFormData({ ...formData, AL: { ...formData.AL, subjects: newSubjects } });
-                            }}
-                          />
-                        </View>
-                        <View className="w-1/3 ml-2">
-                          <CustomDropdown 
-                            title="Result" 
-                            items={results} 
-                            selectedValue={formData.AL.subjects[index].result}
-                            setSelectedValue={(value) => {
-                              let newSubjects = [...formData.AL.subjects];
-                              newSubjects[index].result = value;
-                              setFormData({ ...formData, AL: { ...formData.AL, subjects: newSubjects } });
-                            }}
-                          />
-                        </View>
-                      </View>
-                    ))}
-                  </>
-                )}
+      {/* Login Button */}
+      <CustomButton title="Login" onPress={handleLogin} className="mt-4" />
 
-                {/* Step 3: OL Results */}
-                {step === 3 && (
-                  <>
-                    {OLsubjects.map((subject, index) => (
-                      <View key={index} className="flex-row justify-between space-x-2">
-                        <View className="flex-1">
-                          <Text className="bg-gray-100 text-base rounded-lg px-4 py-5 mt-4 border border-gray-300">{subject.label}</Text>
-                        </View>
-                        <View className="w-1/3 ml-2">
-                          <CustomDropdown 
-                            title="Result" 
-                            items={results} 
-                            selectedValue={formData.OL.subjects[subject.value]}
-                            setSelectedValue={(value) => {
-                              setFormData({ ...formData, OL: { ...formData.OL, subjects: { ...formData.OL.subjects, [subject.value]: value } } });
-                            }}
-                          />
-                        </View>
-                      </View>
-                    ))}
-                  </>
-                )}
-              </>
-            ) : null}
-          </MotiView>
-
-          <CustomButton 
-            title={step === totalSteps ? "Submit" : "Next"} 
-            onPress={step === totalSteps ? handleSubmit : handleNext} 
-          />
-        </View>
-      </ScrollView>
+      {/* Register Link */}
+      <View className="flex-row justify-center mt-6">
+        <Text className="text-gray-500">Don't have an account?</Text>
+        <TouchableOpacity onPress={() => router.replace('/sign-up')}>
+          <Text className="text-blue-500 font-semibold"> Register Now</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
