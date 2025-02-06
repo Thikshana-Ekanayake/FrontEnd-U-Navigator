@@ -58,7 +58,7 @@ const TabsLayout = () => {
           }}
         />
 
-degree<Tabs.Screen
+      <Tabs.Screen
           name="degree"
           options={{
             title: "Degree",

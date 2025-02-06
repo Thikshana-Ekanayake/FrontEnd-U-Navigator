@@ -13,11 +13,12 @@ const SignIn = ({ navigation }) => {
 
   // Placeholder login handler (Replace this with real authentication later)
   const handleLogin = () => {
-    if (formData.email === 'admin' && formData.password === 'admin') {
-      router.replace('/home'); // Navigate to Home
-    } else {
-      Alert.alert('Login Failed', 'Invalid email or password.');
-    }
+    // if (formData.email === 'admin' && formData.password === 'admin') {
+    //   router.replace('/home'); // Navigate to Home
+    // } else {
+    //   Alert.alert('Login Failed', 'Invalid email or password.');
+    // }
+    router.replace('/home');
   };
 
   return (

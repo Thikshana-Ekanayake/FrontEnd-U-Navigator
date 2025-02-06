@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { Slot, SplashScreen } from 'expo-router'
 import { useFonts } from "expo-font";
 import { useEffect } from 'react';
+import { SplashScreen, Stack } from "expo-router";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -96,7 +96,16 @@ const RootLayout = () => {
   
 
 
-  return <Slot/>
+  return (
+    // <GlobalProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        {/* <Stack.Screen name="search/[query]" options={{ headerShown: false }} /> */}
+      </Stack>
+    // </GlobalProvider>
+  );
 }
 
 export default RootLayout
