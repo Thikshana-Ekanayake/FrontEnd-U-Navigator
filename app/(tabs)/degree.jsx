@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { View, Text, TextInput, FlatList, TouchableOpacity, Image } from "react-native";
 import { Search, Filter } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 // Sample Degree Data
 const degreesData = [
   {
+    id: "1",
     title: "Bachelor of Science Honours in Artificial Intelligence",
     subtitle: "University of Moratuwa",
     icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
@@ -15,6 +17,7 @@ const degreesData = [
     isNew: true,
   },
   {
+    id: "2",
     title: "Bachelor of Law",
     subtitle: "University of Colombo",
     icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
@@ -23,6 +26,7 @@ const degreesData = [
     tag: "degree",
   },
   {
+    id: "3",
     title: "Bachelor of Agriculture and Food Technology",
     subtitle: "Sabaragamuwa University",
     icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
@@ -31,6 +35,7 @@ const degreesData = [
     tag: "degree",
   },
   {
+    id: "4",
     title: "Bachelor of Agriculture and Food Technology 2",
     subtitle: "Sabaragamuwa University",
     icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
@@ -39,6 +44,7 @@ const degreesData = [
     tag: "degree",
   },
   {
+    id: "5",
     title: "Bachelor of Design",
     subtitle: "University of Moratuwa",
     icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
@@ -49,6 +55,7 @@ const degreesData = [
 ];
 
 const DegreeScreen = () => {
+  const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
 
@@ -84,45 +91,36 @@ const DegreeScreen = () => {
               selectedFilter === filter ? "border-text" : "border-smoke"
             }`}
           >
-              <Text
-                className={`text-sm font-semibold ${
-                  selectedFilter === filter ? "text-text" : "text-smoke"
-                }`}
-              >
-                {filter}
-              </Text>
+            <Text
+              className={`text-sm font-semibold ${
+                selectedFilter === filter ? "text-text" : "text-smoke"
+              }`}
+            >
+              {filter}
+            </Text>
           </TouchableOpacity>
         ))}
-  
+
         {/* Placeholder for advanced filtering */}
         <TouchableOpacity className="px-4 py-2 rounded-3xl border border-gray-400 absolute right-0">
           <Filter size={16} color="gray" />
         </TouchableOpacity>
       </View>
 
-
       {/* Degree List */}
       <FlatList
         data={filteredDegrees}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View>
+          <TouchableOpacity onPress={() => navigation.navigate("screens/degree/degree-detail", { degreeId: item.id })}>
             <View className="flex-row items-center mt-4 px-2 mb-2">
               <Image source={{ uri: item.image }} className="w-28 h-28 rounded-lg ml-2 mr-2" />
               <View className="flex-1 ml-4">
                 <Text className="text-base font-semibold">
                   {item.title} 
-                  {item.isNew && 
-                  // <View className="bg-accent rounded-lg px-3 py-0.5 -mb-1">
-                    <Text className="text-xs text-accent">  New</Text>
-                  // </View>
-                  }
+                  {item.isNew && <Text className="text-xs text-accent">  New</Text>}
                 </Text>
-                {/* {item.isNew && 
-                  <View className=" bg-accent  rounded-md px-3 py-1 m-0 w-14 justify-center items-center">
-                    <Text className=" text-xs text-white">New</Text>
-                  </View>
-                  } */}
+
                 <View className="flex-row items-center mt-1">
                   <Text className="text-gray-500 text-sm">{item.subtitle}</Text>
                   <Image source={{ uri: item.icon }} className="w-5 h-5 ml-2" />
@@ -132,7 +130,7 @@ const DegreeScreen = () => {
             </View>
             {/* Separator Line */}
             <View className="border-b border-gray-300 mt-4" />
-          </View>
+          </TouchableOpacity>
         )}
       />
     </SafeAreaView>
