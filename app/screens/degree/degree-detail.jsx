@@ -3,7 +3,7 @@ import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeft, Eye, Star, Heart, MoreVertical } from "lucide-react-native";
-import CustomButton from "../../../components/CustomButton"; // Import CustomButton
+import CustomButton from "../../../components/CustomButton"; 
 
 const degreesData = [
   {
