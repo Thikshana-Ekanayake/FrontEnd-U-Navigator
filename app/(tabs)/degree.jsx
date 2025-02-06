@@ -24,7 +24,7 @@ const degreesData = [
   },
   {
     title: "Bachelor of Agriculture and Food Technology",
-    subtitle: "Sabaragamuwa University of Sri Lanka",
+    subtitle: "Sabaragamuwa University",
     icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
     image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
@@ -32,7 +32,7 @@ const degreesData = [
   },
   {
     title: "Bachelor of Agriculture and Food Technology 2",
-    subtitle: "Sabaragamuwa University of Sri Lanka",
+    subtitle: "Sabaragamuwa University",
     icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
     image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
@@ -123,7 +123,10 @@ const DegreeScreen = () => {
                     <Text className=" text-xs text-white">New</Text>
                   </View>
                   } */}
-                <Text className="text-gray-500 text-sm">{item.subtitle}</Text>
+                <View className="flex-row items-center mt-1">
+                  <Text className="text-gray-500 text-sm">{item.subtitle}</Text>
+                  <Image source={{ uri: item.icon }} className="w-5 h-5 ml-2" />
+                </View>
                 <Text className="text-gray-700 text-xs mt-1">{item.description}</Text>
               </View>
             </View>
