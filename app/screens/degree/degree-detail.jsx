@@ -7,7 +7,7 @@ import CustomButton from "../../../components/CustomButton";
 
 const degreesData = [
   {
-    id: "1",
+    id: "D1",
     title: "Bsc (Hons.) in Information Technology & Management",
     subtitle: "University of Moratuwa",
     image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
@@ -24,9 +24,9 @@ const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0
 const DegreeDetail = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const { degreeId } = route.params;
+  const { id } = route.params;
 
-  const degree = degreesData.find((d) => d.id === degreeId);
+  const degree = degreesData.find((d) => d.id === id);
   const [isStarred, setIsStarred] = useState(false);
   const [expanded, setExpanded] = useState(false);
 
