@@ -26,7 +26,7 @@ const universitiesData = [
         image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
         description: "The University of Colombo is Sri Lanka’s oldest university, founded in 1921. It offers diverse disciplines across multiple faculties...",
         mostViewed: [
-            { id: "D3", title: "BSc in Computer Science", image: "https://www.cmb.ac.lk/wp-content/uploads/2021/09/uni-background.jpg", views: 480000, interested: 62000 },
+            { id: "D3", title: "BSc in Computer Science", image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg", views: 578000, interested: 78000 },
         ],
     },
 ];
@@ -47,86 +47,89 @@ const UniversityDetail = () => {
 
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <ScrollView contentContainerStyle={{ padding: 16 }}>
-                {/* Header Image */}
-                <View className="relative">
-                    <Image source={{ uri: university.image }} className="w-full h-80 rounded-xl" />
+            <View className="flex-1 relative">
+                <ScrollView contentContainerStyle={{ padding: 16 }}>
+                    {/* Header Image */}
+                    <View className="relative">
+                        <Image source={{ uri: university.image }} className="w-full h-96 rounded-xl" />
 
-                    {/* Back Button */}
-                    <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-5 left-4 p-2">
-                        <ChevronLeft size={28} color="white" />
-                    </TouchableOpacity>
-
-                    {/* Bookmark Button */}
-                    <TouchableOpacity
-                        onPress={() => setIsBookmarked(!isBookmarked)}
-                        className="absolute -bottom-3 right-4 bg-white p-2 rounded-full shadow-lg"
-                    >
-                        <Bookmark size={26} color={isBookmarked ? "blue" : "gray"} fill={isBookmarked ? "blue" : "none"} />
-                    </TouchableOpacity>
-                </View>
-
-                {/* University Name & Enrollment */}
-                <View className="mt-4 flex-row justify-between items-center">
-                    <Text className="text-2xl font-bold">{university.name}</Text>
-                    {/* Show Map Button */}
-                    <TouchableOpacity>
-                        <Text className="text-blue-600">Show map</Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Enrollment Count with Icon */}
-                <View className="flex-row items-center mt-2">
-                    <Users size={18} color="gray" />
-                    <Text className="text-gray-500 text-sm ml-1">{formatNumber(university.enrollments)} enrollments</Text>
-                </View>
-
-                {/* Description */}
-                <Text className="mt-4 text-sm leading-6">
-                    {expanded ? university.description : university.description.substring(0, 120) + "..."}
-                </Text>
-                <TouchableOpacity className="mt-2" onPress={() => setExpanded(!expanded)}>
-                    <Text className="text-blue-600">{expanded ? "Read less" : "Read more"}</Text>
-                </TouchableOpacity>
-
-                {/* Most Viewed Section */}
-                <Text className="text-lg font-semibold mt-6">Most Viewed</Text>
-                <FlatList
-                    data={university.mostViewed}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("screens/degree/degree-detail", { degreeId: item.id })}
-                            className="flex-row items-center bg-gray-100 p-4 rounded-lg mr-4 mt-3 w-72"
-                        >
-                            {/* Image on the Left */}
-                            <Image source={{ uri: item.image }} className="w-20 h-20 rounded-md" />
-
-                            {/* Text & Stats on the Right */}
-                            <View className="ml-3 flex-1">
-                                <Text className="text-sm font-semibold">{item.title}</Text>
-                                <View className="flex-row items-center mt-1">
-                                    <Eye size={14} color="gray" />
-                                    <Text className="text-gray-500 text-xs ml-1">{formatNumber(item.views)}</Text>
-
-                                    {/* Add space between views and stars */}
-                                    <Text className="mx-3 text-gray-400">|</Text>
-
-                                    <Star size={12} color="gray" />
-                                    <Text className="ml-1 text-xs text-gray-500">{formatNumber(item.interested)}</Text>
-                                </View>
-                            </View>
+                        {/* Back Button */}
+                        <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-5 left-4 p-2">
+                            <ChevronLeft size={28} color="white" />
                         </TouchableOpacity>
-                    )}
-                />
 
+                        {/* Bookmark Button */}
+                        <TouchableOpacity
+                            onPress={() => setIsBookmarked(!isBookmarked)}
+                            className="absolute -bottom-3 right-4 bg-white p-2 rounded-full shadow-lg"
+                        >
+                            <Bookmark size={26} color={isBookmarked ? "gold" : "gray"} fill={isBookmarked ? "gold" : "white"} />
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* University Name & Enrollment */}
+                    <View className="mt-4 flex-row justify-between items-center">
+                        <Text className="text-2xl font-bold">{university.name}</Text>
+                        {/* Show Map Button */}
+                        <TouchableOpacity>
+                            <Text className="text-blue-600">Show map</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Enrollment Count with Icon */}
+                    <View className="flex-row items-center mt-2">
+                        <Users size={18} color="gray" />
+                        <Text className="text-gray-500 text-sm ml-1">{formatNumber(university.enrollments)} enrollments</Text>
+                    </View>
+
+                    {/* Description */}
+                    <Text className="mt-4 text-sm leading-6">
+                        {expanded ? university.description : university.description.substring(0, 120) + "..."}
+                    </Text>
+                    <TouchableOpacity className="mt-2" onPress={() => setExpanded(!expanded)}>
+                        <Text className="text-blue-600">{expanded ? "Read less" : "Read more"}</Text>
+                    </TouchableOpacity>
+
+                    {/* Most Viewed Section */}
+                    <Text className="text-lg font-semibold mt-6">Most Viewed</Text>
+                    <FlatList
+                        data={university.mostViewed}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate("screens/degree/degree-detail", { degreeId: item.id })}
+                                className="flex-row items-center bg-gray-100 p-4 rounded-lg mr-4 mt-3 w-72"
+                            >
+                                {/* Image on the Left */}
+                                <Image source={{ uri: item.image }} className="w-20 h-20 rounded-md" />
+
+                                {/* Text & Stats on the Right */}
+                                <View className="ml-3 flex-1">
+                                    <Text className="text-sm font-semibold">{item.title}</Text>
+                                    <View className="flex-row items-center mt-1">
+                                        <Eye size={14} color="gray" />
+                                        <Text className="text-gray-500 text-xs ml-1">{formatNumber(item.views)}</Text>
+
+                                        {/* Add space between views and stars */}
+                                        <Text className="mx-3 text-gray-400">|</Text>
+
+                                        <Star size={12} color="gray" />
+                                        <Text className="ml-1 text-xs text-gray-500">{formatNumber(item.interested)}</Text>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    />
+
+                    
+                </ScrollView>
                 {/* View All Button */}
-                <View className="mt-6">
-                    <CustomButton title="View all" onPress={() => alert("Viewing all most viewed!")} />
-                </View>
-            </ScrollView>
+                <View className="mt-6 absolute bottom-0 left-0 right-0 p-4 ">
+                        <CustomButton title="View all" onPress={() => alert("Viewing all most viewed!")} />
+                    </View>
+            </View>
         </SafeAreaView>
     );
 };

@@ -52,7 +52,7 @@ const DegreeDetail = () => {
             onPress={() => setIsStarred(!isStarred)}
             className="absolute -bottom-3 right-4 bg-white p-2 rounded-full shadow-lg"
           >
-            <Star size={30} color="gold" fill={isStarred ? "gold" : "none"} />
+            <Star size={30} color="gold" fill={isStarred ? "gold" : "white"} />
           </TouchableOpacity>
         </View>
 
