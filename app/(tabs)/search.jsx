@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity, Image } from "react-native";
+import { View, Text, TextInput, FlatList, TouchableOpacity } from "react-native";
 import { Search, Filter } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
+import ResultItem from "../../components/search/ResultItem";
 
 // Sample Degree Data
 const degreesData = [
@@ -49,7 +50,6 @@ const universitiesData = [
   },
 ];
 
-// Combined Data for Filtering
 const combinedData = [...degreesData, ...universitiesData];
 
 const SearchScreen = () => {
@@ -60,12 +60,10 @@ const SearchScreen = () => {
   const filters = ["All", "Degrees", "Universities"];
 
   // Filtering Logic
-  const filteredResults = combinedData.filter((item) => {
-    return (
-        (selectedFilter === "All" || item.tag === selectedFilter.toLowerCase()) &&
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  });
+  const filteredResults = combinedData.filter((item) =>
+      (selectedFilter === "All" || item.tag === selectedFilter.toLowerCase()) &&
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
       <SafeAreaView className="flex-1 bg-white px-4 pt-6">
@@ -90,10 +88,9 @@ const SearchScreen = () => {
                       selectedFilter === filter ? "border-text" : "border-smoke"
                   }`}
               >
-                <Text
-                    className={`text-sm font-semibold ${
-                        selectedFilter === filter ? "text-text" : "text-smoke"
-                    }`}
+                <Text className={`text-sm font-semibold ${
+                    selectedFilter === filter ? "text-text" : "text-smoke"
+                }`}
                 >
                   {filter}
                 </Text>
@@ -111,34 +108,17 @@ const SearchScreen = () => {
             data={filteredResults}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-                <TouchableOpacity
+                <ResultItem
+                    item={item}
                     onPress={() =>
                         navigation.navigate(
                             item.tag === "degree"
                                 ? "screens/degree/degree-detail"
-                                : "screens/university/university-detail", // Adjust as needed
+                                : "screens/university/university-detail",
                             { id: item.id }
                         )
                     }
-                >
-                  <View className="flex-row items-center mt-4 px-2 mb-2">
-                    <Image source={{ uri: item.image }} className="w-28 h-28 rounded-lg ml-2 mr-2" />
-                    <View className="flex-1 ml-4">
-                      <Text className="text-base font-semibold">
-                        {item.title}
-                        {item.isNew && <Text className="text-xs text-accent">  New</Text>}
-                      </Text>
-
-                      <View className="flex-row items-center mt-1">
-                        <Text className="text-gray-500 text-sm">{item.subtitle}</Text>
-                        <Image source={{ uri: item.icon }} className="w-5 h-5 ml-2" />
-                      </View>
-                      <Text className="text-gray-700 text-xs mt-1">{item.description}</Text>
-                    </View>
-                  </View>
-                  {/* Separator Line */}
-                  <View className="border-b border-gray-300 mt-4" />
-                </TouchableOpacity>
+                />
             )}
         />
       </SafeAreaView>
