@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity, FlatList } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ChevronLeft, Bookmark, Users, Eye, Star } from "lucide-react-native";
+import { ChevronLeft, Bookmark, Users } from "lucide-react-native";
 import CustomButton from "../../../components/CustomButton";
+import MostViewedCard from "../../../components/universityDetails/MostViewedCard"; // Import the new component
 
 // Sample university data
 const universitiesData = [
@@ -12,8 +13,7 @@ const universitiesData = [
         name: "University of Moratuwa",
         enrollments: 125000,
         image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-        description:
-            "The University of Moratuwa (UOM), the successor to the Institute of Practical Technology, Katubedda set up in 1960 and Ceylon College of Technology set up in 1966, commenced functioning as...",
+        description: "The University of Moratuwa is a leading technological university in Sri Lanka...",
         mostViewed: [
             { id: "D1", title: "Bachelor of Science in Engineering Honours", image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg", views: 578000, interested: 78000 },
             { id: "D2", title: "BSc (Hons) in Artificial Intelligence", image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg", views: 578000, interested: 78000 },
@@ -24,20 +24,19 @@ const universitiesData = [
         name: "University of Colombo",
         enrollments: 100000,
         image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-        description: "The University of Colombo is Sri Lanka’s oldest university, founded in 1921. It offers diverse disciplines across multiple faculties...",
+        description: "The University of Colombo is Sri Lanka’s oldest university, founded in 1921...",
         mostViewed: [
             { id: "D3", title: "BSc in Computer Science", image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg", views: 578000, interested: 78000 },
         ],
     },
 ];
 
-// Function to format numbers
 const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0", "") + "K" : num);
 
 const UniversityDetail = () => {
     const route = useRoute();
     const navigation = useNavigation();
-    const { id } = route.params; // Get university ID from params
+    const { id } = route.params;
     const university = universitiesData.find((u) => u.id === id);
 
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -52,13 +51,9 @@ const UniversityDetail = () => {
                     {/* Header Image */}
                     <View className="relative">
                         <Image source={{ uri: university.image }} className="w-full h-96 rounded-xl" />
-
-                        {/* Back Button */}
                         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-5 left-4 p-2">
                             <ChevronLeft size={28} color="white" />
                         </TouchableOpacity>
-
-                        {/* Bookmark Button */}
                         <TouchableOpacity
                             onPress={() => setIsBookmarked(!isBookmarked)}
                             className="absolute -bottom-3 right-4 bg-white p-2 rounded-full shadow-lg"
@@ -70,13 +65,12 @@ const UniversityDetail = () => {
                     {/* University Name & Enrollment */}
                     <View className="mt-4 flex-row justify-between items-center">
                         <Text className="text-2xl font-bold">{university.name}</Text>
-                        {/* Show Map Button */}
                         <TouchableOpacity>
                             <Text className="text-blue-600">Show map</Text>
                         </TouchableOpacity>
                     </View>
 
-                    {/* Enrollment Count with Icon */}
+                    {/* Enrollment Count */}
                     <View className="flex-row items-center mt-2">
                         <Users size={18} color="gray" />
                         <Text className="text-gray-500 text-sm ml-1">{formatNumber(university.enrollments)} enrollments</Text>
@@ -98,37 +92,18 @@ const UniversityDetail = () => {
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
-                            <TouchableOpacity
+                            <MostViewedCard
+                                item={item}
                                 onPress={() => navigation.navigate("screens/degree/degree-detail", { id: item.id })}
-                                className="flex-row items-center bg-gray-100 p-4 rounded-lg mr-4 mt-3 w-72"
-                            >
-                                {/* Image on the Left */}
-                                <Image source={{ uri: item.image }} className="w-20 h-20 rounded-md" />
-
-                                {/* Text & Stats on the Right */}
-                                <View className="ml-3 flex-1">
-                                    <Text className="text-sm font-semibold">{item.title}</Text>
-                                    <View className="flex-row items-center mt-1">
-                                        <Eye size={14} color="gray" />
-                                        <Text className="text-gray-500 text-xs ml-1">{formatNumber(item.views)}</Text>
-
-                                        {/* Add space between views and stars */}
-                                        <Text className="mx-3 text-gray-400">|</Text>
-
-                                        <Star size={12} color="gray" />
-                                        <Text className="ml-1 text-xs text-gray-500">{formatNumber(item.interested)}</Text>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
+                            />
                         )}
                     />
-
-                    
                 </ScrollView>
+
                 {/* View All Button */}
-                <View className="mt-6 absolute bottom-0 left-0 right-0 p-4 ">
-                        <CustomButton title="View all" onPress={() => alert("Viewing all most viewed!")} />
-                    </View>
+                <View className="mt-6 absolute bottom-0 left-0 right-0 p-4">
+                    <CustomButton title="View all" onPress={() => alert("Viewing all most viewed!")} />
+                </View>
             </View>
         </SafeAreaView>
     );
