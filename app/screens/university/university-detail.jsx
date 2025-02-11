@@ -99,7 +99,7 @@ const UniversityDetail = () => {
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
                             <TouchableOpacity
-                                onPress={() => navigation.navigate("screens/degree/degree-detail", { degreeId: item.id })}
+                                onPress={() => navigation.navigate("screens/degree/degree-detail", { id: item.id })}
                                 className="flex-row items-center bg-gray-100 p-4 rounded-lg mr-4 mt-3 w-72"
                             >
                                 {/* Image on the Left */}
