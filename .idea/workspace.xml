@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/consultationScreen/ConsultationCard.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/notification.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/notification.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/screens/consultation/consultation-screen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/consultation/consultation-screen.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -92,11 +92,22 @@
       <workItem from="1739293103344" duration="1072000" />
       <workItem from="1743493394710" duration="154000" />
       <workItem from="1743494261861" duration="1232000" />
-      <workItem from="1743504161041" duration="7308000" />
+      <workItem from="1743504161041" duration="15540000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

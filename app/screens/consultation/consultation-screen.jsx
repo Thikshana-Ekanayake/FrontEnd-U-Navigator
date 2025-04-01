@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
-import { Quote, BadgeCheck, ThumbsUp } from "lucide-react-native";
 import ConsultationCard from "../../../components/consultationScreen/ConsultationCard";
 
-const userId = "user123"; // Dummy user ID
+const userId = "user123";
 
 const consultationData = [
     // Within the last few hours
@@ -53,8 +52,6 @@ const consultationData = [
     },
 ];
 
-
-
 const consultationLikes = [
     { userId: "user123", postId: "1", liked: true, dateTime: "2025-03-31T12:00:00Z" },
     { userId: "user456", postId: "1", liked: true, dateTime: "2025-03-31T12:10:00Z" },
@@ -64,7 +61,6 @@ const consultationLikes = [
     { userId: "user789", postId: "3", liked: true, dateTime: "2025-03-31T12:50:00Z" },
     { userId: "user123", postId: "1", liked: true, dateTime: "2025-03-31T13:00:00Z" },
 ];
-
 
 // Like state
 const ConsultationScreen = () => {
@@ -124,8 +120,6 @@ const ConsultationScreen = () => {
         }
     };
 
-
-
     // Function to count likes per post
     const countLikes = (postId) => likes.filter((like) => like.postId === postId).length;
 
@@ -142,6 +136,7 @@ const ConsultationScreen = () => {
             <TouchableOpacity className="bg-gray-200 rounded-xl p-3 items-center mt-3">
                 <Text className="text-gray-600">Add Consultation</Text>
             </TouchableOpacity>
+
         </View>
     );
 };
