@@ -4,7 +4,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeft, Bookmark, Users } from "lucide-react-native";
 import CustomButton from "../../../components/CustomButton";
-import MostViewedCard from "../../../components/universityDetails/MostViewedCard"; // Import the new component
+import CustomSlidableCard from "../../../components/CustomSlidableCard"; // Import the new component
 
 // Sample university data
 const universitiesData = [
@@ -92,7 +92,7 @@ const UniversityDetail = () => {
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
-                            <MostViewedCard
+                            <CustomSlidableCard
                                 item={item}
                                 onPress={() => navigation.navigate("screens/degree/degree-detail", { id: item.id })}
                             />
