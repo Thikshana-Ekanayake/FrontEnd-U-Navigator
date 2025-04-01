@@ -127,7 +127,10 @@ const Notification = ({ navigation }) => {
                     ))}
                 </View>
 
-                <View className="h-16" /> {/* Bottom padding for better scroll */}
+                {/*<View className="h-16" /> /!* Bottom padding for better scroll *!/*/}
+                <View style={{ height: 16 }}>
+                    <Text> </Text>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
