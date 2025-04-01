@@ -3,7 +3,8 @@ import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeft, Eye, Star, Heart, MoreVertical } from "lucide-react-native";
-import CustomButton from "../../../components/CustomButton"; 
+import CustomButton from "../../../components/CustomButton";
+import ConsultationScreen from "../consultation/consultation-screen";
 
 const degreesData = [
   {
@@ -29,12 +30,14 @@ const DegreeDetail = () => {
   const degree = degreesData.find((d) => d.id === id);
   const [isStarred, setIsStarred] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState("Criteria");
+
 
   if (!degree) return <Text>Degree not found!</Text>;
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
+      <ScrollView contentContainerStyle={{ padding: 16 }} >
         {/* Image Header with Back & Star Icons */}
         <View className="relative">
           <Image source={{ uri: degree.image }} className="w-full h-96 rounded-xl" />
@@ -92,14 +95,29 @@ const DegreeDetail = () => {
           <Text className="text-blue-600">{expanded ? "Read less" : "Read more"}</Text>
         </TouchableOpacity>
 
-        {/* Criteria, Community, Consultation Buttons */}
+        {/* Tabs: Criteria, Community, Consultation */}
         <View className="flex-row justify-between mt-5">
           {["Criteria", "Community", "Consultation"].map((item, index) => (
-            <TouchableOpacity key={index} className="flex-1 mx-1 border border-smoke py-3 rounded-3xl items-center">
-              <Text className="text-smoke">{item}</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                  key={index}
+                  className={`flex-1 mx-1 border py-3 rounded-3xl items-center ${
+                      activeTab === item ? "border-text" : "border-smoke"
+                  }`}
+                  onPress={() => setActiveTab(item)}
+              >
+                <Text className={activeTab === item ? "text-text" : "text-smoke"}>{item}</Text>
+              </TouchableOpacity>
           ))}
         </View>
+
+        {/* Render respective content based on activeTab */}
+        <View className="mt-5">
+          {activeTab === "Criteria" && <Text>Criteria content goes here...</Text>}
+          {activeTab === "Community" && <Text>Community content goes here...</Text>}
+          {activeTab === "Consultation" && <ConsultationScreen/>}
+        </View>
+
+
       </ScrollView>
     </SafeAreaView>
   );
