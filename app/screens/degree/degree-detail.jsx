@@ -37,7 +37,7 @@ const DegreeDetail = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
+      <ScrollView contentContainerStyle={{ padding: 16 }} >
         {/* Image Header with Back & Star Icons */}
         <View className="relative">
           <Image source={{ uri: degree.image }} className="w-full h-96 rounded-xl" />
@@ -101,11 +101,11 @@ const DegreeDetail = () => {
               <TouchableOpacity
                   key={index}
                   className={`flex-1 mx-1 border py-3 rounded-3xl items-center ${
-                      activeTab === item ? "bg-blue-500" : "border-smoke"
+                      activeTab === item ? "border-text" : "border-smoke"
                   }`}
                   onPress={() => setActiveTab(item)}
               >
-                <Text className={activeTab === item ? "text-white" : "text-smoke"}>{item}</Text>
+                <Text className={activeTab === item ? "text-text" : "text-smoke"}>{item}</Text>
               </TouchableOpacity>
           ))}
         </View>
