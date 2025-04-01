@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import { Quote, BadgeCheck, ThumbsUp } from "lucide-react-native";
+import ConsultationCard from "../../../components/consultationScreen/ConsultationCard";
 
-const UserID = "user123"; // Dummy user ID
+const userId = "user123"; // Dummy user ID
 
 const consultationData = [
     // Within the last few hours
@@ -106,7 +107,7 @@ const ConsultationScreen = () => {
         const diffInHours = Math.floor(diffInMinutes / 60);
         const diffInDays = Math.floor(diffInHours / 24);
         const diffInYears = Math.floor(diffInDays / 365);
-        
+
 
         if (diffInMinutes < 1) {
             return "Just now"; // If less than a minute
@@ -133,52 +134,9 @@ const ConsultationScreen = () => {
             <FlatList
                 data={consultationData}
                 keyExtractor={(item) => item.id}
-                nestedScrollEnabled={true}
-                renderItem={({ item }) => {
-                    const isLiked = likes.some(
-                        (like) => like.postId === item.id && like.userId === UserID
-                    );
-
-                    return (
-                        <View className="bg-gray-100 rounded-xl p-4 mb-4">
-                            <Quote size={20} color="gray" />
-                            <Text className="text-gray-700 mt-2">{item.message}</Text>
-
-                            <View className="flex-row items-start mt-3">
-                                <Image
-                                    source={{ uri: item.image }}
-                                    className="w-12 h-12 rounded-full mr-3"
-                                />
-                                <View className="flex-1">
-                                    <View className="flex-row items-center">
-                                        <Text className="font-semibold text-black">
-                                            {item.name}{" "}
-                                        </Text>
-                                        <BadgeCheck size={16} color="blue" />
-                                    </View>
-                                    <Text className="text-xs text-gray-500 flex-wrap">
-                                        {item.role}
-                                    </Text>
-                                </View>
-                            </View>
-
-                            <View className="flex-row justify-between items-center mt-3">
-                                <Text className="text-gray-400">{formatTimeDifference(item.time)}</Text>
-                                <TouchableOpacity
-                                    className="flex-row items-center"
-                                    onPress={() => toggleLike(item.id)}
-                                >
-                                    <ThumbsUp
-                                        size={16}
-                                        color={isLiked ? "gray" : "lightgray"}
-                                        className="mr-1"
-                                    />
-                                    <Text className="text-gray-500">{countLikes(item.id)}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    );
-                }}
+                renderItem={({ item }) => (
+                    <ConsultationCard item={item} likes={likes} toggleLike={toggleLike} userId={userId} />
+                )}
             />
 
             <TouchableOpacity className="bg-gray-200 rounded-xl p-3 items-center mt-3">
