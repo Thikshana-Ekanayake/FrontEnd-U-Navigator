@@ -3,9 +3,34 @@ import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InterestedDegrees from "./interestTab/InterestedDegrees";
 import ActivityTab from "./activityTab/ActivityTab";
+import AboutTab from "./aboutTab/AboutTab";
 
 const StudentProfile = ({profile}) => {
     const [activeTab, setActiveTab] = useState("Interested");
+
+    const aboutData = {
+        stream: "Physical Science",
+        subjects: [
+            { subject: "Combined Mathematics", grade: "A" },
+            { subject: "Chemistry", grade: "A" },
+            { subject: "Physics", grade: "A" },
+            { subject: "General Test", grade: "180" }, // Numeric result
+            { subject: "English", grade: "A" },
+        ],
+        zScore: "2.465",
+        olResults: [
+            { subject: "English", grade: "A" },
+            { subject: "Science", grade: "A" },
+            { subject: "Mathematics", grade: "A" },
+            { subject: "Sinhala", grade: "A" },
+            { subject: "Buddhism", grade: "A" },
+            { subject: "History", grade: "A" },
+            { subject: "English Literature", grade: "B" },
+            { subject: "Commerce", grade: "A" },
+            { subject: "ICT", grade: "A" },
+        ],
+    };
+
 
     // Define the data here and pass it down
     const interestedDegreesData = [
@@ -135,7 +160,7 @@ const StudentProfile = ({profile}) => {
 
                         {/* Tab Content */}
                         <View className="mt-5 px-4 mb-4">
-                            {activeTab === "About" && <Text>About content goes here...</Text>}
+                            {activeTab === "About" && <AboutTab aboutData={aboutData} />}
                             {activeTab === "Activity" && <ActivityTab activities={activitiesData} />}
                         </View>
                     </>
