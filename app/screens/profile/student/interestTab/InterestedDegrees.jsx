@@ -6,6 +6,7 @@ const InterestedDegrees = ({ data }) => {
     return (
         <FlatList
             data={data}
+            nestedScrollEnabled={true}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => <ResultItem item={item} />}
         />

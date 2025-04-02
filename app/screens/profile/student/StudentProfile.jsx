@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import InterestedDegrees from "./interestTab/InterestedDegrees";
+import ActivityTab from "./activityTab/ActivityTab";
 
 const StudentProfile = () => {
     const [activeTab, setActiveTab] = useState("Interested");
@@ -29,54 +30,116 @@ const StudentProfile = () => {
         },
     ];
 
+    const activitiesData = [
+        {
+            id: "A1",
+            type: "question",
+            userImage: "https://randomuser.me/api/portraits/men/1.jpg",
+            userName: "Iruka Pathirana",
+            userRole: "School Student",
+            text: "How does machine learning improve healthcare?",
+            timestamp: new Date().toISOString(),
+            answers: [
+                {
+                    user: "Thikshana Ekanayake",
+                    text: "Machine learning helps in early diagnosis and personalized treatment.",
+                    timestamp: new Date().toISOString(),
+                },
+            ],
+            replierName: "Thikshana Ekanayake",
+            timeAgo: "3 minutes ago",
+        },
+        {
+            id: "A2",
+            type: "post",
+            userImage: "https://randomuser.me/api/portraits/men/2.jpg",
+            userName: "Iruka Pathirana",
+            userRole: "School Student",
+            text: "Just completed my project on AI! It was a challenging but rewarding journey. 🚀",
+            likes: 12,
+            comments: 3,
+            images: ["https://uom.lk/sites/default/files/civil/images/civil1_0.jpg"],
+            posterName: "Iruka Pathirana",
+            timeAgo: "1 hour ago",
+        },
+        {
+            id: "A3",
+            type: "question",
+            userImage: "https://randomuser.me/api/portraits/women/3.jpg",
+            userName: "Nimali Silva",
+            userRole: "University Student",
+            text: "What are the best resources to learn React Native?",
+            timestamp: new Date().toISOString(),
+            answers: [
+                {
+                    user: "Thikshana Ekanayake",
+                    text: "Start with the official React Native docs and YouTube tutorials like Academind.",
+                    timestamp: new Date().toISOString(),
+                },
+            ],
+            replierName: "Thikshana Ekanayake",
+            timeAgo: "10 minutes ago",
+        },
+        {
+            id: "A4",
+            type: "post",
+            userImage: "https://randomuser.me/api/portraits/women/4.jpg",
+            userName: "Nimali Silva",
+            userRole: "University Student",
+            text: "Excited to share my new blog on UX/UI design trends in 2025!",
+            likes: 25,
+            comments: 5,
+            images: ["https://cdn.pixabay.com/photo/2015/01/09/11/09/startup-594090_1280.jpg"],
+            posterName: "Nimali Silva",
+            timeAgo: "2 hours ago",
+        },
+    ];
+
     return (
         <SafeAreaView className="flex-1 bg-white">
-            {/* Header Section */}
-            <View className="items-center bg-gray-200 pb-10">
-                <Image
-                    source={{ uri: "https://img.freepik.com/free-photo/top-view-eyeglasses-with-case_23-2148290434.jpg" }}
-                    className="w-full h-40"
-                    resizeMode="cover"
-                />
-                <View className="absolute -bottom-8">
-                    <Image
-                        source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }}
-                        className="w-32 h-32 rounded-full border-4 border-white"
-                    />
-                </View>
-            </View>
-
-            {/* User Info */}
-            <View className="items-center mt-10">
-                <Text className="text-lg font-semibold">Iruka Pathirana</Text>
-                <Text className="text-gray-500 text-sm">
-                    School Student | Physical Science Stream
-                </Text>
-            </View>
-
-            {/* Tabs Section */}
-            <View className="flex-row justify-between mt-5 px-4">
-                {["About", "Activity", "Interested"].map((item, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        className={`flex-1 mx-1 border py-3 rounded-3xl items-center ${
-                            activeTab === item ? "border-text" : "border-gray-300"
-                        }`}
-                        onPress={() => setActiveTab(item)}
-                    >
-                        <Text className={activeTab === item ? "text-text font-bold" : "text-gray-500"}>
-                            {item}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
-            </View>
-
-            {/* Content Section Based on Active Tab */}
-            <View className="mt-5 px-4">
-                {activeTab === "About" && <Text>About content goes here...</Text>}
-                {activeTab === "Activity" && <Text>Activity content goes here...</Text>}
-                {activeTab === "Interested" && <InterestedDegrees data={interestedDegreesData} />}
-            </View>
+            <FlatList
+                data={activeTab === "Interested" ? interestedDegreesData : []}
+                keyExtractor={(item) => item.id}
+                ListHeaderComponent={
+                    <>
+                        <View className="items-center bg-gray-200 h-40">
+                            <Image
+                                source={{ uri: "https://img.freepik.com/free-photo/top-view-eyeglasses-with-case_23-2148290434.jpg" }}
+                                className="w-full h-full"
+                                resizeMode="cover"
+                            />
+                        </View>
+                        <View className="items-center mt-4">
+                            <Image
+                                source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }}
+                                className="w-32 h-32 rounded-full border-4 border-white -mt-16"
+                            />
+                            <Text className="text-lg font-semibold mt-2">Iruka Pathirana</Text>
+                            <Text className="text-gray-500 text-sm">School Student | Physical Science Stream</Text>
+                        </View>
+                        <View className="flex-row justify-between mt-5 px-4">
+                            {["About", "Activity", "Interested"].map((item, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    className={`flex-1 mx-1 border py-3 rounded-3xl items-center ${
+                                        activeTab === item ? "border-text" : "border-gray-300"
+                                    }`}
+                                    onPress={() => setActiveTab(item)}
+                                >
+                                    <Text className={activeTab === item ? "text-text font-bold" : "text-gray-500"}>
+                                        {item}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                        <View className="mt-5 px-4 mb-4">
+                            {activeTab === "About" && <Text>About content goes here...</Text>}
+                            {activeTab === "Activity" && <ActivityTab activities={activitiesData} />}
+                        </View>
+                    </>
+                }
+                renderItem={({ item }) => <InterestedDegrees data={[item]} />}
+            />
         </SafeAreaView>
     );
 };
