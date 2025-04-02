@@ -9,15 +9,15 @@ const QACard = ({ question }) => {
         <View className="bg-white p-4 rounded-xl mt-2 border-b-[0.5px] border-smoke">
             {/* User Info */}
             <View className="flex-row items-center mb-3">
-                <Image source={{ uri: question.userImage }} className="w-12 h-12 rounded-full mr-3" />
+                <Image source={{ uri: question.userImage }} className="w-10 h-10 rounded-full mr-3" />
                 <View>
-                    <Text className="font-semibold text-lg">{question.userName}</Text>
+                    <Text className=" text-md font-bold">{question.userName}</Text>
                     <Text className="text-gray-500 text-xs">{question.userRole}</Text>
                 </View>
             </View>
 
             {/* Question Text */}
-            <Text className="text-base text-gray-800 mb-3">{question.text}</Text>
+            <Text className="text-sm text-gray-700 mb-2">{question.text}</Text>
             <Text className="text-gray-400 text-xs">{formatTime(question.timestamp)}</Text>
 
             {/* Answer Section */}
