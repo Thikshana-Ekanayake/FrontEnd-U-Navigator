@@ -8,6 +8,28 @@ const StudentProfile = ({profile}) => {
     const [activeTab, setActiveTab] = useState("Interested");
 
     // Define the data here and pass it down
+    const interestedDegreesData = [
+        {
+            id: "D1",
+            title: "Bachelor of Science Honours in Artificial Intelligence",
+            subtitle: "University of Moratuwa",
+            icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
+            image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            tag: "degree",
+            isNew: true,
+        },
+        {
+            id: "D2",
+            title: "Bachelor of Law",
+            subtitle: "University of Colombo",
+            icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
+            image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            tag: "degree",
+        },
+    ];
+
     const activitiesData = [
         {
             id: "A1",
