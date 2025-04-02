@@ -1,28 +1,12 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Quote, BadgeCheck, ThumbsUp } from "lucide-react-native";
+import {formatTime} from "../../utils/formatTimeUtils.js";
 
 const ConsultationCard = ({ item, likes, toggleLike, userId }) => {
     const isLiked = likes.some(
         (like) => like.postId === item.id && like.userId === userId
     );
-
-    const formatTimeDifference = (timestamp) => {
-        const now = new Date();
-        const postDate = new Date(timestamp);
-        const diffInMs = now.getTime() - postDate.getTime();
-        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        const diffInDays = Math.floor(diffInHours / 24);
-        const diffInYears = Math.floor(diffInDays / 365);
-
-        if (diffInMinutes < 1) return "Just now";
-        if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-        if (diffInHours < 24) return `${diffInHours}h ago`;
-        if (diffInDays < 7) return `${diffInDays}d ago`;
-        if (diffInYears < 1) return postDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-        return `${diffInYears}y ago`;
-    };
 
     const countLikes = (postId) => likes.filter((like) => like.postId === postId).length;
 
@@ -46,7 +30,7 @@ const ConsultationCard = ({ item, likes, toggleLike, userId }) => {
             </View>
 
             <View className="flex-row justify-between items-center mt-3">
-                <Text className="text-gray-400">{formatTimeDifference(item.time)}</Text>
+                <Text className="text-gray-400">{formatTime(item.time)}</Text>
                 <TouchableOpacity className="flex-row items-center" onPress={() => toggleLike(item.id)}>
                     <ThumbsUp size={16} color={isLiked ? "gray" : "lightgray"} className="mr-1" />
                     <Text className="text-gray-500">{countLikes(item.id)}</Text>

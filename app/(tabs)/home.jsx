@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import PostCard from "../../components/community/PostCard";
 import CustomSlidableCard from "../../components/CustomSlidableCard";
 import PostCreationHead from "../../components/community/PostCreationHead";
+import QACard from "../../components/community/QACard";
 
 const posts = [
     {
@@ -35,6 +36,35 @@ const recommendations = [
     { id: "D1", title: "Bachelor of Science in Engineering Honours", image: "https://www.uominnovationfactory.com/wp-content/uploads/2023/05/UOM-Campus-scaled.jpg", views: 36000, interested: 5000 },
     { id: "D2", title: "BSc (Hons) in Artificial Intelligence", image: "https://www.uominnovationfactory.com/wp-content/uploads/2023/05/UOM-Campus-scaled.jpg", views: 45000, interested: 6500 },
 ];
+
+const questions = [
+    {
+        id: "Q1",
+        userName: "Iruka Pathirana",
+        userRole: "School Student",
+        userImage: "https://randomuser.me/api/portraits/women/2.jpg",
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+        timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000, // 3 days ago
+        answers: [
+            {
+                user: "Thikshana Ekanayake",
+                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+                timestamp: Date.now() - 1 * 24 * 60 * 60 * 1000, // 1 day ago
+            },
+            {
+                user: "Thikshana Ekanayake",
+                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+                timestamp: Date.now() - 10 * 24 * 60 * 60 * 1000, // 10 days ago
+            },
+            {
+                user: "Thikshana Ekanayake",
+                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
+                timestamp: Date.now() - 45 * 24 * 60 * 60 * 1000, // 1.5 months ago
+            },
+        ],
+    },
+];
+
 
 const Home = () => {
     return (
@@ -74,6 +104,11 @@ const Home = () => {
                         {/* Render the remaining posts */}
                         {posts.slice(1).map((post) => (
                             <PostCard key={post.id} post={post} />
+                        ))}
+
+                        {/* Q&A Card Section */}
+                        {questions.map((question) => (
+                            <QACard key={question.id} question={question} />
                         ))}
                     </>
                 )}

@@ -93,33 +93,6 @@ const ConsultationScreen = () => {
         });
     };
 
-    const formatTimeDifference = (timestamp) => {
-        const now = new Date();
-        const postDate = new Date(timestamp);
-
-        // Ensure we are using the same time zone reference
-        const diffInMs = now.getTime() - postDate.getTime();
-        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        const diffInDays = Math.floor(diffInHours / 24);
-        const diffInYears = Math.floor(diffInDays / 365);
-
-
-        if (diffInMinutes < 1) {
-            return "Just now"; // If less than a minute
-        } else if (diffInMinutes < 60) {
-            return `${diffInMinutes}m ago`; // If less than an hour
-        } else if (diffInHours < 24) {
-            return `${diffInHours}h ago`; // If within the last day
-        } else if (diffInDays < 7) {
-            return `${diffInDays}d ago`; // If within the last week
-        } else if (diffInYears < 1) {
-            return postDate.toLocaleDateString("en-US", { month: "short", day: "numeric" }); // Month and day
-        } else {
-            return `${diffInYears}y ago`; // If more than a year
-        }
-    };
-
     // Function to count likes per post
     const countLikes = (postId) => likes.filter((like) => like.postId === postId).length;
 
@@ -131,6 +104,7 @@ const ConsultationScreen = () => {
                 renderItem={({ item }) => (
                     <ConsultationCard item={item} likes={likes} toggleLike={toggleLike} userId={userId} />
                 )}
+                nestedScrollEnabled
             />
 
             <TouchableOpacity className="bg-gray-200 rounded-xl p-3 items-center mt-3">
