@@ -2,14 +2,17 @@ import React from "react";
 import { View, FlatList, Text } from "react-native";
 import QACard from "../../../../../components/community/QACard";
 import PostCard from "../../../../../components/community/PostCard";
+import {formatTime} from "../../../../../utils/formatTimeUtils.js";
 
 const ActivityTab = ({ activities }) => {
     const renderActivityItem = ({ item }) => {
+        const timeAgo = formatTime(item.timestamp); // Use formatTime function
+
         if (item.type === "question") {
             return (
                 <View className="mb-4">
                     <Text className="text-gray-500 text-xs mb-1">
-                        {item.replierName} replied to your Question {item.timeAgo}
+                        {item.replierName} replied to your Question {timeAgo}
                     </Text>
                     <QACard question={item} />
                 </View>
@@ -18,7 +21,7 @@ const ActivityTab = ({ activities }) => {
             return (
                 <View className="mb-4">
                     <Text className="text-gray-500 text-xs mb-1">
-                        {item.posterName} posted an update {item.timeAgo}
+                        {item.posterName} posted an update {timeAgo}
                     </Text>
                     <PostCard post={item} />
                 </View>

@@ -4,32 +4,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import InterestedDegrees from "./interestTab/InterestedDegrees";
 import ActivityTab from "./activityTab/ActivityTab";
 
-const StudentProfile = () => {
+const StudentProfile = ({profile}) => {
     const [activeTab, setActiveTab] = useState("Interested");
 
     // Define the data here and pass it down
-    const interestedDegreesData = [
-        {
-            id: "D1",
-            title: "Bachelor of Science Honours in Artificial Intelligence",
-            subtitle: "University of Moratuwa",
-            icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
-            image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            tag: "degree",
-            isNew: true,
-        },
-        {
-            id: "D2",
-            title: "Bachelor of Law",
-            subtitle: "University of Colombo",
-            icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
-            image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            tag: "degree",
-        },
-    ];
-
     const activitiesData = [
         {
             id: "A1",
@@ -38,16 +16,15 @@ const StudentProfile = () => {
             userName: "Iruka Pathirana",
             userRole: "School Student",
             text: "How does machine learning improve healthcare?",
-            timestamp: new Date().toISOString(),
+            timestamp: new Date("2025-03-31T10:00:00Z").toISOString(),
             answers: [
                 {
                     user: "Thikshana Ekanayake",
                     text: "Machine learning helps in early diagnosis and personalized treatment.",
-                    timestamp: new Date().toISOString(),
+                    timestamp: new Date("2025-03-31T10:15:00Z").toISOString(),
                 },
             ],
             replierName: "Thikshana Ekanayake",
-            timeAgo: "3 minutes ago",
         },
         {
             id: "A2",
@@ -60,7 +37,7 @@ const StudentProfile = () => {
             comments: 3,
             images: ["https://uom.lk/sites/default/files/civil/images/civil1_0.jpg"],
             posterName: "Iruka Pathirana",
-            timeAgo: "1 hour ago",
+            timestamp: new Date("2025-03-30T15:30:00Z").toISOString(),
         },
         {
             id: "A3",
@@ -69,16 +46,15 @@ const StudentProfile = () => {
             userName: "Nimali Silva",
             userRole: "University Student",
             text: "What are the best resources to learn React Native?",
-            timestamp: new Date().toISOString(),
+            timestamp: new Date("2025-04-01T09:00:00Z").toISOString(),
             answers: [
                 {
                     user: "Thikshana Ekanayake",
                     text: "Start with the official React Native docs and YouTube tutorials like Academind.",
-                    timestamp: new Date().toISOString(),
+                    timestamp: new Date("2025-04-01T09:20:00Z").toISOString(),
                 },
             ],
             replierName: "Thikshana Ekanayake",
-            timeAgo: "10 minutes ago",
         },
         {
             id: "A4",
@@ -91,9 +67,10 @@ const StudentProfile = () => {
             comments: 5,
             images: ["https://cdn.pixabay.com/photo/2015/01/09/11/09/startup-594090_1280.jpg"],
             posterName: "Nimali Silva",
-            timeAgo: "2 hours ago",
+            timestamp: new Date("2025-03-29T08:45:00Z").toISOString(),
         },
     ];
+
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -102,21 +79,22 @@ const StudentProfile = () => {
                 keyExtractor={(item) => item.id}
                 ListHeaderComponent={
                     <>
+                        {/* Cover Image */}
                         <View className="items-center bg-gray-200 h-40">
-                            <Image
-                                source={{ uri: "https://img.freepik.com/free-photo/top-view-eyeglasses-with-case_23-2148290434.jpg" }}
-                                className="w-full h-full"
-                                resizeMode="cover"
-                            />
+                            <Image source={{ uri: profile.coverImage }} className="w-full h-full" resizeMode="cover" />
                         </View>
+
+                        {/* Profile Details */}
                         <View className="items-center mt-4">
                             <Image
-                                source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }}
+                                source={{ uri: profile.profileImage }}
                                 className="w-32 h-32 rounded-full border-4 border-white -mt-16"
                             />
-                            <Text className="text-lg font-semibold mt-2">Iruka Pathirana</Text>
-                            <Text className="text-gray-500 text-sm">School Student | Physical Science Stream</Text>
+                            <Text className="text-lg font-semibold mt-2">{profile.name}</Text>
+                            <Text className="text-gray-500 text-sm">{profile.role}</Text>
                         </View>
+
+                        {/* Tab Navigation */}
                         <View className="flex-row justify-between mt-5 px-4">
                             {["About", "Activity", "Interested"].map((item, index) => (
                                 <TouchableOpacity
@@ -132,6 +110,8 @@ const StudentProfile = () => {
                                 </TouchableOpacity>
                             ))}
                         </View>
+
+                        {/* Tab Content */}
                         <View className="mt-5 px-4 mb-4">
                             {activeTab === "About" && <Text>About content goes here...</Text>}
                             {activeTab === "Activity" && <ActivityTab activities={activitiesData} />}
