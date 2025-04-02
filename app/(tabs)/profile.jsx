@@ -1,12 +1,8 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import React from "react";
+import StudentProfile from "../screens/profile/student/StudentProfile";
 
 const Profile = () => {
-  return (
-    <View>
-      <Text>Profile</Text>
-    </View>
-  )
-}
+    return <StudentProfile />;
+};
 
-export default Profile
+export default Profile;

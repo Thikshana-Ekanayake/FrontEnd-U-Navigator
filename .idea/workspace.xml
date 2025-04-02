@@ -5,10 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/screens/community/community-screen.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/screens/profile/student/StudentProfile.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/screens/profile/student/interestTab/InterestedDegrees.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/screens/degree/degree-detail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/degree/degree-detail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/consultationScreen/ConsultationCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/consultationScreen/ConsultationCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/profile.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +99,7 @@
       <workItem from="1743493394710" duration="154000" />
       <workItem from="1743494261861" duration="1232000" />
       <workItem from="1743504161041" duration="15628000" />
-      <workItem from="1743535645343" duration="15098000" />
+      <workItem from="1743535645343" duration="18039000" />
     </task>
     <servers />
   </component>
