@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeft, Eye, Star, Heart, MoreVertical } from "lucide-react-native";
 import CustomButton from "../../../components/CustomButton";
 import ConsultationScreen from "../consultation/consultation-screen";
+import CommunitySection from "../community/community-screen";
 
 const degreesData = [
   {
@@ -87,7 +88,7 @@ const DegreeDetail = () => {
                     {expanded ? degree.description : degree.description.substring(0, 120) + "..."}
                   </Text>
                   <TouchableOpacity className="mt-2" onPress={() => setExpanded(!expanded)}>
-                    <Text className="text-blue-600">{expanded ? "Read less" : "Read more"}</Text>
+                    <Text className="text-smoke text-sm font-bold">{expanded ? "Read less" : "Read more"}</Text>
                   </TouchableOpacity>
 
                   {/* Tabs */}
@@ -108,7 +109,9 @@ const DegreeDetail = () => {
                   {/* Render respective content based on activeTab */}
                   <View className="mt-5">
                     {activeTab === "Criteria" && <Text>Criteria content goes here...</Text>}
-                    {activeTab === "Community" && <Text>Community content goes here...</Text>}
+                    {/*{activeTab === "Community" && <Text>Community content goes here...</Text>}*/}
+                    {activeTab === "Community" && <CommunitySection degreeId={id} />}
+
                     {activeTab === "Consultation" && <ConsultationScreen />}
                   </View>
                 </View>
