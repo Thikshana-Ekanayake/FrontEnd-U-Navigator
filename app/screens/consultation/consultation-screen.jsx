@@ -104,7 +104,8 @@ const ConsultationScreen = () => {
                 renderItem={({ item }) => (
                     <ConsultationCard item={item} likes={likes} toggleLike={toggleLike} userId={userId} />
                 )}
-                nestedScrollEnabled
+                // showsHorizontalScrollIndicator={false}
+                // scrollEnabled={false}
             />
 
             <TouchableOpacity className="bg-gray-200 rounded-xl p-3 items-center mt-3">
