@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/screens/profile/consultant/activityTab/ActivityTab.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/screens/criteria/criteria-screen.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/screens/profile/consultant/ConsultantProfile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/profile/consultant/ConsultantProfile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/screens/degree/degree-detail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/degree/degree-detail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CustomDropdown.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CustomDropdown.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +40,9 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2stlfBA5cL8H8WZwSsENtoDDTDS" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -100,7 +104,8 @@
       <workItem from="1743504161041" duration="15628000" />
       <workItem from="1743535645343" duration="19194000" />
       <workItem from="1743603184513" duration="1164000" />
-      <workItem from="1743604657469" duration="10677000" />
+      <workItem from="1743604657469" duration="10736000" />
+      <workItem from="1743652094695" duration="2556000" />
     </task>
     <servers />
   </component>

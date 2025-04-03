@@ -6,6 +6,7 @@ import { ChevronLeft, Eye, Star, Heart, MoreVertical } from "lucide-react-native
 import CustomButton from "../../../components/CustomButton";
 import ConsultationScreen from "../consultation/consultation-screen";
 import CommunitySection from "../community/community-screen";
+import CriteriaScreen from "../criteria/criteria-screen";
 
 const degreesData = [
   {
@@ -108,8 +109,9 @@ const DegreeDetail = () => {
 
                   {/* Render respective content based on activeTab */}
                   <View className="mt-5">
-                    {activeTab === "Criteria" && <Text>Criteria content goes here...</Text>}
-                    {/*{activeTab === "Community" && <Text>Community content goes here...</Text>}*/}
+                      {activeTab === "Criteria" && <CriteriaScreen />}
+
+                      {/*{activeTab === "Community" && <Text>Community content goes here...</Text>}*/}
                     {activeTab === "Community" && <CommunitySection degreeId={id} />}
 
                     {activeTab === "Consultation" && <ConsultationScreen />}
