@@ -25,7 +25,7 @@ const Profile = () => {
 
     ];
 
-    const profile = profiles[0];
+    const profile = profiles[1];
 
     return profile.type === "student" ? (
         <StudentProfile profile={profile} />
