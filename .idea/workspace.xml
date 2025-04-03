@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/consultationScreen/ConsultationCard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/screens/consultation/consultation-screen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/consultation/consultation-screen.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/profile.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +37,9 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="2stlfBA5cL8H8WZwSsENtoDDTDS" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -50,14 +51,14 @@
     &quot;git-widget-placeholder&quot;: &quot;Dev-#1&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Tun Tun/U Navigator/FrontEnd-U-Navigator/app/index.jsx&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/TunTun/FrontEnd-U-Navigator/components&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\Tun Tun\\U Navigator\\FrontEnd-U-Navigator\\node_modules\\typescript\\lib&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\TunTun\\FrontEnd-U-Navigator\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -69,6 +70,11 @@
         <entry key="com.intellij.reactbuddy.storybook" value="false" />
       </map>
     </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\TunTun\FrontEnd-U-Navigator\components" />
+    </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -92,11 +98,26 @@
       <workItem from="1739293103344" duration="1072000" />
       <workItem from="1743493394710" duration="154000" />
       <workItem from="1743494261861" duration="1232000" />
-      <workItem from="1743504161041" duration="7308000" />
+      <workItem from="1743504161041" duration="15628000" />
+      <workItem from="1743535645343" duration="19194000" />
+      <workItem from="1743603184513" duration="1164000" />
+      <workItem from="1743604657469" duration="10736000" />
+      <workItem from="1743652094695" duration="2991000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

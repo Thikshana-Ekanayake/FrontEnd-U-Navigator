@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
-import { Quote, BadgeCheck, ThumbsUp } from "lucide-react-native";
 import ConsultationCard from "../../../components/consultationScreen/ConsultationCard";
 
-const userId = "user123"; // Dummy user ID
+const userId = "user123";
 
 const consultationData = [
     // Within the last few hours
@@ -53,8 +52,6 @@ const consultationData = [
     },
 ];
 
-
-
 const consultationLikes = [
     { userId: "user123", postId: "1", liked: true, dateTime: "2025-03-31T12:00:00Z" },
     { userId: "user456", postId: "1", liked: true, dateTime: "2025-03-31T12:10:00Z" },
@@ -64,7 +61,6 @@ const consultationLikes = [
     { userId: "user789", postId: "3", liked: true, dateTime: "2025-03-31T12:50:00Z" },
     { userId: "user123", postId: "1", liked: true, dateTime: "2025-03-31T13:00:00Z" },
 ];
-
 
 // Like state
 const ConsultationScreen = () => {
@@ -97,35 +93,6 @@ const ConsultationScreen = () => {
         });
     };
 
-    const formatTimeDifference = (timestamp) => {
-        const now = new Date();
-        const postDate = new Date(timestamp);
-
-        // Ensure we are using the same time zone reference
-        const diffInMs = now.getTime() - postDate.getTime();
-        const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
-        const diffInHours = Math.floor(diffInMinutes / 60);
-        const diffInDays = Math.floor(diffInHours / 24);
-        const diffInYears = Math.floor(diffInDays / 365);
-
-
-        if (diffInMinutes < 1) {
-            return "Just now"; // If less than a minute
-        } else if (diffInMinutes < 60) {
-            return `${diffInMinutes}m ago`; // If less than an hour
-        } else if (diffInHours < 24) {
-            return `${diffInHours}h ago`; // If within the last day
-        } else if (diffInDays < 7) {
-            return `${diffInDays}d ago`; // If within the last week
-        } else if (diffInYears < 1) {
-            return postDate.toLocaleDateString("en-US", { month: "short", day: "numeric" }); // Month and day
-        } else {
-            return `${diffInYears}y ago`; // If more than a year
-        }
-    };
-
-
-
     // Function to count likes per post
     const countLikes = (postId) => likes.filter((like) => like.postId === postId).length;
 
@@ -137,11 +104,14 @@ const ConsultationScreen = () => {
                 renderItem={({ item }) => (
                     <ConsultationCard item={item} likes={likes} toggleLike={toggleLike} userId={userId} />
                 )}
+                // showsHorizontalScrollIndicator={false}
+                // scrollEnabled={false}
             />
 
             <TouchableOpacity className="bg-gray-200 rounded-xl p-3 items-center mt-3">
                 <Text className="text-gray-600">Add Consultation</Text>
             </TouchableOpacity>
+
         </View>
     );
 };
