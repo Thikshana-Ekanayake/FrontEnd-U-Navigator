@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/screens/postCreate/post-create-screen.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/TagActionButton.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/_layout.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/community/PostCreationHead.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/community/PostCreationHead.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/screens/postCreate/post-create-screen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/postCreate/post-create-screen.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +105,7 @@
       <workItem from="1743603184513" duration="1164000" />
       <workItem from="1743604657469" duration="10736000" />
       <workItem from="1743652094695" duration="2991000" />
-      <workItem from="1743923648447" duration="4041000" />
+      <workItem from="1743923648447" duration="7781000" />
     </task>
     <servers />
   </component>

@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Switch, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ChevronLeft } from "lucide-react-native";
+import {ChevronLeft, MoreVertical} from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
+import { CircleHelp, MessageSquare, Image as ImageIcon,UserPlus, MapPin, ChevronRight } from "lucide-react-native";
+import TagActionButton from "../../../components/TagActionButton";
+import CustomButton from "../../../components/CustomButton";
 
 const PostCreateScreen = () => {
     const navigation = useNavigation();
     const [caption, setCaption] = useState("");
     const [aiLabel, setAiLabel] = useState(false);
+
+    const locationTags = ["Colombo, Sri Lanka", "Sri Lanka", "Paradise Road"];
+
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -22,54 +28,60 @@ const PostCreateScreen = () => {
 
                 {/* Caption Input */}
                 <TextInput
-                    className="border border-gray-300 rounded-lg px-4 py-2 mb-4"
+                    className=" py-2 mb-4"
                     placeholder="Add a caption..."
                     multiline
                     value={caption}
                     onChangeText={setCaption}
                 />
 
-                {/* Buttons */}
+                {/* Tag Action Buttons */}
                 <View className="flex-row space-x-3 mb-4">
-                    <TouchableOpacity className="bg-gray-200 px-4 py-2 rounded-full">
-                        <Text className="text-black">Poll</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="bg-gray-200 px-4 py-2 rounded-full">
-                        <Text className="text-black">Prompt</Text>
-                    </TouchableOpacity>
+                    <TagActionButton icon={ImageIcon} label="Image" />
+                    <TagActionButton icon={MessageSquare} label="Discuss" />
+                    <TagActionButton icon={CircleHelp} label="Ask" />
                 </View>
 
                 {/* Options */}
                 <TouchableOpacity className="flex-row justify-between items-center py-4 border-b border-gray-200">
-                    <Text className="text-base">Tag people</Text>
+                    <View className="flex-row items-center">
+                        <UserPlus size={18} color="black" className="mr-3" />
+                        <Text className="text-base ml-2">Tag people</Text>
+                    </View>
+                    <ChevronRight size={18} color="gray" />
                 </TouchableOpacity>
 
                 <TouchableOpacity className="flex-row justify-between items-center py-4 border-b border-gray-200">
-                    <Text className="text-base">Add location</Text>
+                    <View className="flex-row items-center">
+                        <MapPin size={18} color="black" className="mr-3" />
+                        <Text className="text-base ml-2">Add location</Text>
+                    </View>
+                    <ChevronRight size={18} color="gray" />
                 </TouchableOpacity>
 
-                <View className="flex-row flex-wrap gap-2 mt-2 mb-4">
-                    <Text className="bg-gray-100 px-3 py-1 rounded-full text-sm">Colombo, Sri Lanka</Text>
-                    <Text className="bg-gray-100 px-3 py-1 rounded-full text-sm">Sri Lanka</Text>
-                    <Text className="bg-gray-100 px-3 py-1 rounded-full text-sm">Paradise Road</Text>
+
+                <View className="flex-row flex-wrap gap-2 mt-2 mb-4 pt-2">
+                    {locationTags.map((tag, index) => (
+                        <Text
+                            key={index}
+                            className="bg-gray-100 px-3 py-1 rounded-lg text-sm"
+                        >
+                            {tag}
+                        </Text>
+                    ))}
                 </View>
 
-                {/* AI Label Toggle */}
+
+                {/* Notify Toggle */}
                 <View className="flex-row justify-between items-center py-4 border-b border-gray-200">
                     <View>
-                        <Text className="text-base">Add AI label</Text>
-                        <Text className="text-gray-500 text-xs mt-1 w-60">
-                            We require you to label certain realistic content that's made with AI.
+                        <Text className="text-base">Notify Network</Text>
+                        <Text className="text-gray-500 text-xs mt-1 w-72">
+                            Inform the current community engaged with your degree program regarding this post.
                         </Text>
                     </View>
                     <Switch value={aiLabel} onValueChange={setAiLabel} />
                 </View>
-
-                {/* Audience */}
-                <TouchableOpacity className="flex-row justify-between items-center py-4 border-b border-gray-200">
-                    <Text className="text-base">Audience</Text>
-                    <Text className="text-gray-400">Everyone</Text>
-                </TouchableOpacity>
 
                 {/* Share toggle */}
                 <TouchableOpacity className="flex-row justify-between items-center py-4 border-b border-gray-200">
@@ -77,16 +89,28 @@ const PostCreateScreen = () => {
                     <Text className="text-gray-400">Off</Text>
                 </TouchableOpacity>
 
-                {/* More options */}
+                {/* University */}
                 <TouchableOpacity className="flex-row justify-between items-center py-4 border-b border-gray-200">
-                    <Text className="text-base">More options</Text>
+                    <Text className="text-base">University</Text>
+                    <Text className="text-gray-400">University of Moratuwa</Text>
                 </TouchableOpacity>
+
+                {/* Degree */}
+                <TouchableOpacity className="flex-row justify-between items-center py-4 border-b border-gray-200">
+                    <Text className="text-base">Degree</Text>
+                    <Text className="text-gray-400">Bsc.(Hons) in IT and Management</Text>
+                </TouchableOpacity>
+
+
+
+
             </ScrollView>
 
             {/* Share Button */}
-            <TouchableOpacity className="bg-blue-600 py-4 rounded-xl mx-4 mt-4 mb-6 items-center">
-                <Text className="text-white font-bold text-base">Share</Text>
-            </TouchableOpacity>
+            <View className="mb-5 items-center">
+                <CustomButton title="Share" onPress={() => alert("Share a post!")} containerStyles={{ width: "90%" }} />
+            </View>
+
         </SafeAreaView>
     );
 };
