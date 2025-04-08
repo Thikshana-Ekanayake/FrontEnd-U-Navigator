@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import CustomInput from '../../../../components/CustomInput';
 import CustomDropdown from '../../../../components/CustomDropdown';
 
-const StepOneUserInfo = ({ onDataChange, defaultData = {} }) => {
+const SignUpUserInfo = ({ onDataChange, defaultData = {} }) => {
     const [username, setUsername] = useState(defaultData.username || '');
     const [email, setEmail] = useState(defaultData.email || '');
     const [password, setPassword] = useState(defaultData.password || '');
@@ -49,4 +49,4 @@ const StepOneUserInfo = ({ onDataChange, defaultData = {} }) => {
     );
 };
 
-export default StepOneUserInfo;
+export default SignUpUserInfo;
