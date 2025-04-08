@@ -1,10 +1,14 @@
-// screens/StepOneUserInfo.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import CustomInput from '../../../../components/CustomInput';
 import CustomDropdown from '../../../../components/CustomDropdown';
 
-const StepOneUserInfo = ({ formData, setFormData }) => {
+const StepOneUserInfo = ({ onDataChange, defaultData = {} }) => {
+    const [username, setUsername] = useState(defaultData.username || '');
+    const [email, setEmail] = useState(defaultData.email || '');
+    const [password, setPassword] = useState(defaultData.password || '');
+    const [category, setCategory] = useState(defaultData.category || '');
+
     const categories = [
         { label: 'Pre-AL', value: 'Pre-AL' },
         { label: 'After-AL', value: 'After-AL' },
@@ -12,29 +16,34 @@ const StepOneUserInfo = ({ formData, setFormData }) => {
         { label: 'Undergraduate', value: 'Undergraduate' },
     ];
 
+    // Pass form data to parent whenever any field updates
+    useEffect(() => {
+        onDataChange({ username, email, password, category });
+    }, [username, email, password, category]);
+
     return (
         <View>
             <CustomInput
                 placeholder="Username"
-                value={formData.username}
-                onChangeText={(text) => setFormData({ ...formData, username: text })}
+                value={username}
+                onChangeText={setUsername}
             />
             <CustomInput
                 placeholder="Email"
-                value={formData.email}
-                onChangeText={(text) => setFormData({ ...formData, email: text })}
+                value={email}
+                onChangeText={setEmail}
             />
             <CustomInput
                 placeholder="Password"
                 secureTextEntry
-                value={formData.password}
-                onChangeText={(text) => setFormData({ ...formData, password: text })}
+                value={password}
+                onChangeText={setPassword}
             />
             <CustomDropdown
                 title="Select Category"
                 items={categories}
-                selectedValue={formData.category}
-                setSelectedValue={(value) => setFormData({ ...formData, category: value })}
+                selectedValue={category}
+                setSelectedValue={setCategory}
             />
         </View>
     );

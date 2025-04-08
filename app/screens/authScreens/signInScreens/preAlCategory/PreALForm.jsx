@@ -1,29 +1,31 @@
-// screens/PreALForm.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import CustomInput from '../../../../../components/CustomInput';
 
-const PreALForm = ({ formData, setFormData }) => {
+const PreALForm = ({ onDataChange, defaultData = {} }) => {
+    const [data, setData] = useState({
+        grade: defaultData.grade || '',
+        school: defaultData.school || '',
+    });
+
+    useEffect(() => {
+        onDataChange(data);
+    }, [data]);
+
     return (
         <View>
             <CustomInput
                 placeholder="Current Grade"
-                value={formData.PreAL.grade}
+                value={data.grade}
                 onChangeText={(text) =>
-                    setFormData({
-                        ...formData,
-                        PreAL: { ...formData.PreAL, grade: text },
-                    })
+                    setData((prev) => ({ ...prev, grade: text }))
                 }
             />
             <CustomInput
                 placeholder="School Name"
-                value={formData.PreAL.school}
+                value={data.school}
                 onChangeText={(text) =>
-                    setFormData({
-                        ...formData,
-                        PreAL: { ...formData.PreAL, school: text },
-                    })
+                    setData((prev) => ({ ...prev, school: text }))
                 }
             />
         </View>

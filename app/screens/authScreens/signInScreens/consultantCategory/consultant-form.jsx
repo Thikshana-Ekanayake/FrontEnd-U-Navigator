@@ -1,29 +1,31 @@
-// screens/ConsultantForm.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import CustomInput from '../../../../../components/CustomInput';
 
-const ConsultantForm = ({ formData, setFormData }) => {
+const ConsultantForm = ({ onDataChange, defaultData = {} }) => {
+    const [data, setData] = useState({
+        employeeID: defaultData.employeeID || '',
+        role: defaultData.role || '',
+    });
+
+    useEffect(() => {
+        onDataChange(data);
+    }, [data]);
+
     return (
         <View>
             <CustomInput
                 placeholder="Employee ID"
-                value={formData.Admin.employeeID}
+                value={data.employeeID}
                 onChangeText={(text) =>
-                    setFormData({
-                        ...formData,
-                        Admin: { ...formData.Admin, employeeID: text },
-                    })
+                    setData((prev) => ({ ...prev, employeeID: text }))
                 }
             />
             <CustomInput
                 placeholder="Role"
-                value={formData.Admin.role}
+                value={data.role}
                 onChangeText={(text) =>
-                    setFormData({
-                        ...formData,
-                        Admin: { ...formData.Admin, role: text },
-                    })
+                    setData((prev) => ({ ...prev, role: text }))
                 }
             />
         </View>

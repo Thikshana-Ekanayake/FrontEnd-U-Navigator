@@ -1,48 +1,44 @@
-// screens/AfterALStepOLResults.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import CustomDropdown from '../../../../components/CustomDropdown';
 
-const AfterALStepOLResults = ({ formData, setFormData }) => {
-    const OLsubjects = [
+const AfterALStepOLResults = ({ onDataChange, defaultData = {} }) => {
+    const subjectsList = [
         'Mathematics', 'Science', 'English', 'Sinhala',
         'Buddhism', 'Religion', 'History'
-    ].map(sub => ({ label: sub, value: sub }));
-
-    const results = [
-        { label: 'A', value: 'A' },
-        { label: 'B', value: 'B' },
-        { label: 'C', value: 'C' },
-        { label: 'S', value: 'S' },
-        { label: 'F', value: 'F' },
     ];
+
+    const [subjects, setSubjects] = useState(() => {
+        const initial = {};
+        subjectsList.forEach(sub => {
+            initial[sub] = defaultData[sub] || '';
+        });
+        return initial;
+    });
+
+    useEffect(() => {
+        onDataChange(subjects);
+    }, [subjects]);
+
+    const results = ['A', 'B', 'C', 'S', 'F'].map(r => ({ label: r, value: r }));
 
     return (
         <View>
-            {OLsubjects.map((subject, index) => (
-                <View key={index} className="flex-row justify-between space-x-2">
+            {subjectsList.map((subject, index) => (
+                <View key={index} className="flex-row justify-between space-x-2 mt-4">
                     <View className="flex-1">
-                        <Text className="bg-gray-100 text-base rounded-lg px-4 py-5 mt-4 border border-gray-300">
-                            {subject.label}
+                        <Text className="bg-gray-100 text-base rounded-lg px-4 py-5 border border-gray-300">
+                            {subject}
                         </Text>
                     </View>
-                    <View className="w-1/3 ml-2">
+                    <View className="w-1/3 ml-2 -mt-4">
                         <CustomDropdown
                             title="Result"
                             items={results}
-                            selectedValue={formData.OL.subjects[subject.value]}
-                            setSelectedValue={(value) => {
-                                setFormData({
-                                    ...formData,
-                                    OL: {
-                                        ...formData.OL,
-                                        subjects: {
-                                            ...formData.OL.subjects,
-                                            [subject.value]: value
-                                        }
-                                    }
-                                });
-                            }}
+                            selectedValue={subjects[subject]}
+                            setSelectedValue={(value) =>
+                                setSubjects(prev => ({ ...prev, [subject]: value }))
+                            }
                         />
                     </View>
                 </View>

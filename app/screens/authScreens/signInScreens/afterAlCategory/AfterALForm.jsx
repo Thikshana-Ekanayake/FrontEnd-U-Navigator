@@ -1,83 +1,79 @@
-import React from 'react';
+// AfterALStepALResults.jsx
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import CustomDropdown from '../../../../../components/CustomDropdown';
 import CustomInput from '../../../../../components/CustomInput';
 
-const AfterALStepALResults = ({ formData, setFormData }) => {
-    const ALsubjects = [
-        { label: 'Mathematics', value: 'Mathematics' },
-        { label: 'Physics', value: 'Physics' },
-        { label: 'Chemistry', value: 'Chemistry' },
-    ];
+const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
+    const [form, setForm] = useState({
+        stream: defaultData.stream || '',
+        year: defaultData.year || '',
+        zScore: defaultData.zScore || '',
+        district: defaultData.district || '',
+        subjects: defaultData.subjects || [
+            { subject: '', result: '' },
+            { subject: '', result: '' },
+            { subject: '', result: '' }
+        ],
+        generalEnglish: defaultData.generalEnglish || '',
+        commonGeneralTest: defaultData.commonGeneralTest || ''
+    });
 
-    const results = [
-        { label: 'A', value: 'A' },
-        { label: 'B', value: 'B' },
-        { label: 'C', value: 'C' },
-        { label: 'S', value: 'S' },
-        { label: 'F', value: 'F' },
-    ];
+    useEffect(() => {
+        onDataChange(form);
+    }, [form]);
+
+    const handleSubjectChange = (index, key, value) => {
+        const updatedSubjects = [...form.subjects];
+        updatedSubjects[index][key] = value;
+        setForm({ ...form, subjects: updatedSubjects });
+    };
+
+    const results = ['A', 'B', 'C', 'S', 'F'].map(r => ({ label: r, value: r }));
+    const ALsubjects = ['Mathematics', 'Physics', 'Chemistry'].map(sub => ({ label: sub, value: sub }));
 
     return (
         <View>
-            {/* Existing Dropdowns */}
             <CustomDropdown
                 title="AL Stream"
-                items={[]}
-                selectedValue={formData.AL.stream}
-                setSelectedValue={(value) =>
-                    setFormData({ ...formData, AL: { ...formData.AL, stream: value } })
-                }
+                items={ALsubjects}
+                selectedValue={form.stream}
+                setSelectedValue={(value) => setForm({ ...form, stream: value })}
             />
             <CustomDropdown
                 title="AL Year"
-                items={[]}
-                selectedValue={formData.AL.year}
-                setSelectedValue={(value) =>
-                    setFormData({ ...formData, AL: { ...formData.AL, year: value } })
-                }
+                items={[]} // populate if needed
+                selectedValue={form.year}
+                setSelectedValue={(value) => setForm({ ...form, year: value })}
             />
             <CustomInput
                 placeholder="Z Score"
-                value={formData.AL.zScore}
-                onChangeText={(text) =>
-                    setFormData({ ...formData, AL: { ...formData.AL, zScore: text } })
-                }
+                value={form.zScore}
+                onChangeText={(text) => setForm({ ...form, zScore: text })}
             />
             <CustomDropdown
                 title="District"
-                items={[]}
-                selectedValue={formData.AL.district}
-                setSelectedValue={(value) =>
-                    setFormData({ ...formData, AL: { ...formData.AL, district: value } })
-                }
+                items={[]} // populate if needed
+                selectedValue={form.district}
+                setSelectedValue={(value) => setForm({ ...form, district: value })}
             />
 
-            {/* Subjects */}
-            {[1, 2, 3].map((num, index) => (
-                <View key={num} className="flex-row justify-between space-x-2">
+            {[0, 1, 2].map((index) => (
+                <View key={index} className="flex-row justify-between space-x-2">
                     <View className="flex-1">
                         <CustomDropdown
-                            title={`Subject ${num}`}
+                            title={`Subject ${index + 1}`}
                             items={ALsubjects}
-                            selectedValue={formData.AL.subjects[index].subject}
-                            setSelectedValue={(value) => {
-                                let newSubjects = [...formData.AL.subjects];
-                                newSubjects[index].subject = value;
-                                setFormData({ ...formData, AL: { ...formData.AL, subjects: newSubjects } });
-                            }}
+                            selectedValue={form.subjects[index]?.subject}
+                            setSelectedValue={(value) => handleSubjectChange(index, 'subject', value)}
                         />
                     </View>
                     <View className="w-1/3 ml-2">
                         <CustomDropdown
                             title="Result"
                             items={results}
-                            selectedValue={formData.AL.subjects[index].result}
-                            setSelectedValue={(value) => {
-                                let newSubjects = [...formData.AL.subjects];
-                                newSubjects[index].result = value;
-                                setFormData({ ...formData, AL: { ...formData.AL, subjects: newSubjects } });
-                            }}
+                            selectedValue={form.subjects[index]?.result}
+                            setSelectedValue={(value) => handleSubjectChange(index, 'result', value)}
                         />
                     </View>
                 </View>
@@ -94,16 +90,8 @@ const AfterALStepALResults = ({ formData, setFormData }) => {
                     <CustomDropdown
                         title="Result"
                         items={results}
-                        selectedValue={formData.AL.generalEnglish}
-                        setSelectedValue={(value) =>
-                            setFormData({
-                                ...formData,
-                                AL: {
-                                    ...formData.AL,
-                                    generalEnglish: value
-                                }
-                            })
-                        }
+                        selectedValue={form.generalEnglish}
+                        setSelectedValue={(value) => setForm({ ...form, generalEnglish: value })}
                     />
                 </View>
             </View>
@@ -119,20 +107,11 @@ const AfterALStepALResults = ({ formData, setFormData }) => {
                     <CustomInput
                         placeholder="Marks"
                         keyboardType="numeric"
-                        value={formData.AL.commonGeneralTest}
-                        onChangeText={(text) =>
-                            setFormData({
-                                ...formData,
-                                AL: {
-                                    ...formData.AL,
-                                    commonGeneralTest: text
-                                }
-                            })
-                        }
+                        value={form.commonGeneralTest}
+                        onChangeText={(text) => setForm({ ...form, commonGeneralTest: text })}
                     />
                 </View>
             </View>
-
         </View>
     );
 };
