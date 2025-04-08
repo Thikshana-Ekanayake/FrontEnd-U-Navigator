@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/sign-up.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/sign-up.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/sign-up-category-view.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/sign-up-user-info.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/OLResultsForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/OLResultsForm.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +111,7 @@
       <workItem from="1743604657469" duration="10736000" />
       <workItem from="1743652094695" duration="2991000" />
       <workItem from="1743923648447" duration="7781000" />
-      <workItem from="1744087290701" duration="9134000" />
+      <workItem from="1744087290701" duration="10329000" />
     </task>
     <servers />
   </component>
