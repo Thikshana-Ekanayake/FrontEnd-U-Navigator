@@ -1,13 +1,19 @@
+// screens/SignUp.js
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
-import CustomInput from '../../components/CustomInput';
-import CustomDropdown from '../../components/CustomDropdown';
-import CustomButton from '../../components/CustomButton';
 import * as Progress from 'react-native-progress';
 import { MotiView } from 'moti';
 import { useRouter } from 'expo-router';
+import CustomButton from '../../components/CustomButton';
+
+// Modularized form components
+import UserInfoStep from '../screens/authScreens/signInScreens/sign-up-category-view.jsx';
+import AfterALStepALResults from '../screens/authScreens/signInScreens/afterAlCategory/AfterALForm';
+import AfterALStepOLResults from '../screens/authScreens/signInScreens/OLResultsForm';
+import PreALForm from '../screens/authScreens/signInScreens/preAlCategory/PreALForm';
+import ConsultantForm from "../screens/authScreens/signInScreens/consultantCategory/consultant-form";
 
 const SignUp = () => {
   const router = useRouter();
@@ -24,7 +30,7 @@ const SignUp = () => {
       year: '',
       zScore: '',
       district: '',
-      subjects: [{ subject: '', result: '' }, { subject: '', result: '' }, { subject: '', result: '' }]
+      subjects: [{ subject: '', result: '' }, { subject: '', result: '' }, { subject: '', result: '' }],
     },
     OL: {
       subjects: {}
@@ -39,32 +45,6 @@ const SignUp = () => {
     }
   });
 
-  const categories = [
-    { label: 'Pre-AL', value: 'Pre-AL' },
-    { label: 'After-AL', value: 'After-AL' },
-    { label: 'Admin', value: 'Admin' },
-  ];
-
-  const ALsubjects = [
-    { label: 'Mathematics', value: 'Mathematics' },
-    { label: 'Physics', value: 'Physics' },
-    { label: 'Chemistry', value: 'Chemistry' },
-  ];
-
-  const OLsubjects = [
-    'Mathematics', 'Science', 'English', 'Sinhala', 
-    'Buddhism', 'Religion', 'History'
-  ].map(sub => ({ label: sub, value: sub }));
-
-  const results = [
-    { label: 'A', value: 'A' },
-    { label: 'B', value: 'B' },
-    { label: 'C', value: 'C' },
-    { label: 'S', value: 'S' },
-    { label: 'F', value: 'F' },
-  ];
-
-
   const handleNext = () => {
     if (step < totalSteps) setStep(step + 1);
   };
@@ -78,208 +58,84 @@ const SignUp = () => {
   };
 
   return (
-    <SafeAreaView className="bg-white h-full">
-      <ScrollView>
-        <View className="px-6 my-6">
-          {/* Back Button */}
-          {step > 1 && (
-            <TouchableOpacity className="mt-4 mb-5" onPress={handleBack}>
-              <ChevronLeft size={24} color="#000" />
-            </TouchableOpacity>
-          )}
-
-          {/* Dynamic Title */}
-          <Text className={`text-3xl font-bold text-gray-900 mb-6 ${step === 1 ? 'mt-8' : ''}`}>
-            {step === 1
-              ? 'Hello! Welcome to U - Navigator'
-              : formData.category === 'After-AL'
-              ? step === 2 ? 'AL Results' : 'OL Results'
-              : 'General Information'}
-          </Text>
-
-          {/* Progress Bar */}
-          <Progress.Bar 
-            progress={step / totalSteps} 
-            width={null} 
-            height={8}
-            borderRadius={10}
-            color="#3498db"
-            borderWidth={0}
-            unfilledColor="#e0e0e0"
-          />
-
-          {/* Animated Form Fields */}
-          <MotiView 
-            key={step}
-            from={{ opacity: 0, translateX: 100 }} 
-            animate={{ opacity: 1, translateX: 0 }}
-            exit={{ opacity: 0, translateX: -100 }}
-            transition={{ type: "spring", duration: 400 }}
-          >
-            {/* Step 1: User Info */}
-            {step === 1 && (
-              <>
-                <CustomInput 
-                  placeholder="Username" 
-                  value={formData.username} 
-                  onChangeText={(text) => setFormData({ ...formData, username: text })}
-                />
-                <CustomInput 
-                  placeholder="Email" 
-                  value={formData.email} 
-                  onChangeText={(text) => setFormData({ ...formData, email: text })}
-                />
-                <CustomInput 
-                  placeholder="Password" 
-                  secureTextEntry 
-                  value={formData.password} 
-                  onChangeText={(text) => setFormData({ ...formData, password: text })}
-                />
-                <CustomDropdown 
-                  title="Select Category"
-                  items={categories} 
-                  selectedValue={formData.category} 
-                  setSelectedValue={(value) => setFormData({ ...formData, category: value })}
-                />
-              </>
+      <SafeAreaView className="bg-white h-full">
+        <ScrollView>
+          <View className="px-6 my-6">
+            {/* Back Button */}
+            {step > 1 && (
+                <TouchableOpacity className="mt-4 mb-5" onPress={handleBack}>
+                  <ChevronLeft size={24} color="#000" />
+                </TouchableOpacity>
             )}
 
-            {/* Step 2 & 3: Category-Based Forms */}
-            {formData.category === 'After-AL' && step > 1 && (
-              <>
-                {/* Step 2: AL Results */}
-                {step === 2 && (
-                  <>
-                  <CustomDropdown 
-                    title="AL Stream" 
-                    items={[]} 
-                    selectedValue={formData.AL.stream}
-                    setSelectedValue={(value) => setFormData({ ...formData, AL: { ...formData.AL, stream: value } })}
-                  />
-                  <CustomDropdown 
-                    title="AL Year" 
-                    items={[]} 
-                    selectedValue={formData.AL.year}
-                    setSelectedValue={(value) => setFormData({ ...formData, AL: { ...formData.AL, year: value } })}
-                  />
-                  <CustomInput 
-                    placeholder="Z Score" 
-                    value={formData.AL.zScore} 
-                    onChangeText={(text) => setFormData({ ...formData, AL: { ...formData.AL, zScore: text } })}
-                  />
-                  <CustomDropdown 
-                    title="District" 
-                    items={[]} 
-                    selectedValue={formData.AL.district}
-                    setSelectedValue={(value) => setFormData({ ...formData, AL: { ...formData.AL, district: value } })}
-                  />
+            {/* Title */}
+            <Text className={`text-3xl font-bold text-gray-900 mb-6 ${step === 1 ? 'mt-8' : ''}`}>
+              {step === 1
+                  ? 'Hello! Welcome to U - Navigator'
+                  : formData.category === 'After-AL'
+                      ? step === 2 ? 'AL Results' : 'OL Results'
+                      : 'General Information'}
+            </Text>
 
-                  {[1, 2, 3].map((num, index) => (
-                    <View key={num} className="flex-row justify-between space-x-2">
-                      <View className="flex-1">
-                        <CustomDropdown 
-                          title={`Subject ${num}`} 
-                          items={ALsubjects} 
-                          selectedValue={formData.AL.subjects[index].subject}
-                          setSelectedValue={(value) => {
-                            let newSubjects = [...formData.AL.subjects];
-                            newSubjects[index].subject = value;
-                            setFormData({ ...formData, AL: { ...formData.AL, subjects: newSubjects } });
-                          }}
-                        />
-                      </View>
-                      <View className="w-1/3 ml-2">
-                        <CustomDropdown 
-                          title="Result" 
-                          items={results} 
-                          selectedValue={formData.AL.subjects[index].result}
-                          setSelectedValue={(value) => {
-                            let newSubjects = [...formData.AL.subjects];
-                            newSubjects[index].result = value;
-                            setFormData({ ...formData, AL: { ...formData.AL, subjects: newSubjects } });
-                          }}
-                        />
-                      </View>
-                    </View>
-                  ))}
-                </>
+            {/* Progress Bar */}
+            <Progress.Bar
+                progress={step / totalSteps}
+                width={null}
+                height={8}
+                borderRadius={10}
+                color="#3498db"
+                borderWidth={0}
+                unfilledColor="#e0e0e0"
+            />
 
-                )}
+            {/* Animated Content */}
+            <MotiView
+                key={step}
+                from={{ opacity: 0, translateX: 100 }}
+                animate={{ opacity: 1, translateX: 0 }}
+                exit={{ opacity: 0, translateX: -100 }}
+                transition={{ type: 'spring', duration: 400 }}
+            >
+              {/* Step 1: Basic Info */}
+              {step === 1 && (
+                  <UserInfoStep formData={formData} setFormData={setFormData} />
+              )}
 
-                {/* Step 3: OL Results */}
-                {step === 3 && (
-                  <>
-                    {OLsubjects.map((subject, index) => (
-                      <View key={index} className="flex-row justify-between space-x-2">
-                        <View className="flex-1">
-                          <Text className="bg-gray-100 text-base rounded-lg px-4 py-5 mt-4 border border-gray-300">{subject.label}</Text>
-                        </View>
-                        <View className="w-1/3 ml-2">
-                          <CustomDropdown 
-                            title="Result" 
-                            items={results} 
-                            selectedValue={formData.OL.subjects[subject.value]}
-                            setSelectedValue={(value) => {
-                              setFormData({ ...formData, OL: { ...formData.OL, subjects: { ...formData.OL.subjects, [subject.value]: value } } });
-                            }}
-                          />
-                        </View>
-                      </View>
-                    ))}
-                  </>
-                )}
-              </>
-            )}
+              {/* After-AL Steps */}
+              {formData.category === 'After-AL' && step === 2 && (
+                  <AfterALStepALResults formData={formData} setFormData={setFormData} />
+              )}
+              {formData.category === 'After-AL' && step === 3 && (
+                  <AfterALStepOLResults formData={formData} setFormData={setFormData} />
+              )}
 
-            {/* Pre-AL Form */}
-            {formData.category === 'Pre-AL' && step > 1 && (
-              <>
-                <CustomInput 
-                  placeholder="Current Grade" 
-                  value={formData.PreAL.grade} 
-                  onChangeText={(text) => setFormData({ ...formData, PreAL: { ...formData.PreAL, grade: text } })}
-                />
-                <CustomInput 
-                  placeholder="School Name" 
-                  value={formData.PreAL.school} 
-                  onChangeText={(text) => setFormData({ ...formData, PreAL: { ...formData.PreAL, school: text } })}
-                />
-              </>
-            )}
+              {/* Pre-AL */}
+              {formData.category === 'Pre-AL' && step > 1 && (
+                  <PreALForm formData={formData} setFormData={setFormData} />
+              )}
 
-            {/* Admin Form */}
-            {formData.category === 'Admin' && step > 1 && (
-              <>
-                <CustomInput 
-                  placeholder="Employee ID" 
-                  value={formData.Admin.employeeID} 
-                  onChangeText={(text) => setFormData({ ...formData, Admin: { ...formData.Admin, employeeID: text } })}
-                />
-                <CustomInput 
-                  placeholder="Role" 
-                  value={formData.Admin.role} 
-                  onChangeText={(text) => setFormData({ ...formData, Admin: { ...formData.Admin, role: text } })}
-                />
-              </>
-            )}
-          </MotiView>
+              {/* Admin */}
+              {formData.category === 'Admin' && step > 1 && (
+                  <ConsultantForm formData={formData} setFormData={setFormData} />
+              )}
+            </MotiView>
 
-          {/* Next & Submit Button */}
-          <CustomButton 
-            title={step === totalSteps ? "Submit" : "Next"} 
-            onPress={step === totalSteps ? handleSubmit : handleNext} 
-          />
+            {/* Button */}
+            <CustomButton
+                title={step === totalSteps ? 'Submit' : 'Next'}
+                onPress={step === totalSteps ? handleSubmit : handleNext}
+            />
 
-          {/* Login Navigation */}
-          <View className="flex-row justify-center mt-4">
-            <Text className="text-gray-600">Already have an account? </Text>
-            <TouchableOpacity onPress={() => router.replace('/sign-in')}>
-              <Text className="text-blue-500 font-medium">Login Now</Text>
-            </TouchableOpacity>
+            {/* Already have an account */}
+            <View className="flex-row justify-center mt-4">
+              <Text className="text-gray-600">Already have an account? </Text>
+              <TouchableOpacity onPress={() => router.replace('/sign-in')}>
+                <Text className="text-blue-500 font-medium">Login Now</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
   );
 };
 
