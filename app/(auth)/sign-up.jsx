@@ -31,6 +31,9 @@ const SignUp = () => {
       zScore: '',
       district: '',
       subjects: [{ subject: '', result: '' }, { subject: '', result: '' }, { subject: '', result: '' }],
+      generalEnglish: '',
+      commonGeneralTest: '',
+
     },
     OL: {
       subjects: {}

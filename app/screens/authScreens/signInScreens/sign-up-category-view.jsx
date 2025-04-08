@@ -8,7 +8,8 @@ const StepOneUserInfo = ({ formData, setFormData }) => {
     const categories = [
         { label: 'Pre-AL', value: 'Pre-AL' },
         { label: 'After-AL', value: 'After-AL' },
-        { label: 'Admin', value: 'Admin' },
+        { label: 'Consultant', value: 'Consultant' },
+        { label: 'Undergraduate', value: 'Undergraduate' },
     ];
 
     return (

@@ -1,6 +1,5 @@
-// screens/AfterALStepALResults.js
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import CustomDropdown from '../../../../../components/CustomDropdown';
 import CustomInput from '../../../../../components/CustomInput';
 
@@ -21,6 +20,7 @@ const AfterALStepALResults = ({ formData, setFormData }) => {
 
     return (
         <View>
+            {/* Existing Dropdowns */}
             <CustomDropdown
                 title="AL Stream"
                 items={[]}
@@ -53,6 +53,7 @@ const AfterALStepALResults = ({ formData, setFormData }) => {
                 }
             />
 
+            {/* Subjects */}
             {[1, 2, 3].map((num, index) => (
                 <View key={num} className="flex-row justify-between space-x-2">
                     <View className="flex-1">
@@ -81,6 +82,57 @@ const AfterALStepALResults = ({ formData, setFormData }) => {
                     </View>
                 </View>
             ))}
+
+            {/* General English */}
+            <View className="flex-row justify-between space-x-2 mt-4">
+                <View className="flex-1">
+                    <Text className="bg-gray-100 text-base rounded-lg px-4 py-5 border border-gray-300">
+                        General English
+                    </Text>
+                </View>
+                <View className="w-1/3 ml-2 -mt-4">
+                    <CustomDropdown
+                        title="Result"
+                        items={results}
+                        selectedValue={formData.AL.generalEnglish}
+                        setSelectedValue={(value) =>
+                            setFormData({
+                                ...formData,
+                                AL: {
+                                    ...formData.AL,
+                                    generalEnglish: value
+                                }
+                            })
+                        }
+                    />
+                </View>
+            </View>
+
+            {/* Common General Test */}
+            <View className="flex-row justify-between space-x-2 mt-4">
+                <View className="flex-1">
+                    <Text className="bg-gray-100 text-base rounded-lg px-4 py-5 border border-gray-300">
+                        Common General Test
+                    </Text>
+                </View>
+                <View className="w-1/3 ml-2 -mt-4">
+                    <CustomInput
+                        placeholder="Marks"
+                        keyboardType="numeric"
+                        value={formData.AL.commonGeneralTest}
+                        onChangeText={(text) =>
+                            setFormData({
+                                ...formData,
+                                AL: {
+                                    ...formData.AL,
+                                    commonGeneralTest: text
+                                }
+                            })
+                        }
+                    />
+                </View>
+            </View>
+
         </View>
     );
 };
