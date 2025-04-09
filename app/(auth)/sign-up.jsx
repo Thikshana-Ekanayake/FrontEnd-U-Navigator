@@ -11,7 +11,9 @@ import UserInfoStep from '../screens/authScreens/signInScreens/sign-up-user-info
 import AfterALStepALResults from '../screens/authScreens/signInScreens/afterAlCategory/after-al-form';
 import OLResults from '../screens/authScreens/signInScreens/ol-results-form';
 import PreALStepALResults from '../screens/authScreens/signInScreens/preAlCategory/pre-al-form';
-import ConsultantForm from "../screens/authScreens/signInScreens/consultantCategory/consultant-form";
+import ConsultationDetailsForm from "../screens/authScreens/signInScreens/consultantCategory/consultation-details-form";
+import UndergraduateGeneralDetailPage from "../screens/authScreens/signInScreens/undergraduateCategory/undergraduate-general-detail-page";
+import UndergraduateIdPage from "../screens/authScreens/signInScreens/undergraduateCategory/undergraduate-Id-page";
 
 const SignUp = () => {
   const router = useRouter();
@@ -24,15 +26,18 @@ const SignUp = () => {
   const [alData, setAlData] = useState({});
   const [olData, setOlData] = useState({});
   const [preAlData, setPreAlData] = useState({});
-  const [adminData, setAdminData] = useState({});
+  const [consultantData, setConsultantData] = useState({});
+  const [undergraduateData, setUndergraduateData] = useState({});
 
   const getTotalSteps = () => {
     switch (category) {
       case 'After-AL':
       case 'Pre-AL':
         return 3;
-      case 'Admin':
+      case 'Consultant':
         return 2;
+      case 'Undergraduate':
+        return 3;
       default:
         return 1;
     }
@@ -54,13 +59,12 @@ const SignUp = () => {
         if (step === 3) return 'Enter Your O/L Results';
         break;
 
-      case 'Admin':
       case 'Consultant':
-        return 'Admin/Consultant Information';
+        return 'Consultant Information';
 
       case 'Undergraduate':
-        if (step === 2) return 'Degree Information';
-        if (step === 3) return 'Personal Achievements';
+        if (step === 2) return 'General Information';
+        if (step === 3) return 'Upload Your Student ID';
         break;
 
       default:
@@ -86,7 +90,8 @@ const SignUp = () => {
       AL: alData,
       OL: olData,
       PreAL: preAlData,
-      Admin: adminData
+      Consultant: consultantData,
+      Undergraduate:undergraduateData
     };
     console.log('Merged Form Data:', merged);
   };
@@ -168,10 +173,24 @@ const SignUp = () => {
                       />
                   )}
 
-                  {category === 'Admin' && step > 1 && (
-                      <ConsultantForm
-                          onDataChange={(data) => setAdminData(data)}
-                          defaultData={adminData}
+                  {category === 'Consultant' && step > 1 && (
+                      <ConsultationDetailsForm
+                          onDataChange={(data) => setConsultantData(data)}
+                          defaultData={consultantData}
+                      />
+                  )}
+
+                  {category === 'Undergraduate' && step === 2 && (
+                      <UndergraduateGeneralDetailPage
+                          onDataChange={(data) => setUndergraduateData(data)}
+                          defaultData={undergraduateData}
+                      />
+                  )}
+
+                  {category === 'Undergraduate' && step === 3 && (
+                      <UndergraduateIdPage
+                          onDataChange={(data) => setUndergraduateData(data)}
+                          defaultData={undergraduateData}
                       />
                   )}
                 </MotiView>
