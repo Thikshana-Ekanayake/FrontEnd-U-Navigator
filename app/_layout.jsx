@@ -106,6 +106,7 @@ const RootLayout = () => {
         <Stack.Screen name="screens/degree/degree-detail" options={{headerShown: false }} />
         <Stack.Screen name="screens/university/university-detail" options={{headerShown: false }} />
         <Stack.Screen name="screens/consultation/consultation-screen" options={{headerShown: false }} />
+        <Stack.Screen name="screens/postCreate/post-create-screen" options={{headerShown: false }} />
         {/* <Stack.Screen name="search/[query]" options={{ headerShown: false }} /> */}
       </Stack>
     // </GlobalProvider>

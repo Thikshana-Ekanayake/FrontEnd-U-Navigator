@@ -1,8 +1,15 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Camera, MessageSquare, HelpCircle } from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const PostCreationHead = ({profileImage}) => {
+const PostCreationHead = ({ profileImage }) => {
+    const navigation = useNavigation();
+
+    const handlePress = () => {
+        navigation.navigate("screens/postCreate/post-create-screen"); // make sure this screen name matches your navigator config
+    };
+
     return (
         <>
             <View className="bg-white p-4 rounded-lg mb-2 flex-row items-center">
@@ -10,7 +17,10 @@ const PostCreationHead = ({profileImage}) => {
                     source={{ uri: profileImage }}
                     className="w-10 h-10 rounded-full mr-3"
                 />
-                <TouchableOpacity className="flex-1 bg-gray-100 p-3 rounded-full">
+                <TouchableOpacity
+                    className="flex-1 bg-gray-100 p-3 rounded-full"
+                    onPress={handlePress}
+                >
                     <Text className="text-gray-500">What's on your mind?</Text>
                 </TouchableOpacity>
             </View>

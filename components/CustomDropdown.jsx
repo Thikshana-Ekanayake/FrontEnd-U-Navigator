@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -23,6 +23,9 @@ const CustomDropdown = ({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(items);
+    useEffect(() => {
+        setFilteredItems(items);
+    }, [items]);
 
   const handleSelect = (item) => {
     setSelectedValue(item.value);
