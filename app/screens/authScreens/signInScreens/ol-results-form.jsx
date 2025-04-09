@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import CustomDropdown from '../../../../components/CustomDropdown';
 
-const AfterALStepOLResults = ({ onDataChange, defaultData = {} }) => {
+const OLResults = ({ onDataChange, defaultData = {} }) => {
     const coreSubjects = ['Mathematics', 'Science', 'English', 'Sinhala', 'History'];
 
     const categorySubjects = {
@@ -92,4 +92,4 @@ const AfterALStepOLResults = ({ onDataChange, defaultData = {} }) => {
     );
 };
 
-export default AfterALStepOLResults;
+export default OLResults;

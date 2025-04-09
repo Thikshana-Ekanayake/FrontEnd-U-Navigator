@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/constants/subjectsAndStreams/alSubjectsAndSteams.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/streamSubjectFilter.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/preAlCategory/pre-al-form.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/OLResultsForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/OLResultsForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/afterAlCategory/AfterALForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/afterAlCategory/AfterALForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/CustomDropdown.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CustomDropdown.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(auth)/sign-up.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/sign-up.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/OLResultsForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/ol-results-form.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/afterAlCategory/AfterALForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/afterAlCategory/after-al-form.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/preAlCategory/PreALForm.jsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +117,7 @@
       <workItem from="1743652094695" duration="2991000" />
       <workItem from="1743923648447" duration="7781000" />
       <workItem from="1744087290701" duration="16182000" />
-      <workItem from="1744186368844" duration="3437000" />
+      <workItem from="1744186368844" duration="5247000" />
     </task>
     <servers />
   </component>

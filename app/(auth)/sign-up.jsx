@@ -8,25 +8,72 @@ import { useRouter } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 
 import UserInfoStep from '../screens/authScreens/signInScreens/sign-up-user-info.jsx';
-import AfterALStepALResults from '../screens/authScreens/signInScreens/afterAlCategory/AfterALForm';
-import AfterALStepOLResults from '../screens/authScreens/signInScreens/OLResultsForm';
-import PreALForm from '../screens/authScreens/signInScreens/preAlCategory/PreALForm';
+import AfterALStepALResults from '../screens/authScreens/signInScreens/afterAlCategory/after-al-form';
+import OLResults from '../screens/authScreens/signInScreens/ol-results-form';
+import PreALStepALResults from '../screens/authScreens/signInScreens/preAlCategory/pre-al-form';
 import ConsultantForm from "../screens/authScreens/signInScreens/consultantCategory/consultant-form";
 
 const SignUp = () => {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const totalSteps = 3;
 
   const [category, setCategory] = useState('');
+
+  //data holders
   const [userInfoData, setUserInfoData] = useState({});
   const [alData, setAlData] = useState({});
   const [olData, setOlData] = useState({});
   const [preAlData, setPreAlData] = useState({});
   const [adminData, setAdminData] = useState({});
 
+  const getTotalSteps = () => {
+    switch (category) {
+      case 'After-AL':
+      case 'Pre-AL':
+        return 3;
+      case 'Admin':
+        return 2;
+      default:
+        return 1;
+    }
+  };
+
+  const getStepTitle = () => {
+    if (step === 1) {
+      return 'Hello! Welcome to U - Navigator';
+    }
+
+    switch (category) {
+      case 'After-AL':
+        if (step === 2) return 'Enter your A/L Results';
+        if (step === 3) return 'Enter your O/L Results';
+        break;
+
+      case 'Pre-AL':
+        if (step === 2) return 'Enter Your A/L Stream Preference';
+        if (step === 3) return 'Enter Your O/L Results';
+        break;
+
+      case 'Admin':
+      case 'Consultant':
+        return 'Admin/Consultant Information';
+
+      case 'Undergraduate':
+        if (step === 2) return 'Degree Information';
+        if (step === 3) return 'Personal Achievements';
+        break;
+
+      default:
+        return 'General Information';
+    }
+  };
+
+
+  const totalSteps = getTotalSteps();
+
+
   const handleNext = () => {
-    if (step < totalSteps) setStep(step + 1);
+    if (step < getTotalSteps()) setStep(step + 1);
   };
 
   const handleBack = () => {
@@ -63,12 +110,9 @@ const SignUp = () => {
                 )}
 
                 <Text className={`text-3xl font-bold text-gray-900 mb-6 ${step === 1 ? 'mt-8' : ''}`}>
-                  {step === 1
-                      ? 'Hello! Welcome to U - Navigator'
-                      : category === 'After-AL'
-                          ? step === 2 ? 'AL Results' : 'OL Results'
-                          : 'General Information'}
+                  {getStepTitle()}
                 </Text>
+
 
                 <Progress.Bar
                     progress={step / totalSteps}
@@ -104,16 +148,23 @@ const SignUp = () => {
                       />
                   )}
                   {category === 'After-AL' && step === 3 && (
-                      <AfterALStepOLResults
+                      <OLResults
                           onDataChange={(data) => setOlData(data)}
                           defaultData={olData}
                       />
                   )}
 
-                  {category === 'Pre-AL' && step > 1 && (
-                      <PreALForm
+                  {category === 'Pre-AL' && step === 2 && (
+                      <PreALStepALResults
                           onDataChange={(data) => setPreAlData(data)}
                           defaultData={preAlData}
+                      />
+                  )}
+
+                  {category === 'Pre-AL' && step === 3 && (
+                      <OLResults
+                          onDataChange={(data) => setOlData(data)}
+                          defaultData={olData}
                       />
                   )}
 
