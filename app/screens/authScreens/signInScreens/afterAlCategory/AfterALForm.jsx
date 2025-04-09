@@ -4,6 +4,10 @@ import { View, Text } from 'react-native';
 import CustomDropdown from '../../../../../components/CustomDropdown';
 import CustomInput from '../../../../../components/CustomInput';
 
+import {streamOptions} from "../../../../../constants/subjectsAndStreams/alSubjectsAndSteams";
+import {getSubjectsForStream} from "../../../../../utils/streamSubjectFilter";
+
+
 const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
     const [form, setForm] = useState({
         stream: defaultData.stream || '',
@@ -23,26 +27,35 @@ const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
         onDataChange(form);
     }, [form]);
 
+    const results = ['A', 'B', 'C', 'S', 'F'].map(r => ({ label: r, value: r }));
+
+
+    const handleStreamChange = (value) => {
+        const updatedSubjects = [
+            { subject: '', result: '' },
+            { subject: '', result: '' },
+            { subject: '', result: '' }
+        ];
+        setForm({ ...form, stream: value, subjects: updatedSubjects });
+    };
+
     const handleSubjectChange = (index, key, value) => {
         const updatedSubjects = [...form.subjects];
         updatedSubjects[index][key] = value;
         setForm({ ...form, subjects: updatedSubjects });
     };
 
-    const results = ['A', 'B', 'C', 'S', 'F'].map(r => ({ label: r, value: r }));
-    const ALsubjects = ['Mathematics', 'Physics', 'Chemistry'].map(sub => ({ label: sub, value: sub }));
-
     return (
         <View>
             <CustomDropdown
                 title="AL Stream"
-                items={ALsubjects}
+                items={streamOptions}
                 selectedValue={form.stream}
-                setSelectedValue={(value) => setForm({ ...form, stream: value })}
+                setSelectedValue={handleStreamChange}
             />
             <CustomDropdown
                 title="AL Year"
-                items={[]} // populate if needed
+                items={[]} // Populate if needed
                 selectedValue={form.year}
                 setSelectedValue={(value) => setForm({ ...form, year: value })}
             />
@@ -53,7 +66,7 @@ const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
             />
             <CustomDropdown
                 title="District"
-                items={[]} // populate if needed
+                items={[]} // Populate if needed
                 selectedValue={form.district}
                 setSelectedValue={(value) => setForm({ ...form, district: value })}
             />
@@ -63,10 +76,12 @@ const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
                     <View className="flex-1">
                         <CustomDropdown
                             title={`Subject ${index + 1}`}
-                            items={ALsubjects}
+                            items={getSubjectsForStream(form.stream, index, form.subjects)}
                             selectedValue={form.subjects[index]?.subject}
                             setSelectedValue={(value) => handleSubjectChange(index, 'subject', value)}
                         />
+
+
                     </View>
                     <View className="w-1/3 ml-2">
                         <CustomDropdown

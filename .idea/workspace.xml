@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="85895543-f6f8-4f62-b68d-9c5303d3b627" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/constants/subjectsAndStreams/alSubjectsAndSteams.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/streamSubjectFilter.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/OLResultsForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/OLResultsForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/afterAlCategory/AfterALForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/screens/authScreens/signInScreens/afterAlCategory/AfterALForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/CustomDropdown.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/CustomDropdown.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +31,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JavaScript File" />
         <option value="JSX File" />
       </list>
     </option>
@@ -45,24 +50,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Dev-#2&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/TunTun/FrontEnd-U-Navigator/components&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\FrontEnd-U-Navigator\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Dev-#2",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/TunTun/FrontEnd-U-Navigator/components",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "C:\\TunTun\\FrontEnd-U-Navigator\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -111,7 +116,8 @@
       <workItem from="1743604657469" duration="10736000" />
       <workItem from="1743652094695" duration="2991000" />
       <workItem from="1743923648447" duration="7781000" />
-      <workItem from="1744087290701" duration="10329000" />
+      <workItem from="1744087290701" duration="16182000" />
+      <workItem from="1744186368844" duration="3437000" />
     </task>
     <servers />
   </component>
