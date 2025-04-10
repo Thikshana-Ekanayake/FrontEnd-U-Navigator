@@ -7,11 +7,13 @@ import CustomButton from "../../../components/CustomButton";
 import CustomSlidableCard from "../../../components/CustomSlidableCard";
 
 import {universitiesData} from "../../../sampleData/universityData";
+import {useRouter} from "expo-router";
 
 const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0", "") + "K" : num);
 
 const UniversityDetail = () => {
     const route = useRoute();
+    const router = useRouter();
     const navigation = useNavigation();
     const { id } = route.params;
     const university = universitiesData.find((u) => u.id === id);
@@ -79,7 +81,19 @@ const UniversityDetail = () => {
 
                 {/* View All Button */}
                 <View className="mt-6 absolute bottom-0 left-0 right-0 p-4">
-                    <CustomButton title="View all" onPress={() => alert("Viewing all most viewed!")} />
+                    <CustomButton
+                        title="View all"
+                        onPress={() =>
+                            router.replace({
+                                pathname: "/search",
+                                params: {
+                                    initialQuery: university.title,
+                                    initialFilter: "Universities",
+                                },
+                            })
+                        }
+                    />
+
                 </View>
             </View>
         </SafeAreaView>
