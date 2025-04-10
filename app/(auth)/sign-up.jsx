@@ -14,6 +14,7 @@ import PreALStepALResults from '../screens/authScreens/signInScreens/preAlCatego
 import ConsultationDetailsForm from "../screens/authScreens/signInScreens/consultantCategory/consultation-details-form";
 import UndergraduateGeneralDetailPage from "../screens/authScreens/signInScreens/undergraduateCategory/undergraduate-general-detail-page";
 import UndergraduateIdPage from "../screens/authScreens/signInScreens/undergraduateCategory/undergraduate-Id-page";
+import TopSnackbar from "../../components/CustomTopSnackBar";
 
 const SignUp = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const SignUp = () => {
       case 'Undergraduate':
         return 3;
       default:
-        return 1;
+        return 2;
     }
   };
 
