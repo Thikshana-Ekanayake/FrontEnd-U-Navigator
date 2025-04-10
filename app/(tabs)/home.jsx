@@ -22,7 +22,7 @@ const posts = [
     },
     {
         id: "2",
-        userName: "Iruka Pathirana",
+        userName: "Penelope Featherington",
         userRole: "School Student",
         userImage: "https://randomuser.me/api/portraits/women/2.jpg",
         text: "Excited to start my university journey!",
@@ -40,9 +40,9 @@ const recommendations = [
 const questions = [
     {
         id: "Q1",
-        userName: "Iruka Pathirana",
+        userName: "Eloise Bridgerton",
         userRole: "School Student",
-        userImage: "https://randomuser.me/api/portraits/women/2.jpg",
+        userImage: "https://randomuser.me/api/portraits/women/4.jpg",
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
         timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000, // 3 days ago
         answers: [

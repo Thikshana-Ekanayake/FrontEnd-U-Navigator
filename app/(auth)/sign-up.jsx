@@ -95,6 +95,7 @@ const SignUp = () => {
       Undergraduate:undergraduateData
     };
     console.log('Merged Form Data:', merged);
+    router.replace('/sign-in');
   };
 
   return (

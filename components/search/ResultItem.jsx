@@ -1,7 +1,14 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
+const MAX_DESCRIPTION_LENGTH = 80;
+
 const ResultItem = ({ item, onPress }) => {
+    const truncatedDescription =
+        item.description.length > MAX_DESCRIPTION_LENGTH
+            ? item.description.substring(0, MAX_DESCRIPTION_LENGTH).trim() + "..."
+            : item.description;
+
     return (
         <TouchableOpacity onPress={onPress}>
             <View className="flex-row items-center mt-4 px-2 mb-2">
@@ -16,7 +23,7 @@ const ResultItem = ({ item, onPress }) => {
                         <Text className="text-gray-500 text-sm">{item.subtitle}</Text>
                         <Image source={{ uri: item.icon }} className="w-5 h-5 ml-2" />
                     </View>
-                    <Text className="text-gray-700 text-xs mt-1">{item.description}</Text>
+                    <Text className="text-gray-700 text-xs mt-1">{truncatedDescription}</Text>
                 </View>
             </View>
             {/* Separator Line */}

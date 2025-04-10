@@ -22,7 +22,7 @@ const CommunitySection = ({ degreeId }) => {
         {
             id: "2",
             degreeId: "D2",
-            userName: "Iruka Pathirana",
+            userName: "Hiruni Siriwardana",
             userRole: "School Student",
             userImage: "https://randomuser.me/api/portraits/women/2.jpg",
             text: "Excited to start my university journey!",
@@ -36,7 +36,7 @@ const CommunitySection = ({ degreeId }) => {
         {
             id: "Q1",
             degreeId: "D1",
-            userName: "Iruka Pathirana",
+            userName: "Lankangana",
             userRole: "School Student",
             userImage: "https://randomuser.me/api/portraits/women/2.jpg",
             text: "What are the entry requirements for this degree?",

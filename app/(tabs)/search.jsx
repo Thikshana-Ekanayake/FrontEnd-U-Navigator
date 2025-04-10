@@ -5,50 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import ResultItem from "../../components/search/ResultItem";
 
-// Sample Degree Data
-const degreesData = [
-  {
-    id: "D1",
-    title: "Bachelor of Science Honours in Artificial Intelligence",
-    subtitle: "University of Moratuwa",
-    icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
-    image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    tag: "degree",
-    isNew: true,
-  },
-  {
-    id: "D2",
-    title: "Bachelor of Law",
-    subtitle: "University of Colombo",
-    icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
-    image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    tag: "degree",
-  },
-];
-
-// Sample University Data
-const universitiesData = [
-  {
-    id: "U1",
-    title: "University of Moratuwa",
-    subtitle: "Moratuwa, Sri Lanka",
-    icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
-    image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-    description: "A leading technological university in Sri Lanka.",
-    tag: "university",
-  },
-  {
-    id: "U2",
-    title: "University of Colombo",
-    subtitle: "Colombo, Sri Lanka",
-    icon: "https://upload.wikimedia.org/wikipedia/en/6/60/University_of_Moratuwa_logo.png",
-    image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-    description: "One of the oldest universities in Sri Lanka.",
-    tag: "university",
-  },
-];
+import {degreesData} from "../../sampleData/degreeData";
+import {universitiesData} from "../../sampleData/universityData";
 
 const combinedData = [...degreesData, ...universitiesData];
 
@@ -60,10 +18,20 @@ const SearchScreen = () => {
   const filters = ["All", "Degrees", "Universities"];
 
   // Filtering Logic
-  const filteredResults = combinedData.filter((item) =>
-      (selectedFilter === "All" || item.tag === selectedFilter.toLowerCase()) &&
-      item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredResults = combinedData.filter((item) => {
+    const filterTagMap = {
+      All: null,
+      Degrees: "degree",
+      Universities: "university",
+    };
+    const tagToMatch = filterTagMap[selectedFilter];
+
+    return (
+        (!tagToMatch || item.tag === tagToMatch) &&
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+
 
   return (
       <SafeAreaView className="flex-1 bg-white px-4 pt-6">

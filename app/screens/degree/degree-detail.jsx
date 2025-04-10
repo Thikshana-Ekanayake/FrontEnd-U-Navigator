@@ -8,19 +8,7 @@ import ConsultationScreen from "../consultation/consultation-screen";
 import CommunitySection from "../community/community-screen";
 import CriteriaScreen from "../criteria/criteria-screen";
 
-const degreesData = [
-  {
-    id: "D1",
-    title: "Bsc (Hons.) in Information Technology & Management",
-    subtitle: "University of Moratuwa",
-    image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-    description:
-        "An undergraduate of B.Sc. (Hons) in Information Technology and Management program will have followed a dual core degree program combining core Information Technology (IT) and core Management...",
-    views: 578000,
-    interested: 78000,
-    engaged: 18000,
-  },
-];
+import {degreesData} from "../../../sampleData/degreeData";
 
 const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0", "") + "K" : num);
 
