@@ -18,8 +18,8 @@ const Profile = () => {
             id: "P1",
             name: "Thikshana Ekanayake",
             role: "School Student | Physical Science Stream",
-            coverImage: "https://img.freepik.com/free-photo/top-view-eyeglasses-with-case_23-2148290434.jpg",
-            profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
+            coverImage: "https://www.businessbecause.com/uploads/default/news/images/1603279583.png",
+            profileImage: "https://www.famu.edu/academics/undergraduate-academics/undergraduate-student-success-center/img/GradStudentsFuture_640x480.jpg",
             type: "student",
         },
 
