@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from 'expo-router';
+import { LogOut } from "lucide-react-native";
+
 import MentionsTab from "./mentionsTab/MentionsTab";
 import ActivityTab from "./activityTab/ActivityTab";
 
 const ConsultantProfile = ({ profile }) => {
     const [activeTab, setActiveTab] = useState("Activity");
+    const router = useRouter();
 
     const mentionsData = [
         {
@@ -69,8 +73,16 @@ const ConsultantProfile = ({ profile }) => {
                 ListHeaderComponent={
                     <>
                         {/* Cover Image */}
-                        <View className="items-center bg-gray-200 h-40">
+                        <View className="bg-gray-200 h-40">
                             <Image source={{ uri: profile.coverImage }} className="w-full h-full" resizeMode="cover" />
+
+                            {/* Logout Icon */}
+                            <TouchableOpacity
+                                onPress={() => router.replace('/sign-in')}
+                                className="absolute top-4 right-4 bg-white p-2 rounded-full shadow"
+                            >
+                                <LogOut size={20} color="#000" />
+                            </TouchableOpacity>
                         </View>
 
                         {/* Profile Details */}

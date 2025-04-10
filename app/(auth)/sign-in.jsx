@@ -23,10 +23,10 @@ const SignIn = ({ navigation }) => {
 
   return (
     <SafeAreaView className="bg-white h-full px-6 flex justify-center">
-      {/* Back Button */}
-      <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-20 left-6">
-        <ChevronLeft size={24} color="#000" />
-      </TouchableOpacity>
+      {/*/!* Back Button *!/*/}
+      {/*<TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-20 left-6">*/}
+      {/*  <ChevronLeft size={24} color="#000" />*/}
+      {/*</TouchableOpacity>*/}
 
       {/* Logo / Title */}
       <Text className="text-4xl font-bold text-primary-g2 mb-6">
