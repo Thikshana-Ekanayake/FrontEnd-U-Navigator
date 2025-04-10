@@ -16,10 +16,10 @@ const Profile = () => {
         },
         {
             id: "P1",
-            name: "Iruka Pathirana",
+            name: "Thikshana Ekanayake",
             role: "School Student | Physical Science Stream",
             coverImage: "https://img.freepik.com/free-photo/top-view-eyeglasses-with-case_23-2148290434.jpg",
-            profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+            profileImage: "https://randomuser.me/api/portraits/women/3.jpg",
             type: "student",
         },
 

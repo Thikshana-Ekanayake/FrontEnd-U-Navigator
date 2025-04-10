@@ -4,32 +4,9 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeft, Bookmark, Users } from "lucide-react-native";
 import CustomButton from "../../../components/CustomButton";
-import CustomSlidableCard from "../../../components/CustomSlidableCard"; // Import the new component
+import CustomSlidableCard from "../../../components/CustomSlidableCard";
 
-// Sample university data
-const universitiesData = [
-    {
-        id: "U1",
-        name: "University of Moratuwa",
-        enrollments: 125000,
-        image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-        description: "The University of Moratuwa is a leading technological university in Sri Lanka...",
-        mostViewed: [
-            { id: "D1", title: "Bachelor of Science in Engineering Honours", image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg", views: 578000, interested: 78000 },
-            { id: "D2", title: "BSc (Hons) in Artificial Intelligence", image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg", views: 578000, interested: 78000 },
-        ],
-    },
-    {
-        id: "U2",
-        name: "University of Colombo",
-        enrollments: 100000,
-        image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg",
-        description: "The University of Colombo is Sri Lanka’s oldest university, founded in 1921...",
-        mostViewed: [
-            { id: "D3", title: "BSc in Computer Science", image: "https://uom.lk/sites/default/files/civil/images/civil1_0.jpg", views: 578000, interested: 78000 },
-        ],
-    },
-];
+import {universitiesData} from "../../../sampleData/universityData";
 
 const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0", "") + "K" : num);
 
@@ -49,7 +26,7 @@ const UniversityDetail = () => {
             <View className="flex-1 relative">
                 <ScrollView contentContainerStyle={{ padding: 16 }}>
                     {/* Header Image */}
-                    <View className="relative">
+                    <View className="relative mb-4">
                         <Image source={{ uri: university.image }} className="w-full h-96 rounded-xl" />
                         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-5 left-4 p-2">
                             <ChevronLeft size={28} color="white" />
@@ -63,8 +40,8 @@ const UniversityDetail = () => {
                     </View>
 
                     {/* University Name & Enrollment */}
-                    <View className="mt-4 flex-row justify-between items-center">
-                        <Text className="text-2xl font-bold">{university.name}</Text>
+                    <View className="mt-2 flex-row justify-between items-center">
+                        <Text className="text-2xl font-bold w-4/5">{university.title}</Text>
                         <TouchableOpacity>
                             <Text className="text-blue-600">Show map</Text>
                         </TouchableOpacity>

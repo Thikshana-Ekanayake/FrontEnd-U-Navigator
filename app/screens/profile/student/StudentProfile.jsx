@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from 'expo-router';
+import { LogOut } from "lucide-react-native";
+
 import InterestedDegrees from "./interestTab/InterestedDegrees";
 import ActivityTab from "./activityTab/ActivityTab";
 import AboutTab from "./aboutTab/AboutTab";
 
 const StudentProfile = ({profile}) => {
     const [activeTab, setActiveTab] = useState("Interested");
+    const router = useRouter();
+
 
     const aboutData = {
         stream: "Physical Science",
@@ -60,7 +65,7 @@ const StudentProfile = ({profile}) => {
             id: "A1",
             type: "question",
             userImage: "https://randomuser.me/api/portraits/men/1.jpg",
-            userName: "Iruka Pathirana",
+            userName: "Thikshana Ekanayake",
             userRole: "School Student",
             text: "How does machine learning improve healthcare?",
             timestamp: new Date("2025-03-31T10:00:00Z").toISOString(),
@@ -71,37 +76,37 @@ const StudentProfile = ({profile}) => {
                     timestamp: new Date("2025-03-31T10:15:00Z").toISOString(),
                 },
             ],
-            replierName: "Thikshana Ekanayake",
+            replierName: "Nimali Silva",
         },
         {
             id: "A2",
             type: "post",
             userImage: "https://randomuser.me/api/portraits/men/2.jpg",
-            userName: "Iruka Pathirana",
+            userName: "Thikshana Ekanayake",
             userRole: "School Student",
             text: "Just completed my project on AI! It was a challenging but rewarding journey. 🚀",
             likes: 12,
             comments: 3,
             images: ["https://uom.lk/sites/default/files/civil/images/civil1_0.jpg"],
-            posterName: "Iruka Pathirana",
+            posterName: "Thikshana Ekanayake",
             timestamp: new Date("2025-03-30T15:30:00Z").toISOString(),
         },
         {
             id: "A3",
             type: "question",
             userImage: "https://randomuser.me/api/portraits/women/3.jpg",
-            userName: "Nimali Silva",
+            userName: "Thikshana Ekanayake",
             userRole: "University Student",
             text: "What are the best resources to learn React Native?",
             timestamp: new Date("2025-04-01T09:00:00Z").toISOString(),
             answers: [
                 {
-                    user: "Thikshana Ekanayake",
+                    user: "Nimali Silva",
                     text: "Start with the official React Native docs and YouTube tutorials like Academind.",
                     timestamp: new Date("2025-04-01T09:20:00Z").toISOString(),
                 },
             ],
-            replierName: "Thikshana Ekanayake",
+            replierName: "Nimali Silva",
         },
         {
             id: "A4",
@@ -127,9 +132,18 @@ const StudentProfile = ({profile}) => {
                 ListHeaderComponent={
                     <>
                         {/* Cover Image */}
-                        <View className="items-center bg-gray-200 h-40">
+                        <View className="bg-gray-200 h-40">
                             <Image source={{ uri: profile.coverImage }} className="w-full h-full" resizeMode="cover" />
+
+                            {/* Logout Icon */}
+                            <TouchableOpacity
+                                onPress={() => router.replace('/sign-in')}
+                                className="absolute top-4 right-4 bg-white p-2 rounded-full shadow"
+                            >
+                                <LogOut size={20} color="#000" />
+                            </TouchableOpacity>
                         </View>
+
 
                         {/* Profile Details */}
                         <View className="items-center mt-4">
