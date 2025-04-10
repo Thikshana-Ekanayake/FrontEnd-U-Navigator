@@ -5,6 +5,8 @@ import PostCard from "../../components/community/PostCard";
 import CustomSlidableCard from "../../components/CustomSlidableCard";
 import PostCreationHead from "../../components/community/PostCreationHead";
 import QACard from "../../components/community/QACard";
+import { useRoute, useNavigation } from "@react-navigation/native";
+
 
 const posts = [
     {
@@ -67,6 +69,8 @@ const questions = [
 
 
 const Home = () => {
+    const route = useRoute();
+    const navigation = useNavigation();
     return (
         <SafeAreaView className="flex-1 bg-white">
             <ScrollView className="p-4">
@@ -94,7 +98,7 @@ const Home = () => {
                                 data={recommendations}
                                 horizontal
                                 keyExtractor={(item) => item.id}
-                                renderItem={({ item }) => <CustomSlidableCard item={item} />}
+                                renderItem={({ item }) => <CustomSlidableCard item={item} onPress={() => navigation.navigate("screens/degree/degree-detail", { id: item.id })}/>}
                                 showsHorizontalScrollIndicator={false}
                             />
 
