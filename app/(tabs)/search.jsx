@@ -88,7 +88,7 @@ const SearchScreen = () => {
             </View>
 
             {/* Filters */}
-            <View className="flex-row mt-4 space-x-3">
+            <View className="flex-row mt-4 space-x-3 mb-2">
                 {filters.map((filter) => (
                     <TouchableOpacity
                         key={filter}
