@@ -11,6 +11,9 @@ export const degreesData = [
         views: 578000,
         interested: 78000,
         engaged: 18000,
+        stream: "Physical Science",
+        degreeType: "BSc",
+        duration: "4 Years"
     },
     {
         id: "D2",
@@ -23,6 +26,9 @@ export const degreesData = [
         views: 578000,
         interested: 78000,
         engaged: 18000,
+        stream: "Arts",
+        degreeType: "LLB",
+        duration: "4 Years"
     },
     {
         id: "D3",
@@ -35,6 +41,9 @@ export const degreesData = [
         views: 342000,
         interested: 56000,
         engaged: 15000,
+        stream: "Physical Science",
+        degreeType: "BSc",
+        duration: "3 Years"
     },
     {
         id: "D4",
@@ -47,6 +56,9 @@ export const degreesData = [
         views: 212000,
         interested: 47000,
         engaged: 12000,
+        stream: "Bioscience",
+        degreeType: "BSc",
+        duration: "4 Years"
     },
     {
         id: "D5",
@@ -59,6 +71,9 @@ export const degreesData = [
         views: 189000,
         interested: 31000,
         engaged: 9000,
+        stream: "Bioscience",
+        degreeType: "BDS",
+        duration: "5 Years"
     },
     {
         id: "D6",
@@ -71,6 +86,9 @@ export const degreesData = [
         views: 304000,
         interested: 54000,
         engaged: 16000,
+        stream: "Commerce",
+        degreeType: "BBA",
+        duration: "3 Years"
     },
     {
         id: "D7",
@@ -83,6 +101,9 @@ export const degreesData = [
         views: 175000,
         interested: 29000,
         engaged: 7000,
+        stream: "Bioscience",
+        degreeType: "BSc",
+        duration: "3 Years"
     },
     {
         id: "D8",
@@ -95,6 +116,9 @@ export const degreesData = [
         views: 198000,
         interested: 31000,
         engaged: 8000,
+        stream: "Commerce",
+        degreeType: "BCom",
+        duration: "3 Years"
     },
     {
         id: "D9",
@@ -107,5 +131,8 @@ export const degreesData = [
         views: 164000,
         interested: 25000,
         engaged: 6000,
+        stream: "Arts",
+        degreeType: "BA",
+        duration: "3 Years"
     }
 ];

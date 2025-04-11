@@ -1,49 +1,56 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Modal } from "react-native";
-import { X } from "lucide-react-native";
+import { X, Check } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { degreesData } from "../../sampleData/degreeData";
 
-const universities = ["UoM", "UCSC", "NSBM", "SLIIT", "CINEC", "IIT", "KDU"];
-const streams = ["Physical Science", "Bioscience", "Commerce", "Arts", "Technology"];
-const degreeTypes = ["BSc", "BA", "BEng", "BIT", "BBA"];
-const durations = ["3 Years", "4 Years"];
-const intakes = ["January", "April", "September"];
+const AdvancedFilterModal = ({ visible, onClose, selectedFilters, setSelectedFilters }) => {
+    const {
+        universityOptions,
+        streamOptions,
+        degreeTypeOptions,
+        durationOptions,
+    } = useMemo(() => {
+        const uniSet = new Set();
+        const streamSet = new Set();
+        const typeSet = new Set();
+        const durationSet = new Set();
 
-const AdvancedFilterModal = ({ visible, onClose }) => {
-    const [selectedFilters, setSelectedFilters] = useState({
-        universities: [],
-        streams: [],
-        degreeTypes: [],
-        durations: [],
-        intakes: [],
-    });
-
-    const toggleFilter = (category, value) => {
-        setSelectedFilters((prev) => {
-            const isSelected = prev[category].includes(value);
-            const updated = isSelected
-                ? prev[category].filter((item) => item !== value)
-                : [...prev[category], value];
-            return { ...prev, [category]: updated };
+        degreesData.forEach((degree) => {
+            if (degree.stream) streamSet.add(degree.stream);
+            if (degree.degreeType) typeSet.add(degree.degreeType);
+            if (degree.duration) durationSet.add(degree.duration);
+            if (degree.subtitle) uniSet.add(degree.subtitle); // directly using full name
         });
-    };
 
-    const renderPillList = (data, category) => (
+        return {
+            universityOptions: Array.from(uniSet),
+            streamOptions: Array.from(streamSet),
+            degreeTypeOptions: Array.from(typeSet),
+            durationOptions: Array.from(durationSet),
+        };
+    }, []);
+
+    const renderPillList = (data) => (
         <View className="flex-row flex-wrap gap-2 mt-2">
             {data.map((item) => {
-                const selected = selectedFilters[category].includes(item);
+                const isSelected = selectedFilters.includes(item);
                 return (
                     <TouchableOpacity
                         key={item}
-                        onPress={() => toggleFilter(category, item)}
-                        className={`px-4 py-2 rounded-full border flex-row items-center ${
-                            selected ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-white"
+                        onPress={() => {
+                            setSelectedFilters((prev) =>
+                                isSelected ? prev.filter((f) => f !== item) : [...prev, item]
+                            );
+                        }}
+                        className={`px-4 py-2 rounded-full flex-row items-center border ${
+                            isSelected ? "border-blue-600 bg-blue-100" : "border-gray-300 bg-white"
                         }`}
                     >
-                        <Text className={`text-sm ${selected ? "text-blue-600 font-semibold" : "text-gray-700"}`}>
+                        <Text className={`text-sm ${isSelected ? "text-blue-600" : "text-gray-700"}`}>
                             {item}
                         </Text>
-                        {selected && <Text className="ml-1 text-blue-600">✓</Text>}
+                        {isSelected && <Check size={16} color="#2563eb" className="ml-1" />}
                     </TouchableOpacity>
                 );
             })}
@@ -52,7 +59,7 @@ const AdvancedFilterModal = ({ visible, onClose }) => {
 
     return (
         <Modal visible={visible} animationType="slide" transparent>
-            <SafeAreaView className="flex-1 bg-white px-4 pt-6 mt-3 pb-3">
+            <SafeAreaView className="flex-1 bg-white px-4 pt-6 mt-4 pb-3">
                 <View className="flex-1 bg-white rounded-t-3xl mt-auto p-4">
                     <View className="flex-row justify-between items-center mb-4">
                         <Text className="text-lg font-bold text-gray-900">Advanced Filters</Text>
@@ -64,27 +71,22 @@ const AdvancedFilterModal = ({ visible, onClose }) => {
                     <ScrollView showsVerticalScrollIndicator={false}>
                         <View className="mb-4">
                             <Text className="font-semibold text-base text-gray-800">University</Text>
-                            {renderPillList(universities, "universities")}
+                            {renderPillList(universityOptions)}
                         </View>
 
                         <View className="mb-4">
                             <Text className="font-semibold text-base text-gray-800">Stream</Text>
-                            {renderPillList(streams, "streams")}
+                            {renderPillList(streamOptions)}
                         </View>
 
                         <View className="mb-4">
                             <Text className="font-semibold text-base text-gray-800">Degree Type</Text>
-                            {renderPillList(degreeTypes, "degreeTypes")}
+                            {renderPillList(degreeTypeOptions)}
                         </View>
 
                         <View className="mb-4">
                             <Text className="font-semibold text-base text-gray-800">Duration</Text>
-                            {renderPillList(durations, "durations")}
-                        </View>
-
-                        <View className="mb-4">
-                            <Text className="font-semibold text-base text-gray-800">Intake</Text>
-                            {renderPillList(intakes, "intakes")}
+                            {renderPillList(durationOptions)}
                         </View>
                     </ScrollView>
 

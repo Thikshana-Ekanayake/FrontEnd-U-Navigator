@@ -21,6 +21,8 @@ const SearchScreen = () => {
     const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [selectedFilter, setSelectedFilter] = useState(initialFilter);
     const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
+    const [selectedFilters, setSelectedFilters] = useState([]);
+
 
     useEffect(() => {
         setSearchQuery(initialQuery);
@@ -35,13 +37,31 @@ const SearchScreen = () => {
             Degrees: "degree",
             Universities: "university",
         };
+
         const tagToMatch = filterTagMap[selectedFilter];
 
-        return (
-            (!tagToMatch || item.tag === tagToMatch) &&
-            item.title.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        // 1. Filter by tag
+        if (tagToMatch && item.tag !== tagToMatch) return false;
+
+        // 2. Filter by search query
+        if (!item.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+
+        // 3. Filter by selected advanced filters
+        if (selectedFilters.length > 0) {
+            const itemValues = Object.values(item).map((val) =>
+                typeof val === "string" ? val.toLowerCase() : ""
+            );
+
+            const matchesAll = selectedFilters.every((filter) =>
+                itemValues.some((val) => val.includes(filter.toLowerCase()))
+            );
+
+            if (!matchesAll) return false;
+        }
+
+        return true;
     });
+
 
     return (
         <SafeAreaView className="flex-1 bg-white px-4 pt-6">
@@ -77,13 +97,44 @@ const SearchScreen = () => {
                 ))}
 
                 <TouchableOpacity
-                    className="px-4 py-2 rounded-3xl border border-gray-400 absolute right-0"
+                    className={`px-4 py-2 rounded-3xl border absolute right-0 ${
+                        selectedFilters.length > 0 ? "bg-blue-600 border-blue-600" : "border-gray-400"
+                    }`}
                     onPress={() => setShowAdvancedFilter(true)}
                 >
-                    <Filter size={16} color="gray" />
+                    <Filter
+                        size={16}
+                        color={selectedFilters.length > 0 ? "white" : "gray"}
+                    />
                 </TouchableOpacity>
 
+
             </View>
+
+            {/*advanced filter pills*/}
+            {selectedFilters.length > 0 && (
+                <View className="flex-row flex-wrap mt-2 gap-2">
+                    {selectedFilters.map((filter, index) => (
+                        <View
+                            key={index}
+                            className="flex-row items-center px-4 py-2 rounded-3xl bg-blue-600"
+                        >
+                            <Text className="text-white font-semibold mr-2 text-sm">{filter}</Text>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    setSelectedFilters((prev) =>
+                                        prev.filter((item) => item !== filter)
+                                    )
+                                }
+                                className="w-4 h-4 bg-white rounded-full items-center justify-center"
+                            >
+                                <Text className="text-blue-600 text-xs font-bold">×</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ))}
+                </View>
+            )}
+
 
             {/* Results */}
             <FlatList
@@ -109,7 +160,10 @@ const SearchScreen = () => {
             <AdvancedFilterModal
                 visible={showAdvancedFilter}
                 onClose={() => setShowAdvancedFilter(false)}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
             />
+
         </SafeAreaView>
     );
 };
