@@ -83,15 +83,15 @@ const UniversityDetail = () => {
                 <View className="mt-6 absolute bottom-0 left-0 right-0 p-4">
                     <CustomButton
                         title="View all"
-                        // onPress={() =>
-                        //     router.replace({
-                        //         pathname: "/search",
-                        //         params: {
-                        //             initialQuery: university.title,
-                        //             initialFilter: "Universities",
-                        //         },
-                        //     })
-                        // }
+                        onPress={() =>
+                            router.push({
+                                pathname: "/search",
+                                params: {
+                                    initialFilter: "Degrees",
+                                    initialAdvancedFilters: JSON.stringify([university.title]), 
+                                },
+                            })
+                        }
                     />
 
                 </View>

@@ -16,7 +16,8 @@ const SearchScreen = () => {
     const navigation = useNavigation();
     const router = useRouter();
     const route = useRoute();
-    const { initialQuery = "", initialFilter = "All" } = route.params || {};
+    const { initialQuery = "", initialFilter = "All", initialAdvancedFilters = "[]" } = route.params || {};
+
 
     const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [selectedFilter, setSelectedFilter] = useState(initialFilter);
@@ -27,7 +28,17 @@ const SearchScreen = () => {
     useEffect(() => {
         setSearchQuery(initialQuery);
         setSelectedFilter(initialFilter);
-    }, [initialQuery, initialFilter]);
+
+        try {
+            const parsedFilters = JSON.parse(initialAdvancedFilters);
+            if (Array.isArray(parsedFilters)) {
+                setSelectedFilters(parsedFilters);
+            }
+        } catch (e) {
+            console.warn("Failed to parse advanced filters", e);
+        }
+    }, [initialQuery, initialFilter, initialAdvancedFilters]);
+
 
     const filters = ["All", "Degrees", "Universities"];
 
