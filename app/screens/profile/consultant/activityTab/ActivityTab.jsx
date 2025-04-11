@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import { ThumbsUp, ThumbsUpIcon } from "lucide-react-native";
-import { formatTime } from "../../../../../utils/formatTimeUtils.js";
+import { formatTime } from "../../../../../utils/formatTimeUtils.jsx";
 
 const ActivityTab = ({ activities }) => {
     // Local state to manage likes and liked status

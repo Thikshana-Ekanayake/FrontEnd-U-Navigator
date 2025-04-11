@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, Modal } from "react-native";
 import { X, Check } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { degreesData } from "../../sampleData/degreeData";
+import CustomButton from "../CustomButton";
 
 const AdvancedFilterModal = ({ visible, onClose, selectedFilters, setSelectedFilters }) => {
     const {
@@ -90,9 +91,9 @@ const AdvancedFilterModal = ({ visible, onClose, selectedFilters, setSelectedFil
                         </View>
                     </ScrollView>
 
-                    <TouchableOpacity className="mt-4 bg-blue-600 py-3 rounded-full">
-                        <Text className="text-white text-center font-semibold">Show Results</Text>
-                    </TouchableOpacity>
+                    <View className="mb-5 items-center">
+                        <CustomButton title="View" onPress={onClose} containerStyles={{ width: "100%" }} />
+                    </View>
                 </View>
             </SafeAreaView>
         </Modal>

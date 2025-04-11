@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Quote, BadgeCheck, ThumbsUp } from "lucide-react-native";
-import { formatTime } from "../../utils/formatTimeUtils.js";
+import { formatTime } from "../../utils/formatTimeUtils.jsx";
 
 const ConsultationCard = ({ item, likes, toggleLike, userId }) => {
     const isLiked = likes.some(
