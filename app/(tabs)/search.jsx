@@ -4,6 +4,7 @@ import { Search, Filter } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import ResultItem from "../../components/search/ResultItem";
+import AdvancedFilterModal from "../../components/search/AdvancedFilterModal";
 
 import { degreesData } from "../../sampleData/degreeData";
 import { universitiesData } from "../../sampleData/universityData";
@@ -19,6 +20,7 @@ const SearchScreen = () => {
 
     const [searchQuery, setSearchQuery] = useState(initialQuery);
     const [selectedFilter, setSelectedFilter] = useState(initialFilter);
+    const [showAdvancedFilter, setShowAdvancedFilter] = useState(false);
 
     useEffect(() => {
         setSearchQuery(initialQuery);
@@ -74,9 +76,13 @@ const SearchScreen = () => {
                     </TouchableOpacity>
                 ))}
 
-                <TouchableOpacity className="px-4 py-2 rounded-3xl border border-gray-400 absolute right-0">
+                <TouchableOpacity
+                    className="px-4 py-2 rounded-3xl border border-gray-400 absolute right-0"
+                    onPress={() => setShowAdvancedFilter(true)}
+                >
                     <Filter size={16} color="gray" />
                 </TouchableOpacity>
+
             </View>
 
             {/* Results */}
@@ -96,6 +102,13 @@ const SearchScreen = () => {
                         }
                     />
                 )}
+            />
+
+
+
+            <AdvancedFilterModal
+                visible={showAdvancedFilter}
+                onClose={() => setShowAdvancedFilter(false)}
             />
         </SafeAreaView>
     );
