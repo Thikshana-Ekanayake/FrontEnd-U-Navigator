@@ -2,6 +2,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import { useFonts } from "expo-font";
 import { useEffect } from 'react';
 import { SplashScreen, Stack } from "expo-router";
+import {QueryProvider} from "../src/providers/QueryProvider";
+import {AuthProvider} from "../src/providers/AuthProvider";
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -98,18 +100,20 @@ const RootLayout = () => {
 
 
   return (
-    // <GlobalProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="screens/degree/degree-detail" options={{headerShown: false }} />
-        <Stack.Screen name="screens/university/university-detail" options={{headerShown: false }} />
-        <Stack.Screen name="screens/consultation/consultation-screen" options={{headerShown: false }} />
-        <Stack.Screen name="screens/postCreate/post-create-screen" options={{headerShown: false }} />
-        {/* <Stack.Screen name="search/[query]" options={{ headerShown: false }} /> */}
-      </Stack>
-    // </GlobalProvider>
+      <QueryProvider>
+        <AuthProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="screens/degree/degree-detail" options={{headerShown: false }} />
+            <Stack.Screen name="screens/university/university-detail" options={{headerShown: false }} />
+            <Stack.Screen name="screens/consultation/consultation-screen" options={{headerShown: false }} />
+            <Stack.Screen name="screens/postCreate/post-create-screen" options={{headerShown: false }} />
+            {/* <Stack.Screen name="search/[query]" options={{ headerShown: false }} /> */}
+          </Stack>
+        </AuthProvider>
+      </QueryProvider>
   );
 }
 
