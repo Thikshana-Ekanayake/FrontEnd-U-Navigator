@@ -4,10 +4,14 @@ export const endpoints = {
         refresh: "/api/auth/refresh",        // if you implement refresh later
         me: "/api/auth/me",                  // profile
     },
-    // Example: community
-    posts: {
-        list: "/api/posts",
-        byId: (id) => `/api/posts/${id}`,
+
+    universities: {
+        list: "/api/university"
     },
+
+    degrees: {
+        list: "/api/degree",                             // GET all degrees
+    }
+
     // Add more domains here...
 };
