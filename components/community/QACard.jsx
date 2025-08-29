@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import {formatTime} from "../../utils/formatTimeUtils.js";
+import {formatTime} from "../../utils/formatTimeUtils.jsx";
 
 const QACard = ({ question }) => {
     const answersCount = question.answers?.length || 0;

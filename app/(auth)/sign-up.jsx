@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
 import * as Progress from 'react-native-progress';
@@ -18,6 +18,7 @@ import UndergraduateIdPage from "../screens/authScreens/signInScreens/undergradu
 const SignUp = () => {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const userInfoRef = useRef();
 
   const [category, setCategory] = useState('');
 
@@ -39,7 +40,7 @@ const SignUp = () => {
       case 'Undergraduate':
         return 3;
       default:
-        return 1;
+        return 2;
     }
   };
 
@@ -77,8 +78,14 @@ const SignUp = () => {
 
 
   const handleNext = () => {
+    if (step === 1) {
+      const isValid = userInfoRef.current?.validate();
+      if (!isValid) return;
+    }
+
     if (step < getTotalSteps()) setStep(step + 1);
   };
+
 
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
@@ -94,6 +101,7 @@ const SignUp = () => {
       Undergraduate:undergraduateData
     };
     console.log('Merged Form Data:', merged);
+    router.replace('/sign-in');
   };
 
   return (
@@ -138,6 +146,7 @@ const SignUp = () => {
                 >
                   {step === 1 && (
                       <UserInfoStep
+                          ref={userInfoRef}
                           onDataChange={(data) => {
                             setUserInfoData(data);
                             setCategory(data.category);
@@ -145,6 +154,7 @@ const SignUp = () => {
                           defaultData={userInfoData}
                       />
                   )}
+
 
                   {category === 'After-AL' && step === 2 && (
                       <AfterALStepALResults

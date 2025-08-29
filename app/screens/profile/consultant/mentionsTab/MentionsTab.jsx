@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, FlatList } from "react-native";
 import PostCard from "../../../../../components/community/PostCard";
 import QACard from "../../../../../components/community/QACard";
-import {formatTime} from "../../../../../utils/formatTimeUtils.js";
+import {formatTime} from "../../../../../utils/formatTimeUtils.jsx";
 
 const MentionsTab = ({ mentions }) => {
     const renderMentionItem = ({ item }) => {

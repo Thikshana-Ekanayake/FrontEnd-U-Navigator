@@ -5,6 +5,8 @@ import PostCard from "../../components/community/PostCard";
 import CustomSlidableCard from "../../components/CustomSlidableCard";
 import PostCreationHead from "../../components/community/PostCreationHead";
 import QACard from "../../components/community/QACard";
+import { useRoute, useNavigation } from "@react-navigation/native";
+
 
 const posts = [
     {
@@ -22,7 +24,7 @@ const posts = [
     },
     {
         id: "2",
-        userName: "Iruka Pathirana",
+        userName: "Penelope Featherington",
         userRole: "School Student",
         userImage: "https://randomuser.me/api/portraits/women/2.jpg",
         text: "Excited to start my university journey!",
@@ -40,9 +42,9 @@ const recommendations = [
 const questions = [
     {
         id: "Q1",
-        userName: "Iruka Pathirana",
+        userName: "Eloise Bridgerton",
         userRole: "School Student",
-        userImage: "https://randomuser.me/api/portraits/women/2.jpg",
+        userImage: "https://randomuser.me/api/portraits/women/4.jpg",
         text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.",
         timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000, // 3 days ago
         answers: [
@@ -67,6 +69,8 @@ const questions = [
 
 
 const Home = () => {
+    const route = useRoute();
+    const navigation = useNavigation();
     return (
         <SafeAreaView className="flex-1 bg-white">
             <ScrollView className="p-4">
@@ -94,7 +98,7 @@ const Home = () => {
                                 data={recommendations}
                                 horizontal
                                 keyExtractor={(item) => item.id}
-                                renderItem={({ item }) => <CustomSlidableCard item={item} />}
+                                renderItem={({ item }) => <CustomSlidableCard item={item} onPress={() => navigation.navigate("screens/degree/degree-detail", { id: item.id })}/>}
                                 showsHorizontalScrollIndicator={false}
                             />
 

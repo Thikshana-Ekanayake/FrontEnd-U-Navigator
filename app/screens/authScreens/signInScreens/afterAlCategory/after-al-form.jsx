@@ -23,6 +23,21 @@ const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
         commonGeneralTest: defaultData.commonGeneralTest || ''
     });
 
+    const districts = [
+        { label: 'Colombo', value: 'Colombo' },
+        { label: 'Kandy', value: 'Kandy' },
+        { label: 'Galle', value: 'Galle' },
+        { label: 'Jaffna', value: 'Jaffna' },
+        { label: 'Kurunegala', value: 'Kurunegala' }
+    ];
+
+    const years = [
+        { label: '2020', value: '2020' },
+        { label: '2021', value: '2021' },
+        { label: '2022', value: '2022' },
+        { label: '2023', value: '2023' }
+    ];
+
     useEffect(() => {
         onDataChange(form);
     }, [form]);
@@ -55,7 +70,7 @@ const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
             />
             <CustomDropdown
                 title="AL Year"
-                items={[]} // Populate if needed
+                items={years}
                 selectedValue={form.year}
                 setSelectedValue={(value) => setForm({ ...form, year: value })}
             />
@@ -66,7 +81,7 @@ const AfterALStepALResults = ({ onDataChange, defaultData = {} }) => {
             />
             <CustomDropdown
                 title="District"
-                items={[]} // Populate if needed
+                items={districts}
                 selectedValue={form.district}
                 setSelectedValue={(value) => setForm({ ...form, district: value })}
             />

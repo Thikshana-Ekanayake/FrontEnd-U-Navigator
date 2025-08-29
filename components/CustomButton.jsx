@@ -2,42 +2,49 @@ import { ActivityIndicator, Text, TouchableOpacity, View, StyleSheet } from 'rea
 import React from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const CustomButton = ({ 
-  title, 
-  onPress, 
-  isLoading = false, 
-  containerStyles = {}, 
-  textStyles = {} 
-}) => {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.7}
-      disabled={isLoading}
-      style={[styles.button, containerStyles, isLoading && styles.disabled]}
-    >
-      <LinearGradient
-        colors={['#0047B2', '#25A8F5']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradient}
-      >
-        <Text style={[styles.text, textStyles]}>{title}</Text>
+const CustomButton = ({
+                        title,
+                        onPress,
+                        isLoading = false,
+                        disabled = false, // new prop
+                        containerStyles = {},
+                        textStyles = {}
+                      }) => {
+  const isButtonDisabled = isLoading || disabled;
 
-        {isLoading && (
-          <View style={{ marginLeft: 8 }}>
-            <ActivityIndicator animating={isLoading} color="#fff" size="small" />
-          </View>
-        )}
-      </LinearGradient>
-    </TouchableOpacity>
+  return (
+      <TouchableOpacity
+          onPress={onPress}
+          activeOpacity={0.7}
+          disabled={isButtonDisabled}
+          style={[
+            styles.button,
+            containerStyles,
+            isButtonDisabled && styles.disabled
+          ]}
+      >
+        <LinearGradient
+            colors={['#0047B2', '#25A8F5']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={[styles.gradient, isButtonDisabled && styles.disabledGradient]}
+        >
+          <Text style={[styles.text, textStyles]}>{title}</Text>
+
+          {isLoading && (
+              <View style={{ marginLeft: 8 }}>
+                <ActivityIndicator animating={true} color="#fff" size="small" />
+              </View>
+          )}
+        </LinearGradient>
+      </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   button: {
     borderRadius: 12,
-    overflow: 'hidden', // Ensures rounded corners apply correctly
+    overflow: 'hidden',
   },
   gradient: {
     borderRadius: 12,
@@ -55,6 +62,10 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5,
+  },
+  disabledGradient: {
+    // Optional: override gradient colors if you want a gray tone instead of opacity
+    backgroundColor: '#A9A9A9', // fallback background
   },
 });
 

@@ -2,7 +2,7 @@ import React from "react";
 import { View, FlatList, Text } from "react-native";
 import QACard from "../../../../../components/community/QACard";
 import PostCard from "../../../../../components/community/PostCard";
-import {formatTime} from "../../../../../utils/formatTimeUtils.js";
+import {formatTime} from "../../../../../utils/formatTimeUtils.jsx";
 
 const ActivityTab = ({ activities }) => {
     const renderActivityItem = ({ item }) => {
