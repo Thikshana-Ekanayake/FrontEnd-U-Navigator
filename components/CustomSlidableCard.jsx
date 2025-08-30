@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { Eye, Star } from "lucide-react-native";
+import { TicketCheck, Star } from "lucide-react-native";
 
 const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0", "") + "K" : num);
 
@@ -14,8 +14,8 @@ const CustomSlidableCard = ({ item, onPress }) => {
       <View className="ml-3 flex-1">
         <Text className="text-sm font-semibold">{item.title}</Text>
         <View className="flex-row items-center mt-1">
-          <Eye size={14} color="gray" />
-          <Text className="text-gray-500 text-xs ml-1">{formatNumber(item.views)}</Text>
+          <TicketCheck size={14} color="gray" />
+          <Text className="text-gray-500 text-xs ml-1">{formatNumber(item.engagement)}</Text>
 
           {/* Add space between views and stars */}
           <Text className="mx-3 text-gray-400">|</Text>

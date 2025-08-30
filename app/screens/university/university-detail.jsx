@@ -1,27 +1,84 @@
-import React, { useState } from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity, FlatList } from "react-native";
+// app/screens/university/university-detail.jsx
+import React, { useMemo, useState } from "react";
+import { View, Text, Image, ScrollView, TouchableOpacity, FlatList, ActivityIndicator, Linking } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ChevronLeft, Bookmark, Users } from "lucide-react-native";
 import CustomButton from "../../../components/CustomButton";
 import CustomSlidableCard from "../../../components/CustomSlidableCard";
+import { useRouter } from "expo-router";
 
-import {universitiesData} from "../../../sampleData/universityData";
-import {useRouter} from "expo-router";
+// LIVE hooks
+import { useUniversityById} from "../../../src/quaryHooks/universities/useUniversityById";
+import { useUniversityDegreesWithCount} from "../../../src/quaryHooks/universities/useUniversityDegreesWithCount";
 
-const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0", "") + "K" : num);
+const formatNumber = (num) => (num >= 1000 ? (num / 1000).toFixed(1).replace(".0", "") + "K" : String(num));
 
 const UniversityDetail = () => {
     const route = useRoute();
     const router = useRouter();
     const navigation = useNavigation();
     const { id } = route.params;
-    const university = universitiesData.find((u) => u.id === id);
 
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [expanded, setExpanded] = useState(false);
 
-    if (!university) return <Text className="text-center text-gray-500 mt-10">University not found!</Text>;
+    // Fetch university + degree interest list
+    const { data: uni, isLoading: uniLoading, error: uniError, refetch: refetchUni } = useUniversityById(String(id));
+    const {
+        data: degCounts = [],
+        isLoading: listLoading,
+        error: listError,
+        refetch: refetchList,
+    } = useUniversityDegreesWithCount(String(id));
+
+    const loading = uniLoading || listLoading;
+    const hasError = uniError || listError;
+
+    // Sort by interestCount desc for "Most Interested"
+    const mostInterested = useMemo(() => {
+        return [...degCounts].sort((a, b) => (b.interestCount ?? 0) - (a.interestCount ?? 0));
+    }, [degCounts]);
+
+    // Map into what CustomSlidableCard typically needs (id, title, image, subtitle)
+    const mostInterestedCards = useMemo(
+        () =>
+            mostInterested.map((d) => ({
+                id: d.id,
+                title: d.name,
+                image: d.imageUrl || "",              // alias for card
+                subtitle: `${d.interestCount} interested • ${d.engagementCount} engaged`,
+                interested: d.interestCount,
+                engagement: d.engagementCount,
+            })),
+        [mostInterested]
+    );
+
+    const onOpenMap = () => {
+        if (uni?.locationUrl) Linking.openURL(uni.locationUrl).catch(() => {});
+    };
+
+    if (loading) {
+        return (
+            <SafeAreaView className="flex-1 bg-white items-center justify-center">
+                <ActivityIndicator />
+                <Text style={{ marginTop: 8 }}>Loading university…</Text>
+            </SafeAreaView>
+        );
+    }
+
+    if (hasError || !uni) {
+        return (
+            <SafeAreaView className="flex-1 bg-white items-center justify-center" style={{ paddingHorizontal: 16 }}>
+                <Text style={{ color: "red", textAlign: "center" }}>
+                    {hasError ? "Failed to fetch university details." : "University not found!"}
+                </Text>
+                <TouchableOpacity onPress={() => { refetchUni(); refetchList(); }} style={{ marginTop: 12 }}>
+                    <Text style={{ color: "#2563eb", fontWeight: "700" }}>Try Again</Text>
+                </TouchableOpacity>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -29,44 +86,55 @@ const UniversityDetail = () => {
                 <ScrollView contentContainerStyle={{ padding: 16 }}>
                     {/* Header Image */}
                     <View className="relative mb-4">
-                        <Image source={{ uri: university.image }} className="w-full h-96 rounded-xl" />
+                        <Image source={{ uri: uni.imageUrl || uni.logoUrl || "https://via.placeholder.com/800x600" }} className="w-full h-96 rounded-xl" />
                         <TouchableOpacity onPress={() => navigation.goBack()} className="absolute top-5 left-4 p-2">
                             <ChevronLeft size={28} color="white" />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => setIsBookmarked(!isBookmarked)}
+                            onPress={() => setIsBookmarked((b) => !b)}
                             className="absolute -bottom-3 right-4 bg-white p-2 rounded-full shadow-lg"
                         >
                             <Bookmark size={26} color={isBookmarked ? "gold" : "gray"} fill={isBookmarked ? "gold" : "white"} />
                         </TouchableOpacity>
                     </View>
 
-                    {/* University Name & Enrollment */}
+                    {/* University Name & Map */}
                     <View className="mt-2 flex-row justify-between items-center">
-                        <Text className="text-2xl font-bold w-4/5">{university.title}</Text>
-                        <TouchableOpacity>
-                            <Text className="text-blue-600">Show map</Text>
-                        </TouchableOpacity>
+                        <Text className="text-2xl font-bold w-4/5">{uni.name}</Text>
+                        {!!uni.locationUrl && (
+                            <TouchableOpacity onPress={onOpenMap}>
+                                <Text className="text-blue-600">Show map</Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
 
-                    {/* Enrollment Count */}
-                    <View className="flex-row items-center mt-2">
-                        <Users size={18} color="gray" />
-                        <Text className="text-gray-500 text-sm ml-1">{formatNumber(university.enrollments)} enrollments</Text>
-                    </View>
+                    {/* Contact / Website (replaces enrollments placeholder) */}
+                    {uni.website || uni.contactEmail || uni.contactPhone ? (
+                        <View className="mt-2">
+                            {!!uni.website && <Text className="text-blue-600">{uni.website}</Text>}
+                            {!!uni.contactEmail && <Text className="text-gray-500">{uni.contactEmail}</Text>}
+                            {!!uni.contactPhone && <Text className="text-gray-500">{uni.contactPhone}</Text>}
+                        </View>
+                    ) : null}
 
                     {/* Description */}
-                    <Text className="mt-4 text-sm leading-6">
-                        {expanded ? university.description : university.description.substring(0, 120) + "..."}
-                    </Text>
-                    <TouchableOpacity className="mt-2" onPress={() => setExpanded(!expanded)}>
-                        <Text className="text-blue-600">{expanded ? "Read less" : "Read more"}</Text>
-                    </TouchableOpacity>
+                    {!!uni.description && (
+                        <>
+                            <Text className="mt-4 text-sm leading-6">
+                                {expanded ? uni.description : `${uni.description.slice(0, 160)}${uni.description.length > 160 ? "..." : ""}`}
+                            </Text>
+                            {uni.description.length > 160 && (
+                                <TouchableOpacity className="mt-2" onPress={() => setExpanded((e) => !e)}>
+                                    <Text className="text-blue-600">{expanded ? "Read less" : "Read more"}</Text>
+                                </TouchableOpacity>
+                            )}
+                        </>
+                    )}
 
-                    {/* Most Viewed Section */}
-                    <Text className="text-lg font-semibold mt-6">Most Viewed</Text>
+                    {/* Most Interested Section */}
+                    <Text className="text-lg font-semibold mt-6">Most Interested</Text>
                     <FlatList
-                        data={university.mostViewed}
+                        data={mostInterestedCards}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
@@ -76,6 +144,11 @@ const UniversityDetail = () => {
                                 onPress={() => navigation.navigate("screens/degree/degree-detail", { id: item.id })}
                             />
                         )}
+                        ListEmptyComponent={
+                            <View className="py-8 pr-4">
+                                <Text className="text-gray-500">No degree interest yet.</Text>
+                            </View>
+                        }
                     />
                 </ScrollView>
 
@@ -88,12 +161,11 @@ const UniversityDetail = () => {
                                 pathname: "/search",
                                 params: {
                                     initialFilter: "Degrees",
-                                    initialAdvancedFilters: JSON.stringify([university.title]), 
+                                    initialAdvancedFilters: JSON.stringify([uni.name]), // use university name for search pill
                                 },
                             })
                         }
                     />
-
                 </View>
             </View>
         </SafeAreaView>

@@ -27,3 +27,21 @@ export async function getAllUniversities() {
     const list = Array.isArray(data) ? data : data?.items ?? [];
     return list.map(mapUniversity);
 }
+
+export async function getUniversityById(id) {
+    const { data } = await api.get(endpoints.universities.byId(id));
+    return mapUniversity(data);
+}
+
+/** Item: { id, name, imageUrl, interestCount, engagementCount }[] */
+export async function getDegreesWithCountByUniversity(id) {
+    const { data } = await api.get(endpoints.universities.degreesWithCount(id));
+    const arr = Array.isArray(data) ? data : [];
+    return arr.map((d) => ({
+        id: d.id,
+        name: d.name,
+        imageUrl: d.imageUrl || null,
+        interestCount: d.interestCount ?? 0,
+        engagementCount: d.engagementCount ?? 0,
+    }));
+}

@@ -7,6 +7,9 @@ export const endpoints = {
 
     universities: {
         list: "/api/university",
+        degreesWithCount: (id) => `/api/university/${id}/degreeswithcount`,
+        degreesByUniversity: (id) => `/api/university/${id}/degrees`,
+        byId: (id) => `/api/university/${id}`,
 
     },
 
@@ -14,6 +17,7 @@ export const endpoints = {
         list: "/api/degree",                             // GET all degrees
         byId: (id) => `/api/degree/${id}`,
         activity: (id) => `/api/degree/${id}/activity`,
+
     }
 
     // Add more domains here...
