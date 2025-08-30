@@ -76,6 +76,7 @@ const SearchScreen = () => {
             id: d.id,
             tag: "degree",
             title: d.name,
+            icon: d.universityLogo,
             subtitle: d.universityName || d.degreeType || "",
             description: d.description || "",
             imageUrl: d.imageUrl || "",
