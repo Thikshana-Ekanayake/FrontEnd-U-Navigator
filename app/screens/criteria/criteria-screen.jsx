@@ -1,46 +1,69 @@
-import React, { useMemo, useState } from "react";
+// app/screens/criteria/criteria-screen.jsx
+import React, { useMemo, useState, useEffect } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { CheckCircle, XCircle, Circle } from "lucide-react-native";
 import { CustomDropdown } from "../../../components";
 import { useCriteriaData } from "../../../src/quaryHooks/criteria/useCriteriaData";
+import { useZScoreByDegree } from "../../../src/quaryHooks/zscore/useZScoreByDegree";
+import { useProfile } from "../../../src/quaryHooks/user/useProfile";
 
 // Grade ranking map
-const gradeOrder = { "S": 1, "C": 2, "B": 3, "A": 4, "A+": 5 };
+const gradeOrder = { S: 1, C: 2, B: 3, A: 4, "A+": 5 };
 const normalizeGrade = (g) => (g || "").toUpperCase().replace(/\s+/g, "");
 const gradeValue = (g) => gradeOrder[normalizeGrade(g)] ?? 0;
 const isGradeSufficient = (userGrade, requiredGrade) => gradeValue(userGrade) >= gradeValue(requiredGrade);
 
-// Z-score UI (still static for now)
-const years = [
-    { label: "2023", value: "2023" },
-    { label: "2022", value: "2022" },
-    { label: "2021", value: "2021" },
-    { label: "2020", value: "2020" },
-];
-const locations = [
-    { label: "Kandy", value: "Kandy" },
-    { label: "Colombo", value: "Colombo" },
-    { label: "Galle", value: "Galle" },
-    { label: "Jaffna", value: "Jaffna" },
-];
-const minimumZScore = 1.5;
-const userZScore = 1.567;
-
 const CriteriaScreen = ({ degreeId, userId }) => {
-    const [selectedYear, setSelectedYear] = useState("2023");
-    const [selectedLocation, setSelectedLocation] = useState("Kandy");
-
+    // ----- existing criteria data -----
     const { degreeMeta, criteria, studentResults, isLoading, isError, refetchAll } =
         useCriteriaData({ degreeId, userId });
 
+    // ----- new: zscore + profile -----
+    const { data: zData, isLoading: zLoading, isError: zErr, refetch: refetchZ } = useZScoreByDegree(degreeId);
+    const { data: profile, isLoading: pLoading, isError: pErr, refetch: refetchP } = useProfile();
+
+    // dynamic dropdown data
+    const yearOptions = zData?.years ?? [];
+    const locationOptions = zData?.locations ?? []; // {label, value: districtId}
+    const zItems = zData?.items ?? [];
+
+    // default selections: latest year, and user's district if present in options
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+
+    useEffect(() => {
+        if (yearOptions.length && !selectedYear) setSelectedYear(yearOptions[0].value);
+    }, [yearOptions, selectedYear]);
+
+    useEffect(() => {
+        if (!selectedLocation) {
+            const userDistrictId = profile?.districtId ?? null;
+            const found = locationOptions.find((o) => o.value === userDistrictId);
+            setSelectedLocation((found?.value ?? locationOptions[0]?.value) || null);
+        }
+    }, [locationOptions, profile, selectedLocation]);
+
+    // compute min z for selection
+    const minZScore = useMemo(() => {
+        if (!selectedYear || !selectedLocation) return null;
+        const match = zItems.find(
+            (i) => String(i.year) === String(selectedYear) && i.districtId === selectedLocation
+        );
+        return typeof match?.scoreValue === "number" ? match.scoreValue : null;
+    }, [selectedYear, selectedLocation, zItems]);
+
+    const userZ = typeof profile?.zScore === "number" ? profile.zScore : null;
+
+    const zSatisfied =
+        typeof userZ === "number" && typeof minZScore === "number" ? userZ >= minZScore : false;
+
+    // ----- existing compare helpers -----
     const resById = studentResults?.bySubjectId ?? new Map();
     const resByName = studentResults?.bySubjectName ?? new Map();
 
     const checkCriterion = (crit) => {
         let userRes = (crit.subjectId && resById.get(crit.subjectId)) || null;
-        if (!userRes && crit.subjectName) {
-            userRes = resByName.get(crit.subjectName.toLowerCase()) || null;
-        }
+        if (!userRes && crit.subjectName) userRes = resByName.get(crit.subjectName.toLowerCase()) || null;
         if (!userRes || !userRes.result) return false;
         return isGradeSufficient(userRes.result, crit.minGrade);
     };
@@ -49,52 +72,45 @@ const CriteriaScreen = ({ degreeId, userId }) => {
     const alCriteria = criteria?.al ?? [];
 
     const {
-        mandatoryOlPassCount,
-        mandatoryOlTotal,
-        optionalOlPassCount,
-        optionalOlTotal,
-        olSatisfied,
+        mandatoryOlPassCount, mandatoryOlTotal, optionalOlPassCount, optionalOlTotal, olSatisfied,
     } = useMemo(() => {
         const mandatory = olCriteria.filter((c) => c.isMandatory);
-        const optional = olCriteria.filter((c) => !c.isMandatory);
+        const optional  = olCriteria.filter((c) => !c.isMandatory);
         const mandatoryPass = mandatory.filter(checkCriterion).length;
         const optionalPass = optional.filter(checkCriterion).length;
         const olMinOpt = Number.isFinite(degreeMeta?.olCriteriaMinCount) ? degreeMeta.olCriteriaMinCount : 0;
-        const satisfied = mandatoryPass === mandatory.length && optionalPass >= olMinOpt;
         return {
             mandatoryOlPassCount: mandatoryPass,
             mandatoryOlTotal: mandatory.length,
             optionalOlPassCount: optionalPass,
             optionalOlTotal: optional.length,
-            olSatisfied: satisfied,
+            olSatisfied: mandatoryPass === mandatory.length && optionalPass >= olMinOpt,
         };
     }, [olCriteria, degreeMeta, resById, resByName]);
 
     const {
-        mandatoryAlPassCount,
-        mandatoryAlTotal,
-        alPassCount,
-        alTotal,
-        alSatisfied,
-        alMinRequired,
+        mandatoryAlPassCount, mandatoryAlTotal, alPassCount, alTotal, alSatisfied, alMinRequired,
     } = useMemo(() => {
         const mandatory = alCriteria.filter((c) => c.isMandatory);
         const optional  = alCriteria.filter((c) => !c.isMandatory);
         const mandatoryPass = mandatory.filter(checkCriterion).length;
         const optPass = optional.filter(checkCriterion).length;
         const alMin = Number.isFinite(degreeMeta?.alCriteriaMinCount) ? degreeMeta.alCriteriaMinCount : 2;
-        const satisfied = mandatoryPass === mandatory.length && (optPass + mandatoryPass) >= alMin;
         return {
             mandatoryAlPassCount: mandatoryPass,
             mandatoryAlTotal: mandatory.length,
             alPassCount: optPass + mandatoryPass,
             alTotal: alCriteria.length,
-            alSatisfied: satisfied,
+            alSatisfied: mandatoryPass === mandatory.length && (optPass + mandatoryPass) >= alMin,
             alMinRequired: alMin,
         };
     }, [alCriteria, degreeMeta, resById, resByName]);
 
-    if (isLoading) {
+    // ----- loading / error -----
+    const anyLoading = isLoading || zLoading || pLoading;
+    const anyError = isError || zErr || pErr;
+
+    if (anyLoading) {
         return (
             <View className="mt-5 px-4 items-center">
                 <ActivityIndicator />
@@ -103,19 +119,20 @@ const CriteriaScreen = ({ degreeId, userId }) => {
         );
     }
 
-    if (isError) {
+    if (anyError) {
         return (
             <View className="mt-5 px-4">
-                <Text style={{ color: "red" }}>Failed to load criteria/results.</Text>
-                <Text className="text-gray-500 mt-1">Check your network or try again.</Text>
-                <Text className="text-blue-600 mt-2" onPress={refetchAll}>Tap to retry</Text>
+                <Text style={{ color: "red" }}>Failed to load criteria / z-score / profile.</Text>
+                <Text className="text-blue-600 mt-2" onPress={() => { refetchAll(); refetchZ(); refetchP(); }}>
+                    Tap to retry
+                </Text>
             </View>
         );
     }
 
     return (
         <View className="mt-5 px-4">
-            {/* AL Requirements */}
+            {/* --- AL Requirements (unchanged except your descriptions) --- */}
             <View className="border border-gray-300 rounded-lg p-4">
                 <View className="flex-row items-center justify-between">
                     <Text className="text-lg font-bold">AL Requirements</Text>
@@ -126,7 +143,6 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                     </View>
                 </View>
 
-                {/* NEW: show AL description from degree meta if present */}
                 {!!degreeMeta?.alCriteriaDescription && (
                     <Text className="text-sm text-gray-600 italic mt-2">
                         {degreeMeta.alCriteriaDescription}
@@ -136,11 +152,8 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                 {alCriteria.length > 0 ? (
                     <>
                         <Text className="text-sm mt-2">
-                            Candidate must satisfy{" "}
-                            <Text className="font-bold">{alMinRequired}</Text> subject(s) in total
-                            {mandatoryAlTotal > 0 ? (
-                                <> including <Text className="font-bold">{mandatoryAlTotal}</Text> mandatory.</>
-                            ) : null}
+                            Candidate must satisfy <Text className="font-bold">{alMinRequired}</Text> subject(s) in total
+                            {mandatoryAlTotal > 0 ? <> including <Text className="font-bold">{mandatoryAlTotal}</Text> mandatory.</> : null}
                         </Text>
 
                         <View className="mt-2">
@@ -150,8 +163,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                                     <View key={crit.id} className="flex-row items-center mt-1">
                                         {pass ? <CheckCircle size={16} color="green" /> : <XCircle size={16} color="red" />}
                                         <Text className="ml-2 text-sm">
-                                            {crit.subjectName || "Subject"} — min {crit.minGrade}
-                                            {crit.isMandatory ? " (Mandatory)" : ""}
+                                            {crit.subjectName || "Subject"} — min {crit.minGrade}{crit.isMandatory ? " (Mandatory)" : ""}
                                         </Text>
                                     </View>
                                 );
@@ -167,7 +179,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                 )}
             </View>
 
-            {/* OL Requirements */}
+            {/* --- OL Requirements (unchanged except your descriptions) --- */}
             <View className="border border-gray-300 rounded-lg p-4 mt-4">
                 <View className="flex-row items-center justify-between">
                     <Text className="text-lg font-bold">OL Requirements</Text>
@@ -178,7 +190,6 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                     </View>
                 </View>
 
-                {/* NEW: show OL description from degree meta if present */}
                 {!!degreeMeta?.olCriteriaDescription && (
                     <Text className="text-sm text-gray-600 italic mt-2">
                         {degreeMeta.olCriteriaDescription}
@@ -201,8 +212,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                                     <View key={crit.id} className="flex-row items-center mt-1">
                                         {pass ? <CheckCircle size={16} color="green" /> : <XCircle size={16} color="red" />}
                                         <Text className="ml-2 text-sm">
-                                            {crit.subjectName || "Subject"} — min {crit.minGrade}
-                                            {crit.isMandatory ? " (Mandatory)" : ""}
+                                            {crit.subjectName || "Subject"} — min {crit.minGrade}{crit.isMandatory ? " (Mandatory)" : ""}
                                         </Text>
                                     </View>
                                 );
@@ -218,41 +228,53 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                 )}
             </View>
 
-            {/* Z Score (static UI for now) */}
+            {/* --- Z Score (LIVE) --- */}
             <View className="border border-gray-300 rounded-lg p-4 mt-4">
                 <View className="flex-row items-center">
                     <Circle size={16} color="blue" fill="blue" />
                     <Text className="ml-2 text-lg font-bold">Z Score</Text>
                 </View>
 
-                <View className="mt-2">
-                    <CustomDropdown
-                        title="Select Year"
-                        items={years}
-                        selectedValue={selectedYear}
-                        setSelectedValue={setSelectedYear}
-                        buttonStyle="flex-row justify-between items-center px-4 py-3 mt-4 mb-1 border border-gray-300 rounded-lg bg-gray-100"
-                    />
+                {(!yearOptions.length || !locationOptions.length) ? (
+                    <Text className="text-sm mt-2 text-gray-500">Z-score data not available for this degree.</Text>
+                ) : (
+                    <>
+                        <View className="mt-2">
+                            <CustomDropdown
+                                title="Select Year"
+                                items={yearOptions}                 // [{label:'2021', value:'2021'}]
+                                selectedValue={selectedYear}
+                                setSelectedValue={setSelectedYear}
+                                buttonStyle="flex-row justify-between items-center px-4 py-3 mt-4 mb-1 border border-gray-300 rounded-lg bg-gray-100"
+                            />
 
-                    <CustomDropdown
-                        title="Select Location"
-                        items={locations}
-                        selectedValue={selectedLocation}
-                        setSelectedValue={setSelectedLocation}
-                        buttonStyle="flex-row justify-between items-center px-4 py-3 mt-4 mb-1 border border-gray-300 rounded-lg bg-gray-100"
-                    />
-                </View>
+                            <CustomDropdown
+                                title="Select District"
+                                items={locationOptions}             // [{label:'Kegalle', value:'<districtId>'}]
+                                selectedValue={selectedLocation}
+                                setSelectedValue={setSelectedLocation}
+                                buttonStyle="flex-row justify-between items-center px-4 py-3 mt-4 mb-1 border border-gray-300 rounded-lg bg-gray-100"
+                            />
+                        </View>
 
-                <Text className="mt-4 text-xl font-bold text-blue-600">{userZScore}</Text>
+                        <Text className="mt-4 text-xl font-bold text-blue-600">
+                            {typeof userZ === "number" ? userZ : "N/A"}
+                        </Text>
 
-                <View className="flex-row items-center mt-2">
-                    {userZScore >= minimumZScore ? (
-                        <CheckCircle size={16} color="green" />
-                    ) : (
-                        <XCircle size={16} color="red" />
-                    )}
-                    <Text className="ml-2 text-sm">{`Minimum required Z Score: ${minimumZScore}`}</Text>
-                </View>
+                        <View className="flex-row items-center mt-2">
+                            {typeof userZ === "number" && typeof minZScore === "number" ? (
+                                zSatisfied ? <CheckCircle size={16} color="green" /> : <XCircle size={16} color="red" />
+                            ) : (
+                                <XCircle size={16} color="gray" />
+                            )}
+                            <Text className="ml-2 text-sm">
+                                {typeof minZScore === "number"
+                                    ? `Minimum required Z Score: ${minZScore}`
+                                    : "No cutoff Z-score for this year/district."}
+                            </Text>
+                        </View>
+                    </>
+                )}
             </View>
         </View>
     );

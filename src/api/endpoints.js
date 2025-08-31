@@ -5,6 +5,10 @@ export const endpoints = {
         me: "/api/auth/me",                  // profile
     },
 
+    user: {
+        profile: "/api/user/profile", // JWT required
+    },
+
     universities: {
         list: "/api/university",
         degreesWithCount: (id) => `/api/university/${id}/degreeswithcount`,
@@ -26,6 +30,14 @@ export const endpoints = {
 
     studentResults: {
         byStudent: (studentId) => `/api/studentSubjectResult/by-student/${studentId}`,
+    },
+
+    zscore: {
+        byDegree: (degreeId) => `/api/zscore/by-degree/${degreeId}`,
+    },
+
+    district: {
+        byId: (id) => `/api/district/${id}`,
     },
 
     // Add more domains here...
