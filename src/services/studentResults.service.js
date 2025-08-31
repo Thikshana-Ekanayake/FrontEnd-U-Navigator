@@ -14,6 +14,7 @@ export async function getStudentResultsByStudentId(studentId) {
     const items = arr.map((r) => ({
         id: r.id,
         subjectId: r.subjectId || null,
+        subjectType: r.subjectType || null,
         subjectName: r.subjectName?.trim() || null,
         result: r.resultName?.trim()?.toUpperCase() || null,  // e.g., 'A', 'B', 'C', 'S'
     }));

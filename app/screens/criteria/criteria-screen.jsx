@@ -1,4 +1,3 @@
-// app/screens/criteria/criteria-screen.jsx
 import React, { useMemo, useState, useEffect } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { CheckCircle, XCircle, Circle } from "lucide-react-native";
@@ -13,21 +12,25 @@ const normalizeGrade = (g) => (g || "").toUpperCase().replace(/\s+/g, "");
 const gradeValue = (g) => gradeOrder[normalizeGrade(g)] ?? 0;
 const isGradeSufficient = (userGrade, requiredGrade) => gradeValue(userGrade) >= gradeValue(requiredGrade);
 
+// small utils
+const normType = (t) => (t || "").toUpperCase().replace(/[^A-Z]/g, ""); // "OL","AL",""
+const normName = (s) => (s || "").trim().toLowerCase();
+
 const CriteriaScreen = ({ degreeId, userId }) => {
-    // ----- existing criteria data -----
+    // criteria + student results (normalized)
     const { degreeMeta, criteria, studentResults, isLoading, isError, refetchAll } =
         useCriteriaData({ degreeId, userId });
 
-    // ----- new: zscore + profile -----
-    const { data: zData, isLoading: zLoading, isError: zErr, refetch: refetchZ } = useZScoreByDegree(degreeId);
+    // z-score & profile
+    const { data: zData, isLoading: zLoading, isError: zErr, refetch: refetchZ } =
+        useZScoreByDegree(degreeId);
     const { data: profile, isLoading: pLoading, isError: pErr, refetch: refetchP } = useProfile();
 
-    // dynamic dropdown data
+    // z-score dropdowns
     const yearOptions = zData?.years ?? [];
     const locationOptions = zData?.locations ?? []; // {label, value: districtId}
     const zItems = zData?.items ?? [];
 
-    // default selections: latest year, and user's district if present in options
     const [selectedYear, setSelectedYear] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
 
@@ -43,7 +46,6 @@ const CriteriaScreen = ({ degreeId, userId }) => {
         }
     }, [locationOptions, profile, selectedLocation]);
 
-    // compute min z for selection
     const minZScore = useMemo(() => {
         if (!selectedYear || !selectedLocation) return null;
         const match = zItems.find(
@@ -53,18 +55,27 @@ const CriteriaScreen = ({ degreeId, userId }) => {
     }, [selectedYear, selectedLocation, zItems]);
 
     const userZ = typeof profile?.zScore === "number" ? profile.zScore : null;
-
     const zSatisfied =
         typeof userZ === "number" && typeof minZScore === "number" ? userZ >= minZScore : false;
 
-    // ----- existing compare helpers -----
+    // -------- compare helpers --------
     const resById = studentResults?.bySubjectId ?? new Map();
     const resByName = studentResults?.bySubjectName ?? new Map();
 
     const checkCriterion = (crit) => {
-        let userRes = (crit.subjectId && resById.get(crit.subjectId)) || null;
-        if (!userRes && crit.subjectName) userRes = resByName.get(crit.subjectName.toLowerCase()) || null;
+        // prefer subjectId, fallback to normalized name
+        let userRes =
+            (crit.subjectId && resById.get(crit.subjectId)) ||
+            (crit.subjectName && resByName.get(normName(crit.subjectName))) ||
+            null;
+
         if (!userRes || !userRes.result) return false;
+
+        // enforce OL/AL match when declared
+        const critType = normType(crit.subjectType);
+        const userType = normType(userRes.subjectType);
+        if (critType && userType && critType !== userType) return false;
+
         return isGradeSufficient(userRes.result, crit.minGrade);
     };
 
@@ -72,13 +83,19 @@ const CriteriaScreen = ({ degreeId, userId }) => {
     const alCriteria = criteria?.al ?? [];
 
     const {
-        mandatoryOlPassCount, mandatoryOlTotal, optionalOlPassCount, optionalOlTotal, olSatisfied,
+        mandatoryOlPassCount,
+        mandatoryOlTotal,
+        optionalOlPassCount,
+        optionalOlTotal,
+        olSatisfied,
     } = useMemo(() => {
         const mandatory = olCriteria.filter((c) => c.isMandatory);
-        const optional  = olCriteria.filter((c) => !c.isMandatory);
+        const optional = olCriteria.filter((c) => !c.isMandatory);
         const mandatoryPass = mandatory.filter(checkCriterion).length;
         const optionalPass = optional.filter(checkCriterion).length;
-        const olMinOpt = Number.isFinite(degreeMeta?.olCriteriaMinCount) ? degreeMeta.olCriteriaMinCount : 0;
+        const olMinOpt = Number.isFinite(degreeMeta?.olCriteriaMinCount)
+            ? degreeMeta.olCriteriaMinCount
+            : 0;
         return {
             mandatoryOlPassCount: mandatoryPass,
             mandatoryOlTotal: mandatory.length,
@@ -89,24 +106,31 @@ const CriteriaScreen = ({ degreeId, userId }) => {
     }, [olCriteria, degreeMeta, resById, resByName]);
 
     const {
-        mandatoryAlPassCount, mandatoryAlTotal, alPassCount, alTotal, alSatisfied, alMinRequired,
+        mandatoryAlPassCount,
+        mandatoryAlTotal,
+        alPassCount,
+        alTotal,
+        alSatisfied,
+        alMinRequired,
     } = useMemo(() => {
         const mandatory = alCriteria.filter((c) => c.isMandatory);
-        const optional  = alCriteria.filter((c) => !c.isMandatory);
+        const optional = alCriteria.filter((c) => !c.isMandatory);
         const mandatoryPass = mandatory.filter(checkCriterion).length;
         const optPass = optional.filter(checkCriterion).length;
-        const alMin = Number.isFinite(degreeMeta?.alCriteriaMinCount) ? degreeMeta.alCriteriaMinCount : 2;
+        const alMin = Number.isFinite(degreeMeta?.alCriteriaMinCount)
+            ? degreeMeta.alCriteriaMinCount
+            : 2;
         return {
             mandatoryAlPassCount: mandatoryPass,
             mandatoryAlTotal: mandatory.length,
             alPassCount: optPass + mandatoryPass,
             alTotal: alCriteria.length,
-            alSatisfied: mandatoryPass === mandatory.length && (optPass + mandatoryPass) >= alMin,
+            alSatisfied: mandatoryPass === mandatory.length && alMin <= optPass + mandatoryPass,
             alMinRequired: alMin,
         };
     }, [alCriteria, degreeMeta, resById, resByName]);
 
-    // ----- loading / error -----
+    // -------- loading / error --------
     const anyLoading = isLoading || zLoading || pLoading;
     const anyError = isError || zErr || pErr;
 
@@ -123,7 +147,14 @@ const CriteriaScreen = ({ degreeId, userId }) => {
         return (
             <View className="mt-5 px-4">
                 <Text style={{ color: "red" }}>Failed to load criteria / z-score / profile.</Text>
-                <Text className="text-blue-600 mt-2" onPress={() => { refetchAll(); refetchZ(); refetchP(); }}>
+                <Text
+                    className="text-blue-600 mt-2"
+                    onPress={() => {
+                        refetchAll();
+                        refetchZ();
+                        refetchP();
+                    }}
+                >
                     Tap to retry
                 </Text>
             </View>
@@ -132,7 +163,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
 
     return (
         <View className="mt-5 px-4">
-            {/* --- AL Requirements (unchanged except your descriptions) --- */}
+            {/* AL Requirements */}
             <View className="border border-gray-300 rounded-lg p-4">
                 <View className="flex-row items-center justify-between">
                     <Text className="text-lg font-bold">AL Requirements</Text>
@@ -152,8 +183,14 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                 {alCriteria.length > 0 ? (
                     <>
                         <Text className="text-sm mt-2">
-                            Candidate must satisfy <Text className="font-bold">{alMinRequired}</Text> subject(s) in total
-                            {mandatoryAlTotal > 0 ? <> including <Text className="font-bold">{mandatoryAlTotal}</Text> mandatory.</> : null}
+                            Candidate must satisfy <Text className="font-bold">{alMinRequired}</Text> subject(s) in
+                            total
+                            {mandatoryAlTotal > 0 ? (
+                                <>
+                                    {" "}
+                                    including <Text className="font-bold">{mandatoryAlTotal}</Text> mandatory.
+                                </>
+                            ) : null}
                         </Text>
 
                         <View className="mt-2">
@@ -163,7 +200,8 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                                     <View key={crit.id} className="flex-row items-center mt-1">
                                         {pass ? <CheckCircle size={16} color="green" /> : <XCircle size={16} color="red" />}
                                         <Text className="ml-2 text-sm">
-                                            {crit.subjectName || "Subject"} — min {crit.minGrade}{crit.isMandatory ? " (Mandatory)" : ""}
+                                            {crit.subjectName || "Subject"} — min {crit.minGrade}
+                                            {crit.isMandatory ? " (Mandatory)" : ""}
                                         </Text>
                                     </View>
                                 );
@@ -171,7 +209,8 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                         </View>
 
                         <Text className="text-xs text-gray-500 mt-2">
-                            Passed: {alPassCount}/{alTotal} (Mandatory passed: {mandatoryAlPassCount}/{mandatoryAlTotal})
+                            Passed: {alPassCount}/{alTotal} (Mandatory passed: {mandatoryAlPassCount}/
+                            {mandatoryAlTotal})
                         </Text>
                     </>
                 ) : (
@@ -179,7 +218,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                 )}
             </View>
 
-            {/* --- OL Requirements (unchanged except your descriptions) --- */}
+            {/* OL Requirements */}
             <View className="border border-gray-300 rounded-lg p-4 mt-4">
                 <View className="flex-row items-center justify-between">
                     <Text className="text-lg font-bold">OL Requirements</Text>
@@ -200,9 +239,15 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                     <>
                         <Text className="text-sm mt-2">
                             All mandatory O/L subjects must be satisfied
-                            {Number.isFinite(degreeMeta?.olCriteriaMinCount) && degreeMeta.olCriteriaMinCount > 0
-                                ? <> and at least <Text className="font-bold">{degreeMeta.olCriteriaMinCount}</Text> optional subject(s).</>
-                                : "."}
+                            {Number.isFinite(degreeMeta?.olCriteriaMinCount) && degreeMeta.olCriteriaMinCount > 0 ? (
+                                <>
+                                    {" "}
+                                    and at least <Text className="font-bold">{degreeMeta.olCriteriaMinCount}</Text>{" "}
+                                    optional subject(s).
+                                </>
+                            ) : (
+                                "."
+                            )}
                         </Text>
 
                         <View className="mt-2">
@@ -212,7 +257,8 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                                     <View key={crit.id} className="flex-row items-center mt-1">
                                         {pass ? <CheckCircle size={16} color="green" /> : <XCircle size={16} color="red" />}
                                         <Text className="ml-2 text-sm">
-                                            {crit.subjectName || "Subject"} — min {crit.minGrade}{crit.isMandatory ? " (Mandatory)" : ""}
+                                            {crit.subjectName || "Subject"} — min {crit.minGrade}
+                                            {crit.isMandatory ? " (Mandatory)" : ""}
                                         </Text>
                                     </View>
                                 );
@@ -220,7 +266,8 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                         </View>
 
                         <Text className="text-xs text-gray-500 mt-2">
-                            Optional passed: {optionalOlPassCount}/{optionalOlTotal} (Mandatory passed: {mandatoryOlPassCount}/{mandatoryOlTotal})
+                            Optional passed: {optionalOlPassCount}/{optionalOlTotal} (Mandatory passed:{" "}
+                            {mandatoryOlPassCount}/{mandatoryOlTotal})
                         </Text>
                     </>
                 ) : (
@@ -228,7 +275,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                 )}
             </View>
 
-            {/* --- Z Score (LIVE) --- */}
+            {/* Z Score */}
             <View className="border border-gray-300 rounded-lg p-4 mt-4">
                 <View className="flex-row items-center">
                     <Circle size={16} color="blue" fill="blue" />
@@ -242,7 +289,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                         <View className="mt-2">
                             <CustomDropdown
                                 title="Select Year"
-                                items={yearOptions}                 // [{label:'2021', value:'2021'}]
+                                items={yearOptions}
                                 selectedValue={selectedYear}
                                 setSelectedValue={setSelectedYear}
                                 buttonStyle="flex-row justify-between items-center px-4 py-3 mt-4 mb-1 border border-gray-300 rounded-lg bg-gray-100"
@@ -250,7 +297,7 @@ const CriteriaScreen = ({ degreeId, userId }) => {
 
                             <CustomDropdown
                                 title="Select District"
-                                items={locationOptions}             // [{label:'Kegalle', value:'<districtId>'}]
+                                items={locationOptions}
                                 selectedValue={selectedLocation}
                                 setSelectedValue={setSelectedLocation}
                                 buttonStyle="flex-row justify-between items-center px-4 py-3 mt-4 mb-1 border border-gray-300 rounded-lg bg-gray-100"

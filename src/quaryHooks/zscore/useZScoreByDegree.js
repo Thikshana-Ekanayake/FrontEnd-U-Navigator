@@ -1,31 +1,47 @@
 import { useQuery } from "@tanstack/react-query";
-import { getZScoresByDegree} from "../../services/zscore.service";
-import { getDistrictMap} from "../../services/district.service";
+import { api } from "../../api/client";
+import { endpoints } from "../../api/endpoints";
 
 export function useZScoreByDegree(degreeId) {
     return useQuery({
-        queryKey: ["zscore", "degree", degreeId],
+        queryKey: ["zscore", "byDegree", degreeId],
         enabled: !!degreeId,
-        staleTime: 5 * 60 * 1000,
-        retry: 1,
         queryFn: async () => {
-            const zscores = await getZScoresByDegree(degreeId);
-            const districtMap = await getDistrictMap(zscores.map((z) => z.districtId));
+            const { data } = await api.get(endpoints.zscore.byDegree(degreeId));
+            const rows = Array.isArray(data) ? data : [];
 
-            const items = zscores.map((z) => ({
-                ...z,
-                districtName: districtMap.get(z.districtId)?.name ?? z.districtId,
-            }));
+            // unique years (desc)
+            const yearsSet = new Set(rows.map((r) => String(r.year)));
+            const years = [...yearsSet]
+                .sort((a, b) => Number(b) - Number(a))
+                .map((y) => ({ label: y, value: y }));
 
-            const years = [...new Set(items.map((i) => i.year))]
-                .sort((a, b) => b - a)
-                .map((y) => ({ label: String(y), value: String(y) }));
+            // unique districts → hydrate names
+            const districtIds = [...new Set(rows.map((r) => r.districtId).filter(Boolean))];
 
-            const locations = [...new Set(items.map((i) => i.districtId))]
-                .map((id) => ({ label: districtMap.get(id)?.name ?? id, value: id }))
+            const districtMap = new Map();
+            await Promise.all(
+                districtIds.map(async (id) => {
+                    try {
+                        const { data: d } = await api.get(endpoints.district.byId(id));
+                        const name = d?.name || d?.metaCode || "District";
+                        districtMap.set(id, name);
+                    } catch {
+                        districtMap.set(id, "District");
+                    }
+                })
+            );
+
+            const locations = districtIds
+                .map((id) => ({ label: districtMap.get(id) || "District", value: id }))
                 .sort((a, b) => a.label.localeCompare(b.label));
 
-            return { items, years, locations };
+            return {
+                years,
+                locations,
+                items: rows, // {degreeId, districtId, scoreValue, year}
+            };
         },
+        staleTime: 5 * 60 * 1000,
     });
 }
