@@ -54,3 +54,58 @@ export async function getCommunityPostsByDegree(degreeId) {
             };
         });
 }
+
+// Reuse the same shape you used for degree feed mapping
+export async function getAllCommunityPosts() {
+    const { data } = await api.get(endpoints.communityPosts.list);
+    const rows = Array.isArray(data) ? data : [];
+
+    const ids = new Set();
+    rows.forEach((p) => {
+        if (p.userId) ids.add(p.userId);
+        (p.comments || []).forEach((c) => c.userId && ids.add(c.userId));
+    });
+
+    const peopleArr = await Promise.all([...ids].map((id) => getUserById(id).catch(() => null)));
+    const people = new Map(peopleArr.filter(Boolean).map((u) => [u.id, u]));
+
+    return rows
+        .slice()
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .map((p) => {
+            const author = people.get(p.userId);
+            const images =
+                (p.postType || "").toLowerCase() === "image" && p.imageUrl
+                    ? [absoluteUrl(p.imageUrl)]
+                    : [];
+
+            const commentItems = (p.comments || []).map((c) => {
+                const u = people.get(c.userId);
+                return {
+                    id: c.id,
+                    userId: c.userId,
+                    userName: u?.displayName || "User",
+                    userImage: u?.avatarUrl || null,
+                    text: c.commentText || "",
+                    createdAt: c.createdAt,
+                };
+            });
+
+            return {
+                id: p.id,
+                degreeId: p.degreeId || null,
+                postType: (p.postType || "").trim().toUpperCase(), // "IMAGE" | "QUESTION" | ...
+                userId: p.userId,
+                userName: author?.displayName || "User",
+                userRole: author?.role || null,
+                userImage: author?.avatarUrl || null,
+                text: p.caption || "",
+                images,
+                likes: p.reactionCount ?? 0,
+                comments: commentItems.length,
+                commentItems,
+                createdAt: p.createdAt,
+            };
+        });
+}
+

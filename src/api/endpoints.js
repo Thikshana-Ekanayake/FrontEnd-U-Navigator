@@ -42,7 +42,8 @@ export const endpoints = {
     },
 
     communityPosts: {
-        byDegree: (degreeId) => `/api/communityPost/by-degree/${degreeId}`, // <-- add
+        byDegree: (degreeId) => `/api/communityPost/by-degree/${degreeId}`,
+        list: "/api/communityPost",
     },
 
     // Add more domains here...

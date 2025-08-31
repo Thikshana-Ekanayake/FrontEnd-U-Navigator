@@ -18,6 +18,8 @@ function mapDegree(dto) {
         duration: dto.duration ?? null,
         degreeType: dto.degreeType ?? null,
         streams: Array.isArray(dto.stream) ? dto.stream : [],
+        interestCount: dto.interestCount ?? 0,
+        engagementCount: dto.engagementCount ?? 0,
     };
 }
 
