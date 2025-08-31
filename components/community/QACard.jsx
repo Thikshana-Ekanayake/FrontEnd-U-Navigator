@@ -25,7 +25,7 @@ const QACard = ({ question }) => {
                 <View className="mt-3 border-l-2 border-gray-300 pl-3">
                     {/* Show the first answer */}
                     <Text className="font-semibold text-sm">
-                        {question.answers[0].user} <Text className="text-gray-500 text-xs">Undergraduate</Text>
+                        {question.answers[0].user} <Text className="text-gray-500 text-xs">{question.answers[0].role}</Text>
                     </Text>
                     <Text className="text-sm text-gray-800">{question.answers[0].text}</Text>
                     <Text className="text-gray-400 text-xs mt-1">{formatTime(question.answers[0].timestamp)}</Text>

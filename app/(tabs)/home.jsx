@@ -39,6 +39,7 @@ const Home = () => {
                     timestamp: new Date(p.createdAt).getTime(),
                     answers: (p.commentItems || []).map((c) => ({
                         user: c.userName,
+                        role:c.userRole,
                         text: c.text,
                         timestamp: new Date(c.createdAt).getTime(),
                         userImage: c.userImage,

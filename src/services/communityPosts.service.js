@@ -54,6 +54,7 @@ export async function getCommunityPostsByDegree(degreeId) {
                     id: c.id,
                     userId: c.userId,
                     userName: u?.displayName || "User",
+                    userRole: u?.role || null,
                     userImage: u?.avatarUrl || null,
                     text: c.commentText || "",
                     createdAt: c.createdAt,
@@ -107,6 +108,7 @@ export async function getAllCommunityPosts() {
                 return {
                     id: c.id,
                     userId: c.userId,
+                    userRole: u?.role || null,
                     userName: u?.displayName || "User",
                     userImage: u?.avatarUrl || null,
                     text: c.commentText || "",
