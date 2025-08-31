@@ -5,8 +5,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import images from '../constants/images';
 // import '../global.css';
 
-
-
 export default function LogoScreen() {
   const router = useRouter();
   const fadeAnim = useRef(new Animated.Value(0)).current; // Start from 0 opacity
@@ -39,7 +37,7 @@ export default function LogoScreen() {
         <View className="w-full justify-center items-center h-full px-4">
           <Animated.Image 
             source={images.logo} 
-            style={{ opacity: fadeAnim, width: 250, height: 250 }} // Adjust size as needed
+            style={{ opacity: fadeAnim, width: 350, height: 350 }} // Adjust size as needed
           />
         </View>
       </ScrollView>
