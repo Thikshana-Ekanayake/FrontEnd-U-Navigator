@@ -18,7 +18,15 @@ export const endpoints = {
         byId: (id) => `/api/degree/${id}`,
         activity: (id) => `/api/degree/${id}/activity`,
 
-    }
+    },
+
+    criteria: {
+        byDegreeId: (degreeId) => `/api/criteria/by-degree-id/${degreeId}`,
+    },
+
+    studentResults: {
+        byStudent: (studentId) => `/api/studentSubjectResult/by-student/${studentId}`,
+    },
 
     // Add more domains here...
 };

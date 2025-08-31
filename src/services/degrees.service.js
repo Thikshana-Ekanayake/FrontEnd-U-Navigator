@@ -37,3 +37,13 @@ export async function getDegreeActivity(id) {
         engagementCount: data?.engagementCount ?? 0,
     };
 }
+
+export async function getDegreeById(degreeId) {
+    const { data } = await api.get(endpoints.degrees.byId(degreeId));
+    return {
+        id: data?.id,
+        name: data?.name ?? null,
+        olCriteriaMinCount: Number.isFinite(data?.olCriteriaMinCount) ? data.olCriteriaMinCount : null,
+        alCriteriaMinCount: Number.isFinite(data?.alCriteriaMinCount) ? data.alCriteriaMinCount : null,
+    };
+}

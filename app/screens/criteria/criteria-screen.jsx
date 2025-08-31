@@ -1,15 +1,24 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
+// app/screens/criteria/criteria-screen.jsx
+import React, { useMemo, useState } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
 import { CheckCircle, XCircle, Circle } from "lucide-react-native";
 import { CustomDropdown } from "../../../components";
+import { useCriteriaData} from "../../../src/quaryHooks/criteria/useCriteriaData";
 
+// Grade ranking map
+const gradeOrder = { "S": 1, "C": 2, "B": 3, "A": 4, "A+": 5 };
+// tolerant normalize
+const normalizeGrade = (g) => (g || "").toUpperCase().replace(/\s+/g, "");
+const gradeValue = (g) => gradeOrder[normalizeGrade(g)] ?? 0;
+const isGradeSufficient = (userGrade, requiredGrade) => gradeValue(userGrade) >= gradeValue(requiredGrade);
+
+// UI dropdowns (Z-score ignored for now)
 const years = [
     { label: "2023", value: "2023" },
     { label: "2022", value: "2022" },
     { label: "2021", value: "2021" },
     { label: "2020", value: "2020" },
 ];
-
 const locations = [
     { label: "Kandy", value: "Kandy" },
     { label: "Colombo", value: "Colombo" },
@@ -17,72 +26,122 @@ const locations = [
     { label: "Jaffna", value: "Jaffna" },
 ];
 
-// Grade ranking map for comparison
-const gradeOrder = {
-    "S": 1,
-    "C": 2,
-    "B": 3,
-    "A": 4,
-    "A+": 5,
-};
-
-// Function to check if a user's grade meets the required minimum grade
-const isGradeSufficient = (userGrade, requiredGrade) => {
-    return gradeOrder[userGrade] >= gradeOrder[requiredGrade];
-};
-
-// User's academic results (replace with actual user data)
-const userALResults = [
-    { subject: "Higher Mathematics", grade: "B" },
-    { subject: "Physics", grade: "C" },
-    { subject: "Chemistry", grade: "S" },
-];
-
-const userOLResults = { English: "C", Mathematics: "S" };
+// Placeholder Z-score constants (ignored logic)
+const minimumZScore = 1.5;
 const userZScore = 1.567;
 
-// Degree requirements with grade constraints
-const degreeALCriteria = [
-    { subject: "Higher Mathematics", minGrade: "S" },
-    { subject: "Chemistry", minGrade: "S" },
-    { subject: "Combined Mathematics", minGrade: "S" },
-    { subject: "Accounting", minGrade: "S" },
-    { subject: "Business Statistics", minGrade: "S" },
-    { subject: "Physics", minGrade: "S" },
-    { subject: "Information & Communication Technology", minGrade: "S" },
-];
-
-const requiredOLSubjects = { English: "C", Mathematics: "C" };
-const minimumZScore = 1.5;
-
-// Function to check if AL requirements are met
-const checkALRequirements = () => {
-    let count = 0;
-
-    degreeALCriteria.forEach(criteria => {
-        const userSubject = userALResults.find(
-            entry => entry.subject === criteria.subject && isGradeSufficient(entry.grade, criteria.minGrade)
-        );
-        if (userSubject) count++;
-    });
-
-    return count >= 2; // At least two subjects should match the criteria
-};
-
-// Function to check if OL requirements are met
-const checkOLRequirements = () => {
-    return (
-        isGradeSufficient(userOLResults.English, requiredOLSubjects.English) &&
-        isGradeSufficient(userOLResults.Mathematics, requiredOLSubjects.Mathematics)
-    );
-};
-
-// Function to check Z-Score requirement
-const checkZScore = () => userZScore >= minimumZScore;
-
-const CriteriaScreen = () => {
+const CriteriaScreen = ({ degreeId, userId }) => {
     const [selectedYear, setSelectedYear] = useState("2023");
     const [selectedLocation, setSelectedLocation] = useState("Kandy");
+
+    const { degreeMeta, criteria, studentResults, isLoading, isError, refetchAll } =
+        useCriteriaData({ degreeId, userId });
+
+    // Derive maps for quick checks
+    const resById = studentResults?.bySubjectId ?? new Map();
+    const resByName = studentResults?.bySubjectName ?? new Map();
+
+    // Utility: does a given criterion pass based on user's results?
+    const checkCriterion = (crit) => {
+        // Prefer subjectId match if present
+        let userRes = (crit.subjectId && resById.get(crit.subjectId)) || null;
+
+        // Fallback to name (some results may have empty subjectName; hence guarded)
+        if (!userRes && crit.subjectName) {
+            userRes = resByName.get(crit.subjectName.toLowerCase()) || null;
+        }
+
+        if (!userRes || !userRes.result) return false;
+        return isGradeSufficient(userRes.result, crit.minGrade);
+    };
+
+    // Split criteria by type
+    const olCriteria = criteria?.ol ?? [];
+    const alCriteria = criteria?.al ?? [];
+
+    // Evaluate OL
+    const {
+        mandatoryOlPassCount,
+        mandatoryOlTotal,
+        optionalOlPassCount,
+        optionalOlTotal,
+        olSatisfied,
+    } = useMemo(() => {
+        const mandatory = olCriteria.filter((c) => c.isMandatory);
+        const optional = olCriteria.filter((c) => !c.isMandatory);
+
+        const mandatoryPass = mandatory.filter(checkCriterion).length;
+        const optionalPass = optional.filter(checkCriterion).length;
+
+        const olMinOpt = Number.isFinite(degreeMeta?.olCriteriaMinCount)
+            ? degreeMeta.olCriteriaMinCount
+            : 0;
+
+        const satisfied =
+            mandatoryPass === mandatory.length && // all mandatory must pass
+            optionalPass >= olMinOpt;             // plus optional min-count if any
+
+        return {
+            mandatoryOlPassCount: mandatoryPass,
+            mandatoryOlTotal: mandatory.length,
+            optionalOlPassCount: optionalPass,
+            optionalOlTotal: optional.length,
+            olSatisfied: satisfied,
+        };
+    }, [olCriteria, degreeMeta, resById, resByName]);
+
+    // Evaluate AL
+    const {
+        mandatoryAlPassCount,
+        mandatoryAlTotal,
+        alPassCount,
+        alTotal,
+        alSatisfied,
+        alMinRequired,
+    } = useMemo(() => {
+        const mandatory = alCriteria.filter((c) => c.isMandatory);
+        const optional  = alCriteria.filter((c) => !c.isMandatory);
+
+        const mandatoryPass = mandatory.filter(checkCriterion).length;
+        const optPass = optional.filter(checkCriterion).length;
+
+        // Default to 2 if server doesn’t specify
+        const alMin = Number.isFinite(degreeMeta?.alCriteriaMinCount)
+            ? degreeMeta.alCriteriaMinCount
+            : 2;
+
+        const satisfied =
+            mandatoryPass === mandatory.length &&
+            (optPass + mandatoryPass) >= alMin;
+
+        return {
+            mandatoryAlPassCount: mandatoryPass,
+            mandatoryAlTotal: mandatory.length,
+            alPassCount: optPass + mandatoryPass,
+            alTotal: alCriteria.length,
+            alSatisfied: satisfied,
+            alMinRequired: alMin,
+        };
+    }, [alCriteria, degreeMeta, resById, resByName]);
+
+    if (isLoading) {
+        return (
+            <View className="mt-5 px-4 items-center">
+                <ActivityIndicator />
+                <Text style={{ marginTop: 8 }}>Loading criteria…</Text>
+            </View>
+        );
+    }
+
+    if (isError) {
+        return (
+            <View className="mt-5 px-4">
+                <Text style={{ color: "red" }}>Failed to load criteria/results.</Text>
+                <Text className="text-gray-500 mt-1">Check your network or try again.</Text>
+                <Text className="text-blue-600 mt-2" onPress={refetchAll}>Tap to retry</Text>
+            </View>
+        );
+    }
 
     return (
         <View className="mt-5 px-4">
@@ -90,70 +149,92 @@ const CriteriaScreen = () => {
             <View className="border border-gray-300 rounded-lg p-4">
                 <View className="flex-row items-center justify-between">
                     <Text className="text-lg font-bold">AL Requirements</Text>
-                    <View className={`${checkALRequirements() ? "bg-green-500" : "bg-red-500"} px-2 py-1 rounded-full`}>
+                    <View className={`${alSatisfied ? "bg-green-500" : "bg-red-500"} px-2 py-1 rounded-full`}>
                         <Text className="text-xs font-bold text-white">
-                            {checkALRequirements() ? "Criteria Satisfied" : "Criteria Not Satisfied"}
+                            {alSatisfied ? "Criteria Satisfied" : "Criteria Not Satisfied"}
                         </Text>
                     </View>
                 </View>
 
-                <Text className="text-sm mt-2">
-                    The candidate should have passed at least two of the following subjects with a minimum grade of 'S':
-                </Text>
+                {alCriteria.length > 0 ? (
+                    <>
+                        <Text className="text-sm mt-2">
+                            Candidate must satisfy{" "}
+                            <Text className="font-bold">{alMinRequired}</Text> subject(s) in total
+                            {mandatoryAlTotal > 0 ? (
+                                <> including <Text className="font-bold">{mandatoryAlTotal}</Text> mandatory.</>
+                            ) : null}
+                        </Text>
 
-                <View className="mt-2">
-                    {degreeALCriteria.map((criteria, index) => {
-                        const userSubject = userALResults.find(
-                            entry => entry.subject === criteria.subject && isGradeSufficient(entry.grade, criteria.minGrade)
-                        );
-                        return (
-                            <View key={index} className="flex-row items-center mt-1">
-                                {userSubject ? (
-                                    <CheckCircle size={16} color="green" />
-                                ) : (
-                                    <XCircle size={16} color="red" />
-                                )}
-                                <Text className="ml-2 text-sm">
-                                    {criteria.subject}
-                                </Text>
-                            </View>
-                        );
-                    })}
-                </View>
+                        <View className="mt-2">
+                            {alCriteria.map((crit) => {
+                                const pass = checkCriterion(crit);
+                                return (
+                                    <View key={crit.id} className="flex-row items-center mt-1">
+                                        {pass ? <CheckCircle size={16} color="green" /> : <XCircle size={16} color="red" />}
+                                        <Text className="ml-2 text-sm">
+                                            {crit.subjectName || "Subject"} — min {crit.minGrade}
+                                            {crit.isMandatory ? " (Mandatory)" : ""}
+                                        </Text>
+                                    </View>
+                                );
+                            })}
+                        </View>
+
+                        <Text className="text-xs text-gray-500 mt-2">
+                            Passed: {alPassCount}/{alTotal} (Mandatory passed: {mandatoryAlPassCount}/{mandatoryAlTotal})
+                        </Text>
+                    </>
+                ) : (
+                    <Text className="text-sm mt-2 text-gray-500">No A/L criteria provided.</Text>
+                )}
             </View>
 
             {/* OL Requirements */}
             <View className="border border-gray-300 rounded-lg p-4 mt-4">
                 <View className="flex-row items-center justify-between">
                     <Text className="text-lg font-bold">OL Requirements</Text>
-                    <View className={`${checkOLRequirements() ? "bg-green-500" : "bg-red-500"} px-2 py-1 rounded-full`}>
+                    <View className={`${olSatisfied ? "bg-green-500" : "bg-red-500"} px-2 py-1 rounded-full`}>
                         <Text className="text-xs font-bold text-white">
-                            {checkOLRequirements() ? "Criteria Satisfied" : "Criteria Not Satisfied"}
+                            {olSatisfied ? "Criteria Satisfied" : "Criteria Not Satisfied"}
                         </Text>
                     </View>
                 </View>
 
-                <Text className="text-sm mt-2">
-                    Candidates should have at least a Credit Pass (C) in the following subjects:
-                </Text>
+                {olCriteria.length > 0 ? (
+                    <>
+                        <Text className="text-sm mt-2">
+                            All mandatory O/L subjects must be satisfied
+                            {Number.isFinite(degreeMeta?.olCriteriaMinCount) && degreeMeta.olCriteriaMinCount > 0
+                                ? <> and at least <Text className="font-bold">{degreeMeta.olCriteriaMinCount}</Text> optional subject(s).</>
+                                : "."}
+                        </Text>
 
-                <View className="mt-2">
-                    {Object.keys(requiredOLSubjects).map((subject, index) => (
-                        <View key={index} className="flex-row items-center mt-1">
-                            {isGradeSufficient(userOLResults[subject], requiredOLSubjects[subject]) ? (
-                                <CheckCircle size={16} color="green" />
-                            ) : (
-                                <XCircle size={16} color="red" />
-                            )}
-                            <Text className="ml-2 text-sm">
-                                {`At least a Credit Pass (C) in ${subject}`}
-                            </Text>
+                        <View className="mt-2">
+                            {olCriteria.map((crit) => {
+                                const pass = checkCriterion(crit);
+                                return (
+                                    <View key={crit.id} className="flex-row items-center mt-1">
+                                        {pass ? <CheckCircle size={16} color="green" /> : <XCircle size={16} color="red" />}
+                                        <Text className="ml-2 text-sm">
+                                            {crit.subjectName || "Subject"} — min {crit.minGrade}
+                                            {crit.isMandatory ? " (Mandatory)" : ""}
+                                        </Text>
+                                    </View>
+                                );
+                            })}
                         </View>
-                    ))}
-                </View>
+
+                        <Text className="text-xs text-gray-500 mt-2">
+                            Optional passed: {optionalOlPassCount}/{optionalOlTotal} (Mandatory passed: {mandatoryOlPassCount}/{mandatoryOlTotal})
+                        </Text>
+                    </>
+                ) : (
+                    <Text className="text-sm mt-2 text-gray-500">No O/L criteria provided.</Text>
+                )}
             </View>
 
-            {/* Z Score */}
+            {/* Z Score (static UI for now) */}
             <View className="border border-gray-300 rounded-lg p-4 mt-4">
                 <View className="flex-row items-center">
                     <Circle size={16} color="blue" fill="blue" />
@@ -161,7 +242,6 @@ const CriteriaScreen = () => {
                 </View>
 
                 <View className="mt-2">
-                    {/* Custom Dropdowns */}
                     <CustomDropdown
                         title="Select Year"
                         items={years}
@@ -182,14 +262,13 @@ const CriteriaScreen = () => {
                 <Text className="mt-4 text-xl font-bold text-blue-600">{userZScore}</Text>
 
                 <View className="flex-row items-center mt-2">
-                    {checkZScore() ? (
+                    {/* just visual; not hooked to backend yet */}
+                    {userZScore >= minimumZScore ? (
                         <CheckCircle size={16} color="green" />
                     ) : (
                         <XCircle size={16} color="red" />
                     )}
-                    <Text className="ml-2 text-sm">
-                        {`Minimum required Z Score: ${minimumZScore}`}
-                    </Text>
+                    <Text className="ml-2 text-sm">{`Minimum required Z Score: ${minimumZScore}`}</Text>
                 </View>
             </View>
         </View>
