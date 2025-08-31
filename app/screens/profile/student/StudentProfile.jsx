@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from 'expo-router';
 import { LogOut } from "lucide-react-native";
@@ -8,35 +8,16 @@ import InterestedDegrees from "./interestTab/InterestedDegrees";
 import ActivityTab from "./activityTab/ActivityTab";
 import AboutTab from "./aboutTab/AboutTab";
 
-const StudentProfile = ({profile}) => {
+import { useProfileAboutData} from "../../../../src/quaryHooks/user/useProfileAboutData";
+
+const StudentProfile = ({ profile }) => {
     const [activeTab, setActiveTab] = useState("Interested");
     const router = useRouter();
 
+    // NEW: live About data
+    const { aboutData, isLoading: aboutLoading, isError: aboutErr, refetch } = useProfileAboutData();
 
-    const aboutData = {
-        stream: "Physical Science",
-        subjects: [
-            { subject: "Combined Mathematics", grade: "A" },
-            { subject: "Chemistry", grade: "A" },
-            { subject: "Physics", grade: "A" },
-            { subject: "General Test", grade: "180" }, // Numeric result
-            { subject: "English", grade: "A" },
-        ],
-        zScore: "2.465",
-        olResults: [
-            { subject: "English", grade: "A" },
-            { subject: "Science", grade: "A" },
-            { subject: "Mathematics", grade: "A" },
-            { subject: "Sinhala", grade: "A" },
-            { subject: "Buddhism", grade: "A" },
-            { subject: "History", grade: "A" },
-            { subject: "English Literature", grade: "B" },
-            { subject: "Commerce", grade: "A" },
-            { subject: "ICT", grade: "A" },
-        ],
-    };
-
-
+    // keep your mock lists (unchanged)
     // Define the data here and pass it down
     const interestedDegreesData = [
         {
@@ -123,6 +104,25 @@ const StudentProfile = ({profile}) => {
         },
     ];
 
+    const renderAbout = () => {
+        if (aboutLoading) {
+            return (
+                <View className="py-8 items-center">
+                    <ActivityIndicator />
+                    <Text className="mt-2 text-gray-600">Loading profile details…</Text>
+                </View>
+            );
+        }
+        if (aboutErr) {
+            return (
+                <View className="py-6">
+                    <Text className="text-red-600">Couldn’t load your About data.</Text>
+                    <Text className="text-blue-600 mt-2" onPress={refetch}>Tap to retry</Text>
+                </View>
+            );
+        }
+        return <AboutTab aboutData={aboutData} />;
+    };
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -131,11 +131,9 @@ const StudentProfile = ({profile}) => {
                 keyExtractor={(item) => item.id}
                 ListHeaderComponent={
                     <>
-                        {/* Cover Image */}
+                        {/* Cover */}
                         <View className="bg-gray-200 h-40">
                             <Image source={{ uri: profile.coverImage }} className="w-full h-full" resizeMode="cover" />
-
-                            {/* Logout Icon */}
                             <TouchableOpacity
                                 onPress={() => router.replace('/sign-in')}
                                 className="absolute top-4 right-4 bg-white p-2 rounded-full shadow"
@@ -144,8 +142,7 @@ const StudentProfile = ({profile}) => {
                             </TouchableOpacity>
                         </View>
 
-
-                        {/* Profile Details */}
+                        {/* Profile header */}
                         <View className="items-center mt-4">
                             <Image
                                 source={{ uri: profile.profileImage }}
@@ -155,26 +152,24 @@ const StudentProfile = ({profile}) => {
                             <Text className="text-gray-500 text-sm">{profile.role}</Text>
                         </View>
 
-                        {/* Tab Navigation */}
+                        {/* Tabs */}
                         <View className="flex-row justify-between mt-5 px-4">
-                            {["About", "Activity", "Interested"].map((item, index) => (
+                            {["About", "Activity", "Interested"].map((item) => (
                                 <TouchableOpacity
-                                    key={index}
+                                    key={item}
                                     className={`flex-1 mx-1 border py-3 rounded-3xl items-center ${
                                         activeTab === item ? "border-text" : "border-gray-300"
                                     }`}
                                     onPress={() => setActiveTab(item)}
                                 >
-                                    <Text className={activeTab === item ? "text-text font-bold" : "text-gray-500"}>
-                                        {item}
-                                    </Text>
+                                    <Text className={activeTab === item ? "text-text font-bold" : "text-gray-500"}>{item}</Text>
                                 </TouchableOpacity>
                             ))}
                         </View>
 
-                        {/* Tab Content */}
+                        {/* Tab content */}
                         <View className="mt-5 px-4 mb-4">
-                            {activeTab === "About" && <AboutTab aboutData={aboutData} />}
+                            {activeTab === "About" && renderAbout()}
                             {activeTab === "Activity" && <ActivityTab activities={activitiesData} />}
                         </View>
                     </>

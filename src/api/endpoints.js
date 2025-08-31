@@ -47,5 +47,9 @@ export const endpoints = {
         list: "/api/communityPost",
     },
 
+    stream: {
+        byId: (id) => `/api/stream/${id}`,
+    },
+
     // Add more domains here...
 };
