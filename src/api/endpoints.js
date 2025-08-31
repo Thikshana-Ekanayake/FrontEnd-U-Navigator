@@ -7,6 +7,7 @@ export const endpoints = {
 
     user: {
         profile: "/api/user/profile", // JWT required
+        byId: (id) => `/api/user/${id}`,
     },
 
     universities: {
@@ -38,6 +39,10 @@ export const endpoints = {
 
     district: {
         byId: (id) => `/api/district/${id}`,
+    },
+
+    communityPosts: {
+        byDegree: (degreeId) => `/api/communityPost/by-degree/${degreeId}`, // <-- add
     },
 
     // Add more domains here...

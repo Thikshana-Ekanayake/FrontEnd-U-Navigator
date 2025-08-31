@@ -1,74 +1,76 @@
-import React from "react";
-import { View, ScrollView, Text } from "react-native";
+import React, { useMemo } from "react";
+import { View, ScrollView, Text, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PostCard from "../../../components/community/PostCard";
-import PostCreationHead from "../../../components/community/PostCreationHead";
 import QACard from "../../../components/community/QACard";
+import { useCommunityPostsByDegree} from "../../../src/quaryHooks/community/useCommunityPostsByDegree";
 
 const CommunitySection = ({ degreeId }) => {
-    // Sample posts and questions - Ideally, these should be fetched from an API
-    const posts = [
-        {
-            id: "1",
-            degreeId: "D1", // Related degree
-            userName: "Thikshana Ekanayake",
-            userRole: "Undergraduate",
-            userImage: "https://randomuser.me/api/portraits/men/1.jpg",
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-            images: [],
-            likes: 12,
-            comments: 5,
-        },
-        {
-            id: "2",
-            degreeId: "D2",
-            userName: "Hiruni Siriwardana",
-            userRole: "School Student",
-            userImage: "https://randomuser.me/api/portraits/women/2.jpg",
-            text: "Excited to start my university journey!",
-            images: [],
-            likes: 30,
-            comments: 8,
-        },
-    ];
+    const { data: posts = [], isLoading, isError, refetch, isRefetching } =
+        useCommunityPostsByDegree(degreeId);
 
-    const questions = [
-        {
-            id: "Q1",
-            degreeId: "D1",
-            userName: "Lankangana",
-            userRole: "School Student",
-            userImage: "https://randomuser.me/api/portraits/women/2.jpg",
-            text: "What are the entry requirements for this degree?",
-            timestamp: Date.now() - 3 * 24 * 60 * 60 * 1000,
-            answers: [
-                { user: "Thikshana Ekanayake", text: "You need at least 3 A-level passes.", timestamp: Date.now() - 1 * 24 * 60 * 60 * 1000 },
-            ],
-        },
-    ];
-
-    // Filter posts and Q&A based on the selected degree
-    const filteredPosts = posts.filter((post) => post.degreeId === degreeId);
-    const filteredQuestions = questions.filter((question) => question.degreeId === degreeId);
+    // Split: non-question posts go to feed; question posts -> Q&A (comments become answers)
+    const { feedPosts, qaItems } = useMemo(() => {
+        const feed = [];
+        const qas = [];
+        posts.forEach((p) => {
+            if ((p.postType || "") === "QUESTION") {
+                qas.push({
+                    id: p.id,
+                    degreeId: p.degreeId,
+                    userName: p.userName,
+                    userRole: p.userRole,
+                    userImage: p.userImage,
+                    text: p.text,
+                    timestamp: new Date(p.createdAt).getTime(),
+                    answers: (p.commentItems || []).map((c) => ({
+                        user: c.userName,
+                        text: c.text,
+                        timestamp: new Date(c.createdAt).getTime(),
+                        userImage: c.userImage,
+                    })),
+                });
+            } else {
+                feed.push(p); // IMAGE / TEXT / anything else
+            }
+        });
+        return { feedPosts: feed, qaItems: qas };
+    }, [posts]);
 
     return (
         <SafeAreaView className="flex-1 bg-white">
-            <ScrollView className="-mt-10">
-                {/*<PostCreationHead profileImage="https://randomuser.me/api/portraits/women/3.jpg" />*/}
+            <ScrollView
+                className="-mt-10"
+                refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}
+            >
+                {isLoading ? (
+                    <View className="py-10 items-center">
+                        <ActivityIndicator />
+                        <Text className="mt-2">Loading posts…</Text>
+                    </View>
+                ) : isError ? (
+                    <View className="py-10 items-center">
+                        <Text className="text-red-500">Failed to load community posts.</Text>
+                        <Text className="text-blue-600 mt-2" onPress={refetch}>
+                            Tap to retry
+                        </Text>
+                    </View>
+                ) : (
+                    <>
+                        {/* Posts feed (non-questions) */}
+                        {feedPosts.map((post) => (
+                            <PostCard key={post.id} post={post} />
+                        ))}
 
-                {/* Render Posts */}
-                {filteredPosts.map((post) => (
-                    <PostCard key={post.id} post={post} />
-                ))}
+                        {/* Q&A items (postType === 'QUESTION'); answers from comments */}
+                        {qaItems.map((question) => (
+                            <QACard key={question.id} question={question} />
+                        ))}
 
-                {/* Render Q&A */}
-                {filteredQuestions.map((question) => (
-                    <QACard key={question.id} question={question} />
-                ))}
-
-                {/* Show message if no content */}
-                {filteredPosts.length === 0 && filteredQuestions.length === 0 && (
-                    <Text className="text-gray-500 text-center mt-4">No community discussions yet.</Text>
+                        {!feedPosts.length && !qaItems.length && (
+                            <Text className="text-gray-500 text-center mt-4">No community discussions yet.</Text>
+                        )}
+                    </>
                 )}
             </ScrollView>
         </SafeAreaView>
