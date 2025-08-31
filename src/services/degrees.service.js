@@ -43,6 +43,8 @@ export async function getDegreeById(degreeId) {
     return {
         id: data?.id,
         name: data?.name ?? null,
+        olCriteriaDescription: data?.olCriteriaDescription ?? null,
+        alCriteriaDescription: data?.alCriteriaDescription ?? null,
         olCriteriaMinCount: Number.isFinite(data?.olCriteriaMinCount) ? data.olCriteriaMinCount : null,
         alCriteriaMinCount: Number.isFinite(data?.alCriteriaMinCount) ? data.alCriteriaMinCount : null,
     };

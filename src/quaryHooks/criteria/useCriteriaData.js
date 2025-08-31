@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStudentResultsByStudentId} from "../../services/studentResults.service";
-import { getCriteriaByDegreeId} from "../../services/criteria.service";
-import { getDegreeById} from "../../services/degrees.service";
+import { getStudentResultsByStudentId } from "../../services/studentResults.service";
+import { getCriteriaByDegreeId } from "../../services/criteria.service";
+import { getDegreeById } from "../../services/degrees.service";
 
 export function useCriteriaData({ degreeId, userId }) {
     const degreeQ = useQuery({
@@ -26,15 +26,11 @@ export function useCriteriaData({ degreeId, userId }) {
     });
 
     return {
-        degreeMeta: degreeQ.data,    // { alCriteriaMinCount, olCriteriaMinCount }
-        criteria: criteriaQ.data,    // { ol, al }
-        studentResults: resultsQ.data, // { items, bySubjectId, bySubjectName }
+        degreeMeta: degreeQ.data,     // includes olCriteriaDescription, alCriteriaDescription, and min counts
+        criteria: criteriaQ.data,     // { ol, al }
+        studentResults: resultsQ.data,
         isLoading: degreeQ.isLoading || criteriaQ.isLoading || resultsQ.isLoading,
         isError: degreeQ.isError || criteriaQ.isError || resultsQ.isError,
-        refetchAll: () => {
-            degreeQ.refetch();
-            criteriaQ.refetch();
-            resultsQ.refetch();
-        },
+        refetchAll: () => { degreeQ.refetch(); criteriaQ.refetch(); resultsQ.refetch(); },
     };
 }

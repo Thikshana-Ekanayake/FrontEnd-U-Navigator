@@ -1,18 +1,16 @@
-// app/screens/criteria/criteria-screen.jsx
 import React, { useMemo, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { CheckCircle, XCircle, Circle } from "lucide-react-native";
 import { CustomDropdown } from "../../../components";
-import { useCriteriaData} from "../../../src/quaryHooks/criteria/useCriteriaData";
+import { useCriteriaData } from "../../../src/quaryHooks/criteria/useCriteriaData";
 
 // Grade ranking map
 const gradeOrder = { "S": 1, "C": 2, "B": 3, "A": 4, "A+": 5 };
-// tolerant normalize
 const normalizeGrade = (g) => (g || "").toUpperCase().replace(/\s+/g, "");
 const gradeValue = (g) => gradeOrder[normalizeGrade(g)] ?? 0;
 const isGradeSufficient = (userGrade, requiredGrade) => gradeValue(userGrade) >= gradeValue(requiredGrade);
 
-// UI dropdowns (Z-score ignored for now)
+// Z-score UI (still static for now)
 const years = [
     { label: "2023", value: "2023" },
     { label: "2022", value: "2022" },
@@ -25,8 +23,6 @@ const locations = [
     { label: "Galle", value: "Galle" },
     { label: "Jaffna", value: "Jaffna" },
 ];
-
-// Placeholder Z-score constants (ignored logic)
 const minimumZScore = 1.5;
 const userZScore = 1.567;
 
@@ -37,29 +33,21 @@ const CriteriaScreen = ({ degreeId, userId }) => {
     const { degreeMeta, criteria, studentResults, isLoading, isError, refetchAll } =
         useCriteriaData({ degreeId, userId });
 
-    // Derive maps for quick checks
     const resById = studentResults?.bySubjectId ?? new Map();
     const resByName = studentResults?.bySubjectName ?? new Map();
 
-    // Utility: does a given criterion pass based on user's results?
     const checkCriterion = (crit) => {
-        // Prefer subjectId match if present
         let userRes = (crit.subjectId && resById.get(crit.subjectId)) || null;
-
-        // Fallback to name (some results may have empty subjectName; hence guarded)
         if (!userRes && crit.subjectName) {
             userRes = resByName.get(crit.subjectName.toLowerCase()) || null;
         }
-
         if (!userRes || !userRes.result) return false;
         return isGradeSufficient(userRes.result, crit.minGrade);
     };
 
-    // Split criteria by type
     const olCriteria = criteria?.ol ?? [];
     const alCriteria = criteria?.al ?? [];
 
-    // Evaluate OL
     const {
         mandatoryOlPassCount,
         mandatoryOlTotal,
@@ -69,18 +57,10 @@ const CriteriaScreen = ({ degreeId, userId }) => {
     } = useMemo(() => {
         const mandatory = olCriteria.filter((c) => c.isMandatory);
         const optional = olCriteria.filter((c) => !c.isMandatory);
-
         const mandatoryPass = mandatory.filter(checkCriterion).length;
         const optionalPass = optional.filter(checkCriterion).length;
-
-        const olMinOpt = Number.isFinite(degreeMeta?.olCriteriaMinCount)
-            ? degreeMeta.olCriteriaMinCount
-            : 0;
-
-        const satisfied =
-            mandatoryPass === mandatory.length && // all mandatory must pass
-            optionalPass >= olMinOpt;             // plus optional min-count if any
-
+        const olMinOpt = Number.isFinite(degreeMeta?.olCriteriaMinCount) ? degreeMeta.olCriteriaMinCount : 0;
+        const satisfied = mandatoryPass === mandatory.length && optionalPass >= olMinOpt;
         return {
             mandatoryOlPassCount: mandatoryPass,
             mandatoryOlTotal: mandatory.length,
@@ -90,7 +70,6 @@ const CriteriaScreen = ({ degreeId, userId }) => {
         };
     }, [olCriteria, degreeMeta, resById, resByName]);
 
-    // Evaluate AL
     const {
         mandatoryAlPassCount,
         mandatoryAlTotal,
@@ -101,19 +80,10 @@ const CriteriaScreen = ({ degreeId, userId }) => {
     } = useMemo(() => {
         const mandatory = alCriteria.filter((c) => c.isMandatory);
         const optional  = alCriteria.filter((c) => !c.isMandatory);
-
         const mandatoryPass = mandatory.filter(checkCriterion).length;
         const optPass = optional.filter(checkCriterion).length;
-
-        // Default to 2 if server doesn’t specify
-        const alMin = Number.isFinite(degreeMeta?.alCriteriaMinCount)
-            ? degreeMeta.alCriteriaMinCount
-            : 2;
-
-        const satisfied =
-            mandatoryPass === mandatory.length &&
-            (optPass + mandatoryPass) >= alMin;
-
+        const alMin = Number.isFinite(degreeMeta?.alCriteriaMinCount) ? degreeMeta.alCriteriaMinCount : 2;
+        const satisfied = mandatoryPass === mandatory.length && (optPass + mandatoryPass) >= alMin;
         return {
             mandatoryAlPassCount: mandatoryPass,
             mandatoryAlTotal: mandatory.length,
@@ -155,6 +125,13 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                         </Text>
                     </View>
                 </View>
+
+                {/* NEW: show AL description from degree meta if present */}
+                {!!degreeMeta?.alCriteriaDescription && (
+                    <Text className="text-sm text-gray-600 italic mt-2">
+                        {degreeMeta.alCriteriaDescription}
+                    </Text>
+                )}
 
                 {alCriteria.length > 0 ? (
                     <>
@@ -200,6 +177,13 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                         </Text>
                     </View>
                 </View>
+
+                {/* NEW: show OL description from degree meta if present */}
+                {!!degreeMeta?.olCriteriaDescription && (
+                    <Text className="text-sm text-gray-600 italic mt-2">
+                        {degreeMeta.olCriteriaDescription}
+                    </Text>
+                )}
 
                 {olCriteria.length > 0 ? (
                     <>
@@ -262,7 +246,6 @@ const CriteriaScreen = ({ degreeId, userId }) => {
                 <Text className="mt-4 text-xl font-bold text-blue-600">{userZScore}</Text>
 
                 <View className="flex-row items-center mt-2">
-                    {/* just visual; not hooked to backend yet */}
                     {userZScore >= minimumZScore ? (
                         <CheckCircle size={16} color="green" />
                     ) : (
