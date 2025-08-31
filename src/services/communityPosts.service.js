@@ -3,6 +3,29 @@ import { endpoints } from "../api/endpoints";
 import { getUserById } from "./user.service";
 import { absoluteUrl} from "../../utils/url";
 
+export async function createCommunityPost(payload) {
+    const form = new FormData();
+    form.append("UserId", String(payload.userId));
+    form.append("DegreeId", String(payload.degreeId));
+    form.append("Caption", payload.caption ?? "");
+    form.append("PostType", (payload.postType || "text").toLowerCase()); // backend expects a string
+    form.append("ActiveStatus", "Active");
+
+    if (payload.postType === "image" && payload.imageAsset?.uri) {
+        const uri = payload.imageAsset.uri;
+        const name =
+            payload.imageAsset.fileName ||
+            `upload_${Date.now()}.${(uri.split(".").pop() || "jpg").replace(/\?.*$/, "")}`;
+        const type = payload.imageAsset.mimeType || "image/jpeg";
+        form.append("Image", { uri, name, type });
+    }
+
+    const { data } = await api.post(endpoints.communityPosts.create, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+    return data;
+}
+
 export async function getCommunityPostsByDegree(degreeId) {
     const { data } = await api.get(endpoints.communityPosts.byDegree(degreeId));
     const rows = Array.isArray(data) ? data : [];

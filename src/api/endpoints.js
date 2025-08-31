@@ -42,6 +42,7 @@ export const endpoints = {
     },
 
     communityPosts: {
+        create: "/api/communityPost",
         byDegree: (degreeId) => `/api/communityPost/by-degree/${degreeId}`,
         list: "/api/communityPost",
     },
