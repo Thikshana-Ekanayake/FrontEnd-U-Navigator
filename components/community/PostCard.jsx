@@ -32,7 +32,7 @@ const PostCard = ({ post }) => {
                     horizontal
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <Image source={{ uri: item }} className="w-36 h-24 rounded-lg mr-2" />
+                        <Image source={{ uri: item }} className="h-48 w-64 rounded-lg mr-2" />
                     )}
                 />
             )}

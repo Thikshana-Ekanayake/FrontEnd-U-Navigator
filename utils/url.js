@@ -8,3 +8,4 @@ export function absoluteUrl(path) {
     const rel  = String(path).startsWith("/") ? path : `/${path}`;
     return `${base}${rel}`;
 }
+

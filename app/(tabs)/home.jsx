@@ -10,6 +10,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 
 import { useCommunityFeed} from "../../src/quaryHooks/community/useCommunityFeed";
 import { useDegreesMostInterested} from "../../src/quaryHooks/degrees/useDegreesMostInterested";
+import { useProfile} from "../../src/quaryHooks/user/useProfile";
 
 const Home = () => {
     const route = useRoute();
@@ -18,6 +19,10 @@ const Home = () => {
     // LIVE data
     const { data: feed = [], isLoading, isError, refetch, isRefetching } = useCommunityFeed();
     const { data: mostInterested = [], isLoading: degLoading } = useDegreesMostInterested(10);
+
+    // Current user profile (for avatar)
+    const { data: me, isLoading: meLoading } = useProfile();
+    const avatar = me?.avatarUrl || "https://ui-avatars.com/api/?name=U&background=DDD&color=555";
 
     // Split feed: posts vs questions (Q&A)
     const { firstPost, remainingPosts, qaItems } = useMemo(() => {
@@ -80,8 +85,13 @@ const Home = () => {
                     </View>
                 </View>
 
-                {/* Post Creation (hook up create later) */}
-                <PostCreationHead profileImage="https://randomuser.me/api/portraits/women/3.jpg" />
+                {/* Post Creation (now shows current user's avatar) */}
+                <PostCreationHead
+                    profileImage={avatar}
+                    // you can also pass a loading flag if your component supports it:
+                    // loading={meLoading}
+                />
+
 
                 {/* Loading / Error states */}
                 {isLoading ? (
