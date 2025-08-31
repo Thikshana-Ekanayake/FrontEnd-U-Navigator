@@ -26,15 +26,15 @@ const PostCreationHead = ({ profileImage }) => {
             </View>
 
             <View className="flex-row justify-around bg-white p-2 pb-3 rounded-lg border-b-[0.5px] border-smoke">
-                <TouchableOpacity className="flex-row items-center">
+                <TouchableOpacity className="flex-row items-center" onPress={handlePress}>
                     <Camera size={20} color="gray" />
                     <Text className="ml-2 text-gray-700">Photo</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className="flex-row items-center">
+                <TouchableOpacity className="flex-row items-center" onPress={handlePress}>
                     <MessageSquare size={20} color="gray" />
                     <Text className="ml-2 text-gray-700">Post</Text>
                 </TouchableOpacity>
-                <TouchableOpacity className="flex-row items-center">
+                <TouchableOpacity className="flex-row items-center" onPress={handlePress}>
                     <HelpCircle size={20} color="gray" />
                     <Text className="ml-2 text-gray-700">Ask</Text>
                 </TouchableOpacity>
