@@ -8,49 +8,56 @@ const consultationData = [
     // Within the last few hours
     {
         id: "1",
-        name: "Adam Steven",
+        name: "Dr. Nadeesha Fernando",
         role: "Senior Lecturer | Faculty of Information Technology | University of Moratuwa",
-        message: "Recently posted message...",
-        time: "2025-04-01T15:30:00Z", // 2.5 hours ago
-        image: "https://randomuser.me/api/portraits/men/1.jpg",
+        message:
+            "The ITM degree at Moratuwa is well-balanced with both management and core computing courses. Students gain strong exposure to software engineering as well as business analysis, which is highly valued by Sri Lankan IT companies.",
+        time: "2025-09-01T13:30:00Z",
+        image: "https://randomuser.me/api/portraits/women/65.jpg",
     },
     // Within the last 24 hours
     {
         id: "2",
-        name: "Esther Howard",
-        role: "Senior Lecturer | Faculty of Information Technology | University of Moratuwa",
-        message: "Posted within the last day...",
-        time: "2025-03-28T22:00:00Z", // 20 hours ago
-        image: "https://randomuser.me/api/portraits/women/2.jpg",
+        name: "Prof. Ruwan Weerasinghe",
+        role: "Professor | University of Colombo School of Computing (UCSC)",
+        message:
+            "One of the key advantages of the ITM programme is the focus on practical training. Internships arranged through the faculty give students real-world experience in Colombo’s IT industry and beyond.",
+        time: "2025-08-31T23:10:00Z",
+        image: "https://randomuser.me/api/portraits/men/12.jpg",
     },
     // Within the last 7 days
     {
         id: "3",
-        name: "Amanda Perkins",
-        role: "Senior Lecturer | Faculty of Information Technology | University of Moratuwa",
-        message: "This post is from a few days ago...",
-        time: "2025-02-25T10:00:00Z", // 4 days ago
-        image: "https://randomuser.me/api/portraits/women/3.jpg",
+        name: "Dr. Tharushi Jayasuriya",
+        role: "Senior Lecturer | Dept. of Statistics & Computer Science | University of Peradeniya",
+        message:
+            "The curriculum is frequently updated to match industry demand. Recently, modules on cloud computing and data analytics were added, giving graduates a competitive edge in Sri Lanka’s tech job market.",
+        time: "2025-08-28T10:00:00Z",
+        image: "https://randomuser.me/api/portraits/women/33.jpg",
     },
     // Within the last year
     {
         id: "4",
-        name: "Michael Brown",
-        role: "Professor | Department of Computer Science | University of Colombo",
-        message: "This post is from a few months ago...",
-        time: "2024-10-10T14:15:00Z", // About 5 months ago
-        image: "https://randomuser.me/api/portraits/men/4.jpg",
+        name: "Dr. Chamika Perera",
+        role: "Senior Lecturer | Faculty of Information Technology | University of Moratuwa",
+        message:
+            "Students sometimes feel the workload is heavy, especially in the second year. However, this helps them build strong time management and project skills, which are essential for their final-year projects and future careers.",
+        time: "2025-05-12T14:15:00Z",
+        image: "https://randomuser.me/api/portraits/men/24.jpg",
     },
     // More than a year ago
     {
         id: "5",
-        name: "Sophia White",
-        role: "Senior Researcher | AI and Data Science | University of Peradeniya",
-        message: "An old but still relevant post...",
-        time: "2023-02-20T08:00:00Z", // More than 2 years ago
-        image: "https://randomuser.me/api/portraits/women/5.jpg",
+        name: "Dr. S. Tharmakulasingam",
+        role: "Senior Lecturer | Dept. of Computer Science | University of Jaffna",
+        message:
+            "Graduates from ITM are highly employable. Many join top local firms such as WSO2, Virtusa, or move abroad for postgraduate studies. The blend of technical and management knowledge makes them versatile professionals.",
+        time: "2023-07-05T08:00:00Z",
+        image: "https://randomuser.me/api/portraits/men/52.jpg",
     },
 ];
+
+
 
 const consultationLikes = [
     { userId: "user123", postId: "1", liked: true, dateTime: "2025-03-31T12:00:00Z" },

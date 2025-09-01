@@ -8,7 +8,7 @@ const OLResults = ({ onDataChange, defaultData = {} }) => {
     const categorySubjects = {
         Religion: ['Buddhism', 'Christianity', 'Islam', 'Hinduism'],
         Category1: ['Commerce', 'Art', 'ICT'],
-        Category2: ['Geography', 'Civic', 'Health'],
+        Category2: ['Geography', 'Civic', 'Health', 'German'],
         Category3: ['Music', 'Dancing', 'Drama']
     };
 
